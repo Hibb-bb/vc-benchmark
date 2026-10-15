@@ -1,0 +1,29 @@
+# environments, caches, logs
+.venv/
+.venv-scvi/
+__pycache__/
+*.pyc
+*.egg-info/
+cache/
+logs/
+# data: raw downloads, item banks, panels (hundreds of GB; see configs/datasets.yaml and README)
+data/
+*.parts
+# run outputs: keep the small Rasch reports and ability tables, drop long response tables and model dumps
+runs/*
+!runs/*/
+runs/*/*
+!runs/*/summary.md
+!runs/*/rasch/
+runs/*/rasch/*
+!runs/*/rasch/*.md
+!runs/*/rasch/*abilities.csv
+# LaTeX build products
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz

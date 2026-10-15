@@ -1,0 +1,561 @@
+\documentclass[]{style}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\graphicspath{{bench/}}
+
+\title{\fontsize{0.6cm}{0.72cm}\selectfont Maintaining a Living Virtual Cell Benchmark\\[0.3cm] with Item Response Theory}
+
+\author[1]{Author One}
+\author[1]{Author Two}
+\affiliation[1]{Northwestern University}
+
+\abstract{Current virtual cell benchmarks face two major problems. First, they score
+models mainly by raw accuracy or average error, even though test cases differ greatly in
+difficulty. Second, a fixed benchmark loses value over time: test cases become too easy as
+the field moves forward, and they become less reliable once they are widely known and enter
+training data. We address both problems with a benchmark that assigns every test case a
+measured difficulty, as standardized tests such as the SAT and GRE do. The current release
+aggregates Tabula Sapiens v2 and fourteen public perturbation screens, about 100 million
+cells in all, into 20,026 cell-type annotation items covering 102 cell types and 74,197
+perturbation items covering roughly 10,000 gene targets and 500 compounds in more than 250
+cell lines and culture conditions. We evaluate [N] models on it, from principal components
+and ridge regression to scVI and scGen. Difficulties are estimated with a one-parameter item
+response model from a pool of deliberately simple models, so the scale is anchored to
+methods that cannot have memorized the test data. The scale reproduces what the field has
+found with raw scores and adds what raw scores hide: a quarter of the perturbation items are
+passed by no model because the average response is unbeatable on them, and annotation
+difficulty falls with how many training cells a cell type has. We find no strong evidence
+that current virtual cell models outperform simple baselines: scVI sits just below PCA on
+held-out donors, and scGen beats the average-response baseline only when a drug has been
+observed in many cell lines. Finally, we quantify maintenance: a model one unit above the
+best current one would retire half of the annotation items, which fixes the rate at which
+new hard items must be written.}
+
+\begin{document}
+\maketitle
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+To be filled.
+
+% ---------------------------------------------------------------------------
+\section{Dataset Composition and Statistics}
+\label{sec:data}
+
+We call every test case an \emph{item}. 
+Depending on the task, an item could be one cell or one experimental condition.
+Each item contains a difficulty score.
+For each model, its ability is estimated by considering both the 
+
+
+The bank has two components with different items
+but the same pass/fail response format.
+
+\paragraph{Component A: representation.}
+An item is one cell. A model maps a cell's expression profile to a vector. The response is
+whether a multinomial logistic regression, trained once on the vectors of a separate
+training panel with fixed settings, assigns the cell its annotated type. The classifier is
+identical for every model, so a difference in responses is a difference in embeddings.
+
+\paragraph{Component B: perturbation.}
+An item is one experimental condition: a perturbation applied in one context.
+A perturbation is either a knockout target gene or a chemical perturbation.
+A context is either a cell line, donor or cell type.
+When a dataset contains more than one type of context, the context is the combination of those contexts. For example, (donor, cell type).
+The cells of a condition are replicates, not items; the measured
+A model predicts this response for conditions it has not been trained on. 
+We score a prediction by its Pearson correlation with the measured response over the 2,000 most variable genes, and the item is passed when that correlation exceeds the context-mean baseline.
+We call this reference the \emph{mean shift}, and it is chosen on purpose. Recent benchmarks
+\citep{systema,perturbench,ahlmann2025} found that this average matches deep models on
+standard metrics, because much of any response is shared across perturbations; a pass
+therefore credits the perturbation-specific part of a prediction and not the part every
+perturbation shares.
+
+\paragraph{Sources.}
+Component A uses Tabula Sapiens v2 \citep{tabulasapiens2}, 28 tissues and 23 donors with
+10x data. Component B uses thirteen screens from the scPerturb collection
+\citep{scperturb} and the Tahoe-100M drug atlas \citep{tahoe}; see \Cref{tab:compB}. All
+sources are public under CC0 or CC BY licences.
+
+\begin{table}[t]
+\centering
+\caption{Perturbation items by source. An item is a condition with at least 50
+quality-passing cells and a matched control. Contexts are cell lines or culture conditions.
+Tahoe-100M conditions are compound, dose and cell line triples; the Replogle genome-wide
+screen is the largest genetic source. Cell counts are after quality filtering.}
+\label{tab:compB}
+\footnotesize
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Dataset & Perturbation & Contexts & Perturbations & Items & Cells \\
+\midrule
+Tahoe-100M & compound, 3 doses & 50 & 379 & 53,972 & 95.6M \\
+Replogle 2022, K562 genome-wide & CRISPRi & 1 & 9,326 & 9,326 & 1.97M \\
+sciPlex3, Srivatsan 2020 & compound, 4 doses & 3 & 188 & 2,423 & 762k \\
+Replogle 2022, K562 essential & CRISPRi & 1 & 1,832 & 1,832 & 303k \\
+Nadig 2024, Jurkat & CRISPRi & 1 & 1,815 & 1,815 & 245k \\
+Replogle 2022, RPE1 & CRISPRi & 1 & 1,611 & 1,611 & 225k \\
+Nadig 2024, HepG2 & CRISPRi & 1 & 1,061 & 1,061 & 104k \\
+McFarland 2020 & compound, 7 doses & 196 & 16 & 866 & 166k \\
+Frangieh 2021 & CRISPR knockout & 3 & 229 & 669 & 216k \\
+Norman 2019 & CRISPRa, single and double & 1 & 236 & 236 & 111k \\
+Tian 2021, neurons & CRISPRi & 1 & 183 & 183 & 32k \\
+Adamson 2016 & CRISPRi & 1 & 87 & 87 & 63k \\
+Tian 2019, iPSC & CRISPRi & 1 & 81 & 81 & 29k \\
+Tian 2019, neurons & CRISPRi & 1 & 35 & 35 & 8k \\
+\midrule
+Total & & & & 74,197 & 99.9M \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Representation panel.}
+Donors are split before anything else: 21 donors supply a training panel of 146,800
+cells and 2 donors supply the test items, so no donor appears on both sides and the
+classifier cannot learn donor identity as a stand-in for cell type. We call each
+combination of tissue, cell type and donor a \emph{stratum}; within each stratum we keep at
+most 200 training and 50 test cells and drop strata with fewer than 20 cells. The result is
+20,026 test items in 433 strata across 28 tissues and 102 cell types, with 159 types
+present in training. Immune cells are 58\% of the items, stromal 18\%, epithelial 13\%,
+endothelial 10\%. The 844 test cells whose type is absent from training are kept in the
+panel but not scored. \Cref{tab:compA} gives the panel by tissue. Because the split is by donor,
+six tissues whose donors all fall on the training side contribute training cells but no
+items, and Testis, with a single donor on the test side, contributes items but no training
+cells; both are consequences of the donor-disjoint design rather than of the data.
+
+\begin{table}[t]
+\centering
+\caption{Representation panel by tissue. Donors and cell types count the whole panel;
+training cells are the classifier's training set; items are the scored test cells and
+strata their tissue, cell type and donor combinations. Tissues are ordered by item count.}
+\label{tab:compA}
+\footnotesize
+\input{bench/tab_compA.tex}
+\end{table}
+
+\paragraph{Perturbation items.}
+Every screen is mapped to one schema with perturbation, target genes, modality, context,
+dose, time and a control flag; cells with fewer than 500 counts or 200 detected genes are
+removed; and the per-condition mean is computed in one pass over the raw count matrix. For
+Tahoe-100M this pass streams 95.6 million cells from the public parquet files and reduces
+them to 56,827 conditions, of which 53,972 have at least 50 cells. Median cells per item
+range from 74 for Nadig HepG2 to 1,363 for Tahoe-100M. Each item carries covariates for
+later analysis: cell count, an effect-size measure, which is the Euclidean norm of the
+response, the target gene or the compound's chemical structure, and dose.
+
+\paragraph{Difficulty distributions.}
+\Cref{fig:difficulty} shows the fitted difficulties. Three features determine how the bank
+can be used.
+
+\emph{The scale is wide.} Informative difficulties span about five to six units in both
+components: the 5th to 95th percentiles are $-3.2$ to $2.6$ for cells and $-3.4$ to $1.1$
+for conditions, with standard deviations of 1.8 and 1.5. The abilities of the simple
+models occupy the shaded band in each panel. The bank already holds items well above its
+best model, which is the stock a living benchmark draws on as the field improves.
+
+\emph{A quarter of the items are off the scale today.} 2,270 cells, or 11\%, are
+labelled correctly by no model, and 18,366 conditions, or 25\%, are passed either by every
+model or by none; all but 56 of them by none. The latter are conditions on which the mean
+shift is the best prediction any model in the pool can make. They are hard in the useful
+sense and stay in the bank, but they carry no information about the current ranking and
+have no finite difficulty until some model passes them. In Tahoe-100M the fraction is 28\%.
+
+\emph{Datasets differ by more than their items.} On the pooled perturbation scale the mean
+difficulty by dataset ranges from $-2.3$ for Norman, where every double perturbation has
+both of its singles in training, to $+0.9$ for Tian 2021 neurons, a spread of 3.2 against a
+within-dataset standard deviation of about 1.5; Tahoe-100M sits at $-0.8$. A single pooled
+scale is therefore a first approximation. The K562 screens share thousands of target
+genes, and those shared conditions are the natural anchors for linking datasets in the
+next release.
+
+\paragraph{What makes an item hard.}
+Difficulty tracks the covariates the design predicts. For cells, difficulty falls with the
+number of training cells of the same type, with Spearman $\rho=-0.35$ over 17,756 items and
+$-0.47$ at the stratum level, and more weakly with sequencing depth, $\rho=-0.10$. The
+hardest types are sibling immune states such as activated versus naive CD8 T cells,
+gamma-delta T cells, innate lymphoid cells and intermediate monocytes, and stromal types
+that share a lineage such as mural cells, muscle cells and mesenchymal stem cells. For
+conditions the sign is the reverse of what a raw metric would give: difficulty rises weakly
+with effect size, $\rho=+0.15$ pooled, $+0.18$ in the genome-wide K562 screen and $+0.25$ in
+RPE1. Large responses are the ones the mean shift already captures, so beating it there is
+hard, while small responses are close to coin flips. The pass rule thus changes what
+difficulty means; we keep the continuous scores so that a graded fit can be run alongside
+the binary one.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_difficulty.pdf}
+\caption{Item difficulty. (a) Representation items, one per cell. (b) The same cells grouped
+into strata, one stratum per combination of tissue, cell type and donor, so that each
+stratum is one item answered $k$ times correctly out of its $n$ cells; this removes the
+dependence between cells of the same type from the same donor. (c) Perturbation conditions
+pooled across datasets and (d) the same conditions by dataset; boxes span the interquartile
+range and whiskers the 5th to 95th percentile. The shaded band is the ability range of the
+simple models and the dashed line the best of them. An item is informative when at least one
+model passes it and at least one fails it.}
+\label{fig:difficulty}
+\end{figure}
+
+% ---------------------------------------------------------------------------
+\section{Method: Estimating Difficulty and Ability}
+\label{sec:method}
+
+\Cref{fig:pipeline} summarizes the pipeline. Both components end in the same object, a
+pass/fail matrix with one row per model and one column per item, and the same fit turns
+that matrix into abilities and difficulties.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_pipeline.pdf}
+\caption{From raw data to a difficulty scale. The same pipeline applies to both components:
+items are built from public data, every model answers every item, the answers form a
+pass/fail matrix, and one fit converts the matrix into an ability for every model and a
+difficulty for every item.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Models, items, and ability}
+\label{sec:model}
+
+There are $M$ models, indexed by $j\in\{1,\dots,M\}$; model $j$ has an ability
+$\theta_j\in\mathbb{R}$. Items are drawn from a universe $\mathcal{U}$; item $i$ has a
+difficulty $b_i\in\mathbb{R}$. We use the one-parameter Rasch model: model $j$ passes item
+$i$ with probability
+\begin{equation}
+P(U_{ij}=1)=\sigma(\theta_j-b_i),\qquad \sigma(z)=\frac{1}{1+e^{-z}},
+\label{eq:rasch}
+\end{equation}
+so an item is fully described by its difficulty. The unit of the scale is a logit: one unit
+of extra ability multiplies the odds of passing any item by $e\approx2.7$. The information
+a single item carries about a model's ability is
+\begin{equation}
+I_b(\theta)=\sigma(\theta-b)\bigl(1-\sigma(\theta-b)\bigr)\le\tfrac14,
+\label{eq:info}
+\end{equation}
+which is largest when the difficulty matches the ability and falls off like
+$e^{-|\theta-b|}$ on either side: an item is most telling for models near its own level,
+and nearly useless for models that almost always pass or almost always fail it. Given a
+model's answers to items of known difficulty, its ability is the penalized maximum
+likelihood estimate
+\begin{equation}
+\hat\theta_j=\arg\max_{\theta}\sum_i\Bigl[U_{ij}\log\sigma(\theta-b_i)
++(1-U_{ij})\log\bigl(1-\sigma(\theta-b_i)\bigr)\Bigr]-\frac{\theta^2}{2\tau^2},
+\label{eq:fit}
+\end{equation}
+which has a unique solution. The companion paper \citep{companion} builds on
+\cref{eq:rasch,eq:info,eq:fit} to show how a bank of items should be maintained as models
+improve; here we use them to build the bank.
+
+\subsection{From benchmark outputs to a pass/fail matrix}
+\label{sec:responses}
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+\item \textbf{Build items.} Component A: select the test panel of \Cref{sec:data} and
+record each cell's annotated type. Component B: map every screen to the common schema,
+filter cells, and compute each condition's response as the mean log-normalized expression
+of its cells minus that of its matched control cells.
+\item \textbf{Run every model on every item.} Component A: fit the embedding on the
+training panel, embed both panels, train the fixed classifier on the training embedding,
+and predict the test cells. Component B: for each of five folds, fit the model on the
+training conditions and predict the held-out ones, so that every condition receives
+exactly one out-of-fold prediction per model.
+\item \textbf{Score and binarize.} Component A: $U_{ij}=1$ if the predicted type equals the
+annotated type. Component B: compute the Pearson correlation between the predicted and
+measured response over the 2,000 most variable genes, and set $U_{ij}=1$ if it exceeds the
+mean shift's correlation on the same item. The continuous scores are stored as well.
+\item \textbf{Assemble the matrix.} Rows are models, columns are items, entries are
+$U_{ij}$; a pair that was not run, for example low-rank completion on a single-context
+screen, is left missing and contributes nothing to the likelihood.
+\end{enumerate}
+
+\subsection{Fitting difficulties and abilities}
+\label{sec:fitting}
+
+All abilities and difficulties are estimated at once from the matrix. The objective is
+the log-likelihood of \cref{eq:rasch} summed over observed pairs, with a Gaussian prior
+$\theta_j\sim\mathcal{N}(0,\tau^2)$ on abilities, $\tau=3$, and a weaker one
+$b_i\sim\mathcal{N}(0,\tau_b^2)$ on difficulties, $\tau_b=4$. The prior on difficulties
+does two jobs: it fixes the location of the scale, which the likelihood alone leaves free
+because only differences $\theta_j-b_i$ enter \cref{eq:rasch}, and it keeps items that
+every model passes or every model fails at a finite value instead of sending them to
+$\pm\infty$. Such items are flagged and excluded from the summaries in
+\Cref{sec:data,sec:eval}; they carry no information about the current pool.
+
+We maximize by alternating Newton steps: holding difficulties fixed, every ability is
+updated by one Newton step of its own one-dimensional concave problem; holding abilities
+fixed, every difficulty is updated likewise; the two sweeps repeat until the largest
+change falls below $10^{-6}$, which takes a few hundred sweeps and seconds of compute even
+for 74,000 items. The same code path handles the stratum-level fit for component A, where
+an item is a stratum answered $k$ times correctly out of $n$ cells, by replacing each
+Bernoulli term with a binomial one.
+
+Two checks validate the fit. On synthetic data generated from \cref{eq:rasch} with 80
+models and 2,000 items at 30\% missingness, the recovered abilities correlate 0.998 with
+the truth and the difficulties 0.969. On real data, the floors, which are random
+embeddings, random shifts and predicting no change, must come out at the bottom of the
+scale, and every capacity ladder must come out in order; \Cref{sec:eval} confirms this
+before any other reading of the scale is made.
+
+\paragraph{What the scale does and does not say.}
+Ability is relative to the pool that defined the difficulties: a value of $0.98$ for
+PCA-128D means it passes a typical item of this bank with probability $\sigma(0.98-b)$,
+not that it is good in an absolute sense. Difficulty is likewise relative to the models: an
+item is hard because these methods fail it. Both are comparable across models within a
+component and, with the caveats in \Cref{sec:data}, across datasets within a component;
+they are not comparable between the two components, which are fit separately.
+
+% ---------------------------------------------------------------------------
+\section{Model Evaluation}
+\label{sec:eval}
+
+\paragraph{Why simple models come first.}
+A difficulty scale is only as trustworthy as the models that define it. We calibrate with
+methods that are cheap, transparent, and cannot have seen the test data during
+pretraining. Within each family we vary one capacity setting so that abilities spread out
+in a known order, and we include several families so that items which one family passes
+and another fails become visible. Floors pin the bottom of the scale. Pretrained
+foundation models are placed on the scale afterwards; this is the only order in which
+their abilities can be read separately from their exposure to the test data.
+
+\subsection{The model pool}
+\label{sec:pool}
+
+\Cref{tab:pool} lists every model. All component A models see the same input:
+log-normalized counts on the 2,000 most variable genes of the training panel, standardized
+per gene; each is fit on training cells only and then applied to test cells, so test cells
+never shape an embedding. This rules out UMAP and t-SNE, which have no out-of-sample map.
+Component B models predict a condition's response from two inputs: the responses of the
+training conditions, and a feature vector for the condition. Genetic items are represented
+by a 64-dimensional embedding of the target gene learned from control cells only, with
+genes as rows, cells as columns and principal components across cells; compounds by Morgan
+fingerprints of their chemical structure \citep{morgan} together with the dose and a
+one-hot context indicator.
+
+\begin{table}[t]
+\centering
+\caption{The model pool. Each row is one family; the setting varied within the family is
+given in the last column. For component B, $d$ is the number of principal components of
+the training responses that a model predicts before decoding back to genes, and the kernel
+width is a multiple of the median pairwise distance between training conditions. Learned
+models are listed last; they are placed on the scale the simple models define.}
+\label{tab:pool}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}lXl@{}}
+\toprule
+Model & What it does & Settings \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Component A: embeddings of a cell, followed by the same fixed classifier}} \\
+PCA-$k$D & top-$k$ principal components & $k\in\{4,8,16,32,64,128,256\}$ \\
+Random projection-$k$D & Gaussian random projection to $k$ dimensions & $k\in\{8,32,128\}$, 2 seeds \\
+Nystr\"om-$k$D & RBF kernel features on PCA-50D & $k\in\{64,256\}$, kernel width 0.5 or 2 \\
+NMF-$k$D & non-negative matrix factorization & $k\in\{16,64\}$ \\
+ICA-$k$D & independent components of PCA-$k$D & $k\in\{16,64\}$ \\
+GMM-$k$ memberships & soft cluster memberships from a Gaussian mixture on PCA-50D & $k\in\{10,30,100\}$ \\
+Depth only & two numbers, log total counts and log detected genes; a floor & \\
+Random-32D & i.i.d.\ Gaussian features; a floor & 2 seeds \\
+scVI-$k$D & variational autoencoder for counts \citep{scvi}, with and without tissue as the batch variable & $k\in\{10,30\}$ \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Component B: prediction of a condition's response}} \\
+No change & predicts zero response; a floor & \\
+Random shift & the response of a random training condition; a floor & 2 seeds \\
+Mean shift & the average response of the training conditions in that context; defines the pass rule & \\
+Mean shift + on-target change & mean shift with the target gene forced down for CRISPRi and knockout or up for CRISPRa & \\
+KNN (K=$k$) & average response of the $k$ nearest training conditions in feature space & $k\in\{1,5,20\}$ \\
+Ridge ($d$, $\lambda$) & ridge regression from features to the top-$d$ components of the responses & $d\in\{10,50\}$, $\lambda\in\{1,100\}$ \\
+PCA regression-$k$D & ridge to the top-$k$ components with a fixed penalty; the capacity ladder of this component & $k\in\{2,5,10,20,50,100,200\}$ \\
+Gaussian process (kernel width) & Gaussian-process regression with an RBF kernel on features, to the top-50 components & kernel width 0.5 or 2 \\
+Training-fraction ladder & ridge and KNN trained on a random 30\% or 10\% of the training conditions & 2 fractions \\
+Low-rank completion & soft-impute of the perturbation-by-context response matrix; multi-context screens only & rank $\in\{2,5,10\}$ \\
+scGen & variational autoencoder with latent arithmetic \citep{scgen}; unseen-context setting only & \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Splits.}
+Perturbation models are evaluated out of fold: perturbations are divided into five folds,
+each model is trained on four and predicts the fifth, and every condition therefore
+receives a prediction from a model that never saw its perturbation. Screens with several
+contexts are additionally split over perturbation and context pairs, so that a
+perturbation seen in some contexts must be predicted in a new one. Representation models
+are fit on the training panel and scored on the donor-held-out test panel. All models
+share the same folds, panel, classifier, and metrics.
+
+\paragraph{Fit.}
+Abilities and difficulties are estimated as in \Cref{sec:fitting}. For cells we report a
+cell-level fit and a stratum-level binomial fit; the two order the models identically.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_abilities.pdf}
+\caption{Abilities of the model pool. (a) Representation models on the cell-level scale of
+20,026 items. (b) Perturbation models on the pooled scale of all fourteen screens, 74,197
+conditions. Colour marks the family; the two seeds of a stochastic model are averaged. The
+mean shift defines the pass rule and therefore has no ability of its own. The full tables,
+with plain accuracy alongside ability for component A, are in \Cref{app:tables}.}
+\label{fig:abilities}
+\end{figure}
+
+\paragraph{The ladders behave as ladders.}
+Ability rises with capacity in every representation family that has a capacity setting;
+see \Cref{fig:abilities}a. PCA climbs from $-2.14$ at PCA-4D to $0.98$ at PCA-128D and
+flattens at PCA-256D. Random projections sit 0.6 to 1.4 below PCA at the same dimension,
+which separates the value of ordering directions by variance from the value of a linear
+subspace as such. In component B the training-fraction ladder is ordered correctly on the
+pooled scale and in every scPerturb screen, and the floors land where floors should:
+random shifts, no change, and random embeddings are the bottom of their panels. These
+checks are what justify reading the rest of the scale.
+
+\paragraph{Ability and accuracy do not tell the same story.}
+Ability is estimated from which items a model passes, not how many, and the difference
+shows in \Cref{app:tables}. Between PCA-32D and PCA-128D plain accuracy rises by four
+points, from 0.61 to 0.65, while ability rises by 0.43, almost half the spread of the
+whole ladder: the extra components buy passes on hard items, which the average cannot
+see. Conversely, tissue-corrected scVI-30D and NMF-64D have the same accuracy of 0.60 and
+nearly the same ability, 0.47 and 0.49, so the two scores agree whenever the items passed
+are of similar difficulty; they diverge exactly where the benchmark is informative.
+
+\paragraph{The mean shift is the model to beat.}
+Ranked by raw Pearson correlation, the best model in eight of the fourteen screens,
+Tahoe-100M among them, is the mean shift itself or its on-target variant, which differs
+from it at a single gene; this reproduces the finding of Systema \citep{systema} and
+PerturBench \citep{perturbench} under a different protocol. The item view adds the
+distribution behind that average: 18,310 conditions, or 25\%, are passed by no model, and
+in the Tian 2021 neuronal screen that fraction reaches two thirds. On the pooled scale the
+feature-based families cluster within half a unit of one another: PCA regression at about
+$-1.0$ for every $k$ from 2 to 200, KNN with $K=5$ and the Gaussian processes at $-1.1$ to
+$-1.2$, and ridge at $-1.3$ to $-1.4$. That the PCA-regression ladder is flat in $k$ says
+that, for unseen perturbations, the limiting factor is the features and not the capacity
+of the regression. The one clear exception is Norman, where KNN and the Gaussian process
+lead by a wide margin because every double perturbation has both of its singles in
+training.
+
+\paragraph{A learned embedding does not beat the PCA ladder on held-out donors.}
+scVI-30D without batch correction has ability 0.74, between PCA-64D and PCA-32D and a
+quarter of a unit below PCA-128D. Correcting for tissue as a batch variable lowers ability
+to 0.47, because tissue carries type information that the classifier would otherwise use.
+These placements agree with reports that parameter-free pipelines match learned
+representations on annotation \citep{kedzierska2025,souza2026}.
+
+\paragraph{A learned perturbation model wins only when a drug has many contexts.}
+scGen's result depends on how many contexts a perturbation has been observed in; see
+\Cref{tab:scgen}. On McFarland, where 16 compounds are profiled across 196 cell lines,
+scGen passes 81\% of items, has ability $+2.75$, and is the only model in the bank that
+beats the mean shift on most items of a screen. On sciPlex3 and Frangieh, with three
+contexts each, it falls below the mean shift on raw correlation and below the low-rank
+completion on the scale. Transfer through a learned latent space thus pays off in
+proportion to the contexts available. Tahoe-100M, with fifty cell lines, confirms the
+pattern without any learned model: in its unseen-context split, low-rank completion and
+KNN reach raw correlations of 0.75 and 0.73 against 0.42 for the mean shift, which falls
+to 18th of 21 models, and only 169 of 53,972 conditions are passed by nobody. The same
+simple models that cannot beat the mean shift on an unseen drug beat it easily on a seen
+drug in a new line, once enough lines are available. Because scGen cannot predict a perturbation it has never seen, it is placed per
+screen in the unseen-context setting rather than on the pooled scale.
+
+\begin{table}[t]
+\centering
+\caption{scGen in the unseen-context setting. Raw is the mean Pearson correlation on the
+2,000 most variable genes, next to the mean shift's value. Rank is among the models that
+ran on that screen.}
+\label{tab:scgen}
+\small
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Screen & Contexts & Raw scGen & Raw mean shift & Ability and rank & Best model \\
+\midrule
+McFarland 2020 & 196 & 0.53 & 0.32 & $+2.75$, 1 of 9 & scGen \\
+sciPlex3, Srivatsan 2020 & 3 & 0.13 & 0.26 & $-1.76$, 4 of 9 & low-rank, rank 10 \\
+Frangieh 2021 & 3 & 0.18 & 0.32 & $-2.77$, 10 of 22 & low-rank, rank 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{How many items would today's best models retire?}
+A benchmark stays informative only while its items sit near the abilities being measured;
+an item that a model passes with high probability has little left to say about that
+model. We therefore ask how much of the bank a stronger model would retire, as a function
+of the pass-probability threshold that defines retirement; see \Cref{fig:retire}. At a
+threshold of 0.95, a model exactly as able as the best current one already retires 26\% of
+the informative cell items but only 3\% of the conditions. In a pilot of the same
+annotation protocol on three smaller atlases, the strongest pretrained foundation model sat
+about one unit above PCA. A model one unit above the best current one would retire 51\% of
+the cell items and 10\% of the conditions at the 0.95 threshold, and 76\% and 45\% at a
+looser threshold of 0.75; two units above retires 66\% and 28\% at 0.95. Perturbation items
+degrade far more slowly, because their difficulties are spread over a wider range relative
+to the pool and because the 18,310 conditions that no model passes only come into play as
+models improve. The practical content is a writing schedule. The maintenance analysis in
+our companion paper \citep{companion} shows that a benchmark keeps its resolution only when
+new hard items arrive at least as fast as the field moves; at the rates above, a bank that
+loses half its annotation items per unit of progress must add items above the current
+ceiling at the same pace. The yearly Virtual Cell Challenge releases \citep{vcc2026} of
+300 to 10,000 held-out perturbations per cell line and the announced Tahoe follow-on atlas
+are the supply we plan the next rounds around.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_retire.pdf}
+\caption{Fraction of informative items that a hypothetical model retires, as a function of
+the pass-probability threshold that defines retirement, for a model as able as the best
+current one and for models one and two units above it. (a) Representation items.
+(b) Perturbation items. Items passed by none or all current models are excluded from the
+denominator.}
+\label{fig:retire}
+\end{figure}
+
+\paragraph{Limits of this release.}
+The pool has about 30 models per component; the design target of 50 to 100 would halve the
+uncertainty of every difficulty. The pooled perturbation scale carries a dataset factor of
+3.2 that linking through shared perturbations must remove before cross-dataset
+difficulties are compared. The compounds in sciPlex3 and McFarland lack chemical structures
+in their source files, so those screens run only in the unseen-context setting. No
+pretrained foundation model has yet been placed on the perturbation scale; that step, with
+a record of which items each model has seen in pretraining, is what the scale was built
+for.
+
+% ---------------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have built a benchmark for virtual cell models in which every test case has a measured
+difficulty, assembled from about 100 million cells across Tabula Sapiens v2 and fourteen
+perturbation screens, and calibrated it with a pool of simple models. The scale is wide,
+its ladders are ordered, and its difficulties track the covariates one would expect.
+Placed on it, the learned models we tested give no strong evidence that current virtual
+cell models outperform traditional, simple baselines: an scVI embedding lands below PCA on
+held-out donors, and scGen beats the mean shift only when a drug has been observed in many
+cell lines, while a quarter of all perturbation conditions are passed by no model at all.
+Because the scale is anchored to methods that cannot have memorized the test data, it is
+ready to receive pretrained foundation models next, and because it records which items
+each model passes, it tells us how fast new hard items must be written to keep the
+benchmark alive.
+
+\bibliographystyle{acl_natbib}
+\bibliography{benchmark}
+
+\beginappendix
+\section{Ability tables}
+\label{app:tables}
+
+\begin{table}[h]
+\centering
+\caption{Representation models on the cell-level scale of 20,026 items: ability and plain
+accuracy, which is the fraction of test cells labelled correctly.}
+\small
+\input{bench/tab_abilA.tex}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Perturbation models on the pooled scale of all fourteen screens, 74,197 conditions.
+Low-rank completion ran only on multi-context screens and, in the unseen-perturbation
+setting, can only fall back to the context mean for a perturbation it has never seen.}
+\small
+\input{bench/tab_abilB.tex}
+\end{table}
+
+\end{document}

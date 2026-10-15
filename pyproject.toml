@@ -1,0 +1,15 @@
+[project]
+name = "vcb"
+version = "0.0.1"
+description = "Living IRT benchmark for virtual cell models: item bank, simple-model pools, Rasch fits"
+requires-python = ">=3.12"
+dependencies = [
+  "numpy", "scipy", "pandas", "pyarrow", "scikit-learn", "anndata", "scanpy", "h5py", "pyyaml",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

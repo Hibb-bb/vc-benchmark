@@ -1,0 +1,33 @@
+\begin{tabular}{@{}lr@{}}
+\toprule
+Model & Ability \\
+\midrule
+PCA regression-50D & -0.99 \\
+PCA regression-2D & -1.01 \\
+PCA regression-20D & -1.02 \\
+PCA regression-100D & -1.02 \\
+PCA regression-200D & -1.04 \\
+PCA regression-10D & -1.04 \\
+PCA regression-5D & -1.05 \\
+KNN (K=5) & -1.13 \\
+Gaussian process (kernel width = 0.5) & -1.15 \\
+Gaussian process (kernel width = 2) & -1.17 \\
+Ridge (d=50, $\lambda$=100) & -1.31 \\
+KNN (K=20) & -1.33 \\
+Ridge (d=10, $\lambda$=100) & -1.37 \\
+KNN (K=1) & -1.38 \\
+Ridge (d=50, $\lambda$=1) & -1.39 \\
+Ridge (d=50, $\lambda$=100), 30\% train & -1.40 \\
+Ridge (d=10, $\lambda$=1) & -1.42 \\
+Ridge (d=50, $\lambda$=100), 10\% train & -1.57 \\
+KNN (K=20), 30\% train & -1.65 \\
+KNN (K=20), 10\% train & -1.82 \\
+Random shift (seed 0) & -2.77 \\
+Random shift (seed 1) & -2.77 \\
+Low-rank completion, rank 10 & -2.91 \\
+Low-rank completion, rank 5 & -2.91 \\
+Low-rank completion, rank 2 & -2.91 \\
+No change & -3.76 \\
+Mean shift + on-target change & -5.03 \\
+\bottomrule
+\end{tabular}

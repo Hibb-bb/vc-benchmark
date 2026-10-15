@@ -1,0 +1,205 @@
+groups:
+  tabula_sapiens_v2:
+    component: A
+    source: figshare 27921984, CC BY 4.0
+    files:
+    - name: Ear_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850693
+      size: 199624331
+      md5: e2b84ad5b2ff8ab1711e59c171ae4eaf
+    - name: Testis_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851422
+      size: 443842850
+      md5: 71d36d3b676adb0f4e1ddac8f9922cff
+    - name: Kidney_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850951
+      size: 524034766
+      md5: 191c154a15618fc947bc5781b1228fb3
+    - name: Skin_TSP1_30_version2d_10X_smartseq_scvi_Nov122024_updated.h5ad
+      url: https://ndownloader.figshare.com/files/50851344
+      size: 615423037
+      md5: fa9d2c42b77df3fdf76f0d378db5c969
+    - name: Pancreas_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851329
+      size: 865149287
+      md5: 872196db64207435810028282d215dc8
+    - name: Liver_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851056
+      size: 986694079
+      md5: e2a2f54237b8a3df8b17d0d0c5dd1be1
+    - name: Uterus_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851470
+      size: 1059376449
+      md5: 78826f6f50b64b5b690966e5b275978a
+    - name: Prostate_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851335
+      size: 1065240381
+      md5: c5b2c03541312642d0a183015b4c3430
+    - name: Trachea_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851473
+      size: 1140842603
+      md5: d77cdd1e0574e586710ca895dbe3d523
+    - name: Large_Intestine_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851005
+      size: 1220944648
+      md5: bca273ee5e1f0e53fe9053abce56145f
+    - name: Bone_Marrow_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850783
+      size: 1222840322
+      md5: bc9fe98fcdf2cc18f031cc58074f3270
+    - name: Stomach_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851425
+      size: 1278543079
+      md5: f305f025b821dffcc0afcbfa8c2766e2
+    - name: Heart_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850948
+      size: 1375752255
+      md5: 3ccece546952c88da92442a4e0d16ff3
+    - name: Mammary_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851290
+      size: 1581641818
+      md5: d42ad69f09c8363e1fd1df1a13a479a0
+    - name: Thymus_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851428
+      size: 2062511061
+      md5: b9737d1be10d9f9bc827ee6c2372c7e5
+    - name: Salivary_Gland_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851341
+      size: 2135187171
+      md5: 5857613f78fedbb4a6d2504aa33fad37
+    - name: Small_Intestine_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851431
+      size: 2140573487
+      md5: 461fb67d76a32840f44fb7d2177e24ae
+    - name: Ovary_TSP1_30_version2d_10X_smartseq_scvi_Nov262024.h5ad
+      url: https://ndownloader.figshare.com/files/50851338
+      size: 2173805633
+      md5: cc07c0b64f1d6a63d1503313228b6e1d
+    - name: Tongue_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851434
+      size: 2362678253
+      md5: 8f941c3ef0675073f7424e92744648b6
+    - name: Muscle_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851320
+      size: 2441016511
+      md5: 47bfff1364fca539ef86f68d52cb0558
+    - name: Vasculature_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851476
+      size: 2584536594
+      md5: b0f3c00bf6b73f72824b91a219b93cb8
+    - name: Blood_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850792
+      size: 3037527756
+      md5: ee5e2856c5e0173d280528cd0fa67cf7
+    - name: Spleen_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851440
+      size: 3172261758
+      md5: 08598787f59fdbb544b7f893eaecf6d7
+    - name: Lung_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851323
+      size: 3790956913
+      md5: 947f211533a9463e132ac8769c19bd87
+    - name: Bladder_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850798
+      size: 3932499489
+      md5: 334e891b8f26f614d5e17f86616b3a52
+    - name: Eye_TSP1_30_version2d_10X_smartseq_scvi_Nov122024_updated.h5ad
+      url: https://ndownloader.figshare.com/files/50850831
+      size: 4374025850
+      md5: 2564899788688da63d8a4e560cf64df1
+    - name: Fat_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50850936
+      size: 4441748497
+      md5: 8269b64d360e060b36941a1261fcea0c
+    - name: Lymph_Node_TSP1_30_version2d_10X_smartseq_scvi_Nov122024.h5ad
+      url: https://ndownloader.figshare.com/files/50851326
+      size: 4907454436
+      md5: ca6ef57292fc09c2d901ae6ac494699d
+  scperturb:
+    component: B
+    source: scPerturb v1.4, Zenodo 13350497 (Peidli et al. 2024)
+    files:
+    - name: AdamsonWeissman2016_GSM2406681_10X010.h5ad
+      url: https://zenodo.org/api/records/13350497/files/AdamsonWeissman2016_GSM2406681_10X010.h5ad/content
+      size: 471286951
+      md5: 2fa44ea61a8dd35742af618638ec65fc
+    - name: NormanWeissman2019_filtered.h5ad
+      url: https://zenodo.org/api/records/13350497/files/NormanWeissman2019_filtered.h5ad/content
+      size: 698680199
+      md5: c870e6967d91c017d9da827bab183cd6
+    - name: TianKampmann2019_day7neuron.h5ad
+      url: https://zenodo.org/api/records/13350497/files/TianKampmann2019_day7neuron.h5ad/content
+      size: 268921535
+      md5: 74074e99e8e7c5a6297b6a684b72d754
+    - name: TianKampmann2021_CRISPRi.h5ad
+      url: https://zenodo.org/api/records/13350497/files/TianKampmann2021_CRISPRi.h5ad/content
+      size: 289389479
+      md5: 70d260cf5587fc09d759b9f3e32785c6
+    - name: TianKampmann2019_iPSC.h5ad
+      url: https://zenodo.org/api/records/13350497/files/TianKampmann2019_iPSC.h5ad/content
+      size: 350848489
+      md5: 8279484264b513fd0419dacdc639ecef
+    - name: NadigOConner2024_hepg2.h5ad
+      url: https://zenodo.org/api/records/13350497/files/NadigOConner2024_hepg2.h5ad/content
+      size: 850590740
+      md5: af2be47f7477cf32fa6e4bec1c6a4868
+    - name: ReplogleWeissman2022_rpe1.h5ad
+      url: https://zenodo.org/api/records/13350497/files/ReplogleWeissman2022_rpe1.h5ad/content
+      size: 1236886900
+      md5: cc7f1ec50aeb3a3e1b4a6cfa713d80fa
+    - name: NadigOConner2024_jurkat.h5ad
+      url: https://zenodo.org/api/records/13350497/files/NadigOConner2024_jurkat.h5ad/content
+      size: 1293665804
+      md5: d8b05d00bfbd686d37ffdd4293bc6c8c
+    - name: FrangiehIzar2021_RNA.h5ad
+      url: https://zenodo.org/api/records/13350497/files/FrangiehIzar2021_RNA.h5ad/content
+      size: 1458928348
+      md5: dc438f53c476a3dd562898654d48ed15
+    - name: McFarlandTsherniak2020.h5ad
+      url: https://zenodo.org/api/records/13350497/files/McFarlandTsherniak2020.h5ad/content
+      size: 1459410830
+      md5: 03204a96b7b5dd96fc3cf33418222cd9
+    - name: ReplogleWeissman2022_K562_essential.h5ad
+      url: https://zenodo.org/api/records/13350497/files/ReplogleWeissman2022_K562_essential.h5ad/content
+      size: 1546729675
+      md5: d8cba17576d1a8afc0f7d71b79cad0f7
+    - name: SrivatsanTrapnell2020_sciplex3.h5ad
+      url: https://zenodo.org/api/records/13350497/files/SrivatsanTrapnell2020_sciplex3.h5ad/content
+      size: 2526631614
+      md5: c9e70629505d98c7ca1a837f62b14e89
+    - name: ReplogleWeissman2022_K562_gwps.h5ad
+      url: https://zenodo.org/api/records/13350497/files/ReplogleWeissman2022_K562_gwps.h5ad/content
+      size: 8805466154
+      md5: 13db594f8f1d2ccb88fec44a13e414dc
+  cellxgene_repr:
+    component: A
+    source: CELLxGENE Discover, CC BY 4.0 (no MD5 published; size-checked)
+    files:
+    - name: immune_atlas_global.h5ad
+      url: https://datasets.cellxgene.cziscience.com/09a381ce-feaf-48c8-a928-58f6768f4265.h5ad
+      size: 3036698635
+      md5: null
+      cells: 329762
+      title: Global
+      collection: 62ef75e4-cbea-454e-a0ce-998ec40223d3
+    - name: hao_pbmc_multimodal.h5ad
+      url: https://datasets.cellxgene.cziscience.com/4078abd1-063d-4b35-aa04-324dddf8244e.h5ad
+      size: 2606736974
+      md5: null
+      cells: 161764
+      title: nygc multimodal pbmc
+      collection: b0cf0afa-ec40-4d65-b570-ed4ceacc6813
+    - name: heart_adult_all.h5ad
+      url: https://datasets.cellxgene.cziscience.com/49312f8c-a75a-4672-9c8a-9078acd35bdb.h5ad
+      size: 2953098273
+      md5: null
+      cells: 486134
+      title: "All \u2014 Cells of the adult human heart"
+      collection: b52eb423-5d0d-4645-b217-e1c6d38b2e72
+    - name: hlca_core.h5ad
+      url: https://datasets.cellxgene.cziscience.com/688185ad-11c2-4172-a53a-f4f1f4076860.h5ad
+      size: 5873612847
+      md5: null
+      cells: 584944
+      title: An integrated cell atlas of the human lung in health and disease (core)
+      collection: 6f6d381a-7701-4781-935c-db10d30de293
