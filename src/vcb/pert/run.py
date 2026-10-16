@@ -62,8 +62,12 @@ def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: 
         featured = True
         print(f"  Morgan fingerprint available for {found.mean():.1%} of items", flush=True)
     else:
+        # one-hot perturbation + context + log dose: informative across contexts (a perturbation seen in
+        # other contexts), uninformative for an unseen perturbation (its column is all zeros in training)
         F = categorical_item_features(meta)
         meta["target_in_var"] = False
+        featured = multi_ctx
+        print(f"  categorical features ({F.shape[1]} columns); featured={featured}", flush=True)
 
     # Folds (shared with external respondents via folds.py)
     gid = fold_groups(meta, scheme, seed)

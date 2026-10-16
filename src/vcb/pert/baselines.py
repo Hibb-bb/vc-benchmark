@@ -251,17 +251,23 @@ def pca_ladder(ks=(2, 5, 10, 20, 50, 100, 200)) -> list[Baseline]:
     return [PCARegression(k) for k in ks]
 
 
+def featured_pool() -> list[Baseline]:
+    """Respondents that need item features (gene embedding, fingerprint, or one-hot perturbation/context)."""
+    pool: list[Baseline] = [KNNShift(k) for k in (1, 5, 20)]
+    pool += [RidgePCA(d, lam) for d in (10, 50) for lam in (1.0, 100.0)]
+    pool += [GPPCA(50, m) for m in (0.5, 2.0)]
+    pool += [SubsampledTrain(RidgePCA(50, 100.0), f) for f in (0.3, 0.1)]
+    pool += [SubsampledTrain(KNNShift(20), f) for f in (0.3, 0.1)]
+    return pool
+
+
 def default_pool(var_names, ctrl_mean_by_ctx, genetic: bool, multi_context: bool, seeds=(0, 1), featured: bool | None = None) -> list[Baseline]:
     """featured: items carry informative features (gene embedding or fingerprint); defaults to `genetic`."""
     featured = genetic if featured is None else featured
     pool: list[Baseline] = [ControlMean(), MeanShift(), TargetKnockdown(var_names, ctrl_mean_by_ctx)]
     pool += [RandomShift(seed=s) for s in seeds]
     if featured:
-        pool += [KNNShift(k) for k in (1, 5, 20)]
-        pool += [RidgePCA(d, lam) for d in (10, 50) for lam in (1.0, 100.0)]
-        pool += [GPPCA(50, m) for m in (0.5, 2.0)]
-        pool += [SubsampledTrain(RidgePCA(50, 100.0), f) for f in (0.3, 0.1)]
-        pool += [SubsampledTrain(KNNShift(20), f) for f in (0.3, 0.1)]
+        pool += featured_pool()
     if multi_context:
         pool += [LowRank(r) for r in (2, 5, 10)]
     return pool
