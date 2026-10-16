@@ -366,6 +366,49 @@ Observations.
 - The TS2-only compartment block in `scripts/summarize.py` is now guarded; it had failed on
   every non-TS2 run (the Rasch fits themselves were fine).
 
+### 7.6 Component B on Parse 10M PBMC cytokines (runs of 2026-10-15/16)
+
+Items: `parse_pbmc_cytokines`, built from the 9.7M-cell Parse h5ad with `--pert-col cytokine
+--control-label PBS --context-col "donor|cell_type"` (30 cells kept per condition, >= 50 cells
+required): 14,182 conditions, of which 13,967 are perturbation items over 169 contexts (donor x
+cell type pairs that have PBS controls) and 90 cytokines. Build time 11 h (CSR read of 44 GB with
+int64 indices), 36 GB peak. One cell type, "B Intermediate/Memory", contains "/", which h5py
+treats as a group separator inside `uns["control_stats"]`; contexts are now sanitized in the
+harmonizer and the built files were patched in place.
+
+Cytokines have neither a target gene nor a SMILES, so the first run had only the seven
+feature-free respondents. One-hot perturbation + context + log-dose features now count as item
+features whenever a set has several contexts (`featured = multi_ctx` in `pert/run.py`), which
+adds the KNN / ridge / GP / training-fraction / PCA-regression models. With one-hot features
+these models are additive-effects models: PCA-regression on one-hot = perturbation main effect +
+context main effect in PCA space; KNN = average shift of the nearest training items, which for an
+unseen context is the same cytokine elsewhere and for an unseen cytokine is the same context.
+
+| scheme | items | informative | passed by none | top (raw Pearson delta; mean shift 0.36) | ability |
+|---|---|---|---|---|---|
+| unseen context | 13,967 | 13,248 | 719 (5 %) | pcareg_k200 0.497, pcareg_k100 0.459, lowrank_r10 0.446, ridge_d50 0.427 | 3.74, 1.88, 0.67, 0.63 |
+| unseen cytokine | 13,967 | 10,600 | 3,367 (24 %) | knn_k20 0.349, pcareg_k200 0.325 (all below mean shift 0.363) | -0.21, -2.44 |
+
+Observations.
+
+- Unseen context: an additive model (cytokine effect + context effect, 200 PCs) beats the mean
+  shift on 87 % of items and beats low-rank tensor completion (59 %). The response to a cytokine
+  transfers across donors and cell types mostly as a main effect; the interaction that low-rank
+  models is second order here. This is the same conclusion as CPA-style additive latents and
+  argues for an additive baseline in every multi-context screen (Tahoe runs it as pcareg).
+- Unseen cytokine: no model beats the mean shift on average. knn_k20 (context-mean shift) passes
+  47 % of items, everything else under 17 %. Without a descriptor of the cytokine the split is
+  unlearnable, so Parse is the hardest set on the pooled perturbation scale (mean difficulty
+  +0.27 against -0.98 for Tahoe). A ligand-gene mapping (IL-2 -> IL2, IFN-gamma -> IFNG,
+  4-1BBL -> TNFSF9, ...) would let the control-coexpression gene embedding serve as a cytokine
+  descriptor; not done (needs a hand-checked table for 90 names).
+- Pooled scale after adding Parse (15 screens, 88,164 items, 27 respondents, 66,431
+  informative): knn_k20 -1.10, knn_k5 -1.19, pcareg_k200 -1.34, GP -1.38/-1.42, ridge -1.6 to
+  -1.7, random shift -2.93, low-rank -2.97, control mean -3.88, target_kd -5.27. The 10,600
+  informative unseen-cytokine items, which only knn_k20 passes often, moved it to the top; the
+  PCA-regression ladder is no longer flat in k (k200 -1.34 ... k5 -1.73) because the one-hot
+  additive model needs many components.
+
 ### 7.4 Compute actually used
 
 Downloads 2.5 h wall (Zenodo throttles to ~1 MB/s per connection; two parallel jobs).

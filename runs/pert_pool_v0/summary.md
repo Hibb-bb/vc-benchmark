@@ -648,111 +648,151 @@
 
 ## parse_pbmc_cytokines.context
 
-- items: 13967; informative (non-degenerate): 8685; nobody passes: 5282; everybody passes: 0
-- difficulty percentiles 5/25/50/75/95: [-5.43, -2.65, -1.08, 0.44, 0.44]; median SE 1.30
-- histogram (bin lower edge: count): -6: 287, -5: 473, -4: 0, -3: 3204, -2: 1735, -1: 0, +0: 2643, +1: 0, +2: 0, +3: 0, +4: 0, +5: 0
+- items: 13967; informative (non-degenerate): 13248; nobody passes: 719; everybody passes: 0
+- difficulty percentiles 5/25/50/75/95: [-3.55, -2.06, -0.54, 2.06, 3.49]; median SE 0.58
+- histogram (bin lower edge: count): -6: 100, -5: 457, -4: 937, -3: 2382, -2: 2241, -1: 1427, +0: 1266, +1: 885, +2: 2143, +3: 1352, +4: 0, +5: 0
 
 ### Abilities
 
 | respondent | ability | se | p_correct | outfit |
 |---|---|---|---|---|
-| lowrank_r10 | 1.04 | 0.03 | 0.588 | 0.50 |
-| lowrank_r5 | -0.64 | 0.03 | 0.414 | 0.41 |
-| lowrank_r2 | -1.58 | 0.03 | 0.321 | 0.64 |
-| random_shift_s1 | -4.90 | 0.04 | 0.072 | 0.50 |
-| random_shift_s0 | -4.93 | 0.04 | 0.070 | 0.57 |
-| control_mean | -5.69 | 0.05 | 0.047 | 0.16 |
-| target_kd | -12.82 | 0.81 | 0.000 | 0.00 |
+| pcareg_k200 | 3.74 | 0.03 | 0.871 | 0.60 |
+| pcareg_k100 | 1.88 | 0.03 | 0.711 | 0.46 |
+| lowrank_r10 | 0.67 | 0.03 | 0.588 | 0.88 |
+| ridge_d50_lam100 | 0.63 | 0.03 | 0.585 | 0.26 |
+| pcareg_k50 | 0.63 | 0.03 | 0.584 | 0.26 |
+| ridge_d50_lam1 | 0.63 | 0.03 | 0.584 | 0.26 |
+| ridge_d50_lam100_tf0.3 | 0.23 | 0.03 | 0.542 | 0.37 |
+| gp_d50_ls2 | 0.18 | 0.03 | 0.537 | 0.41 |
+| gp_d50_ls0.5 | 0.14 | 0.03 | 0.532 | 0.43 |
+| knn_k20_tf0.1 | 0.11 | 0.03 | 0.529 | 1.28 |
+| pcareg_k20 | -0.26 | 0.03 | 0.488 | 0.31 |
+| ridge_d50_lam100_tf0.1 | -0.53 | 0.02 | 0.457 | 0.69 |
+| ridge_d10_lam100 | -0.73 | 0.02 | 0.434 | 0.30 |
+| pcareg_k10 | -0.73 | 0.02 | 0.434 | 0.30 |
+| ridge_d10_lam1 | -0.73 | 0.02 | 0.434 | 0.30 |
+| lowrank_r5 | -0.90 | 0.02 | 0.414 | 1.15 |
+| knn_k20_tf0.3 | -1.20 | 0.02 | 0.378 | 3.92 |
+| knn_k20 | -1.31 | 0.02 | 0.365 | 4.91 |
+| pcareg_k5 | -1.64 | 0.02 | 0.326 | 0.40 |
+| lowrank_r2 | -1.68 | 0.02 | 0.321 | 1.31 |
+| pcareg_k2 | -2.59 | 0.03 | 0.217 | 0.50 |
+| knn_k5 | -2.65 | 0.03 | 0.211 | 3.90 |
+| knn_k1 | -3.52 | 0.03 | 0.130 | 2.43 |
+| random_shift_s1 | -4.43 | 0.04 | 0.072 | 1.18 |
+| random_shift_s0 | -4.46 | 0.04 | 0.070 | 1.38 |
+| control_mean | -5.03 | 0.05 | 0.047 | 0.68 |
+| target_kd | -11.80 | 0.84 | 0.000 | 0.00 |
 
 ### Difficulty vs covariates (prediction: difficulty falls with effect size)
 
 | covariate | Spearman rho | p | n |
 |---|---|---|---|
-| delta_l2 | -0.236 | 4.0e-110 | 8685 |
-| log_n_cells | -0.121 | 1.2e-29 | 8685 |
+| delta_l2 | -0.007 | 4.0e-01 | 13248 |
+| log_n_cells | -0.399 | 0.0e+00 | 13248 |
 
 ## parse_pbmc_cytokines.perturbation
 
-- items: 13967; informative (non-degenerate): 2525; nobody passes: 11442; everybody passes: 0
-- difficulty percentiles 5/25/50/75/95: [-3.92, -3.92, -3.92, -3.22, -2.27]; median SE 0.81
-- histogram (bin lower edge: count): -6: 2, -5: 35, -4: 1881, -3: 599, -2: 0, -1: 0, +0: 0, +1: 0, +2: 0, +3: 0, +4: 0, +5: 0
+- items: 13967; informative (non-degenerate): 10600; nobody passes: 3367; everybody passes: 0
+- difficulty percentiles 5/25/50/75/95: [-3.24, -1.55, -0.3, 0.49, 0.49]; median SE 0.79
+- histogram (bin lower edge: count): -6: 9, -5: 110, -4: 717, -3: 1165, -2: 1741, -1: 3439, +0: 3419, +1: 0, +2: 0, +3: 0, +4: 0, +5: 0
 
 ### Abilities
 
 | respondent | ability | se | p_correct | outfit |
 |---|---|---|---|---|
-| lowrank_r10 | -3.83 | 0.04 | 0.085 | 0.14 |
-| lowrank_r2 | -3.83 | 0.04 | 0.085 | 0.14 |
-| lowrank_r5 | -3.83 | 0.04 | 0.085 | 0.14 |
-| random_shift_s1 | -4.16 | 0.04 | 0.070 | 0.30 |
-| random_shift_s0 | -4.17 | 0.04 | 0.069 | 0.29 |
-| control_mean | -4.72 | 0.05 | 0.048 | 0.20 |
-| target_kd | -11.37 | 0.85 | 0.000 | 0.00 |
+| knn_k20 | -0.21 | 0.02 | 0.466 | 2.56 |
+| knn_k20_tf0.3 | -1.55 | 0.02 | 0.267 | 1.14 |
+| knn_k5 | -1.61 | 0.02 | 0.259 | 1.17 |
+| pcareg_k200 | -2.44 | 0.03 | 0.165 | 1.20 |
+| knn_k1 | -2.52 | 0.03 | 0.158 | 0.90 |
+| gp_d50_ls0.5 | -2.89 | 0.03 | 0.126 | 0.49 |
+| ridge_d50_lam100_tf0.1 | -2.95 | 0.03 | 0.121 | 0.62 |
+| pcareg_k100 | -3.13 | 0.03 | 0.108 | 0.58 |
+| gp_d50_ls2 | -3.13 | 0.03 | 0.107 | 0.43 |
+| ridge_d50_lam100_tf0.3 | -3.15 | 0.03 | 0.106 | 0.40 |
+| knn_k20_tf0.1 | -3.19 | 0.03 | 0.103 | 0.77 |
+| pcareg_k50 | -3.47 | 0.03 | 0.085 | 0.20 |
+| lowrank_r5 | -3.48 | 0.03 | 0.085 | 0.19 |
+| lowrank_r10 | -3.48 | 0.03 | 0.085 | 0.19 |
+| lowrank_r2 | -3.48 | 0.03 | 0.085 | 0.19 |
+| ridge_d50_lam1 | -3.48 | 0.03 | 0.085 | 0.20 |
+| ridge_d50_lam100 | -3.49 | 0.03 | 0.084 | 0.19 |
+| random_shift_s1 | -3.75 | 0.04 | 0.070 | 0.74 |
+| random_shift_s0 | -3.76 | 0.04 | 0.069 | 0.73 |
+| pcareg_k20 | -3.76 | 0.04 | 0.069 | 0.29 |
+| ridge_d10_lam1 | -4.01 | 0.04 | 0.057 | 0.24 |
+| pcareg_k10 | -4.02 | 0.04 | 0.057 | 0.24 |
+| ridge_d10_lam100 | -4.02 | 0.04 | 0.057 | 0.23 |
+| pcareg_k5 | -4.12 | 0.04 | 0.053 | 0.41 |
+| control_mean | -4.24 | 0.04 | 0.048 | 0.53 |
+| pcareg_k2 | -4.26 | 0.04 | 0.047 | 0.49 |
+| target_kd | -10.85 | 0.87 | 0.000 | 0.00 |
 
 ### Difficulty vs covariates (prediction: difficulty falls with effect size)
 
 | covariate | Spearman rho | p | n |
 |---|---|---|---|
-| delta_l2 | -0.526 | 9.6e-180 | 2525 |
-| log_n_cells | 0.110 | 2.7e-08 | 2525 |
+| delta_l2 | -0.303 | 2.0e-224 | 10600 |
+| log_n_cells | -0.209 | 7.0e-105 | 10600 |
 
 ## pooled
 
-- items: 88164; informative (non-degenerate): 58356; nobody passes: 29752; everybody passes: 56
-- difficulty percentiles 5/25/50/75/95: [-3.55, -2.31, -1.1, -0.15, 1.03]; median SE 0.57
-- histogram (bin lower edge: count): -6: 867, -5: 662, -4: 4107, -3: 12708, -2: 12710, -1: 13765, +0: 6608, +1: 6929, +2: 0, +3: 0, +4: 0, +5: 0
+- items: 88164; informative (non-degenerate): 66431; nobody passes: 21677; everybody passes: 56
+- difficulty percentiles 5/25/50/75/95: [-3.41, -2.1, -0.86, 0.28, 1.37]; median SE 0.56
+- histogram (bin lower edge: count): -6: 859, -5: 1120, -4: 4255, -3: 11651, -2: 12680, -1: 16092, +0: 14737, +1: 5037, +2: 0, +3: 0, +4: 0, +5: 0
 
 ### Abilities
 
 | respondent | ability | se | p_correct | outfit |
 |---|---|---|---|---|
-| pcareg_k50 | -1.11 | 0.02 | 0.464 | 0.35 |
-| pcareg_k2 | -1.12 | 0.02 | 0.463 | 1.53 |
-| pcareg_k20 | -1.14 | 0.02 | 0.461 | 0.41 |
-| pcareg_k100 | -1.14 | 0.02 | 0.460 | 0.37 |
-| pcareg_k200 | -1.16 | 0.02 | 0.458 | 0.38 |
-| pcareg_k10 | -1.16 | 0.02 | 0.458 | 0.44 |
-| pcareg_k5 | -1.17 | 0.02 | 0.457 | 0.66 |
-| knn_k5 | -1.25 | 0.01 | 0.355 | 0.85 |
-| gp_d50_ls0.5 | -1.27 | 0.01 | 0.352 | 0.74 |
-| gp_d50_ls2 | -1.29 | 0.01 | 0.349 | 0.67 |
-| ridge_d50_lam100 | -1.43 | 0.01 | 0.330 | 0.38 |
-| knn_k20 | -1.45 | 0.01 | 0.328 | 0.75 |
-| ridge_d10_lam100 | -1.49 | 0.01 | 0.322 | 0.42 |
-| knn_k1 | -1.49 | 0.01 | 0.322 | 0.89 |
-| ridge_d50_lam1 | -1.51 | 0.01 | 0.320 | 0.39 |
-| ridge_d50_lam100_tf0.3 | -1.51 | 0.01 | 0.319 | 0.56 |
-| ridge_d10_lam1 | -1.54 | 0.01 | 0.316 | 0.42 |
-| ridge_d50_lam100_tf0.1 | -1.69 | 0.01 | 0.297 | 0.64 |
-| knn_k20_tf0.3 | -1.76 | 0.01 | 0.288 | 0.68 |
-| knn_k20_tf0.1 | -1.93 | 0.01 | 0.267 | 0.76 |
-| random_shift_s0 | -2.92 | 0.01 | 0.149 | 1.49 |
-| random_shift_s1 | -2.92 | 0.01 | 0.148 | 1.51 |
-| lowrank_r2 | -3.02 | 0.01 | 0.116 | 1.17 |
-| lowrank_r10 | -3.02 | 0.01 | 0.116 | 1.17 |
-| lowrank_r5 | -3.02 | 0.01 | 0.116 | 1.17 |
-| control_mean | -3.87 | 0.01 | 0.081 | 0.84 |
-| target_kd | -5.25 | 0.02 | 0.028 | 5.41 |
+| knn_k20 | -1.10 | 0.01 | 0.351 | 1.16 |
+| knn_k5 | -1.19 | 0.01 | 0.339 | 0.93 |
+| pcareg_k200 | -1.34 | 0.02 | 0.339 | 0.65 |
+| gp_d50_ls0.5 | -1.38 | 0.01 | 0.314 | 0.69 |
+| gp_d50_ls2 | -1.42 | 0.01 | 0.309 | 0.63 |
+| pcareg_k100 | -1.52 | 0.02 | 0.316 | 0.39 |
+| knn_k1 | -1.54 | 0.01 | 0.295 | 0.90 |
+| ridge_d50_lam100 | -1.58 | 0.01 | 0.290 | 0.35 |
+| pcareg_k50 | -1.58 | 0.02 | 0.309 | 0.30 |
+| knn_k20_tf0.3 | -1.62 | 0.01 | 0.284 | 0.88 |
+| ridge_d50_lam100_tf0.3 | -1.63 | 0.01 | 0.284 | 0.53 |
+| ridge_d50_lam1 | -1.65 | 0.01 | 0.281 | 0.36 |
+| pcareg_k20 | -1.66 | 0.02 | 0.301 | 0.35 |
+| ridge_d10_lam100 | -1.67 | 0.01 | 0.279 | 0.39 |
+| ridge_d10_lam1 | -1.71 | 0.01 | 0.274 | 0.39 |
+| pcareg_k10 | -1.71 | 0.02 | 0.294 | 0.36 |
+| pcareg_k2 | -1.72 | 0.02 | 0.293 | 1.11 |
+| pcareg_k5 | -1.73 | 0.02 | 0.292 | 0.52 |
+| ridge_d50_lam100_tf0.1 | -1.76 | 0.01 | 0.268 | 0.63 |
+| knn_k20_tf0.1 | -2.00 | 0.01 | 0.240 | 0.75 |
+| random_shift_s0 | -2.93 | 0.01 | 0.149 | 1.53 |
+| random_shift_s1 | -2.93 | 0.01 | 0.148 | 1.55 |
+| lowrank_r2 | -2.97 | 0.01 | 0.116 | 1.11 |
+| lowrank_r10 | -2.97 | 0.01 | 0.116 | 1.11 |
+| lowrank_r5 | -2.97 | 0.01 | 0.116 | 1.11 |
+| control_mean | -3.88 | 0.01 | 0.081 | 0.92 |
+| target_kd | -5.27 | 0.02 | 0.028 | 4.60 |
 
 ### Mean difficulty by dataset (dataset factor check)
 
 | dataset | n items | mean difficulty | sd |
 |---|---|---|---|
-| AdamsonWeissman2016_GSM2406681_10X010 | 81 | -0.60 | 1.39 |
-| FrangiehIzar2021_RNA | 457 | -0.14 | 1.33 |
-| McFarlandTsherniak2020 | 385 | -1.01 | 1.24 |
-| NadigOConner2024_hepg2 | 954 | -1.23 | 1.78 |
-| NadigOConner2024_jurkat | 1585 | -1.40 | 1.78 |
-| NormanWeissman2019_filtered | 225 | -2.39 | 1.52 |
-| ReplogleWeissman2022_K562_essential | 1653 | -1.41 | 1.80 |
-| ReplogleWeissman2022_K562_gwps | 8273 | -1.58 | 1.95 |
-| ReplogleWeissman2022_rpe1 | 1375 | -1.18 | 1.76 |
-| SrivatsanTrapnell2020_sciplex3 | 2006 | -1.34 | 1.10 |
-| TianKampmann2019_day7neuron | 28 | -0.36 | 1.32 |
-| TianKampmann2019_iPSC | 45 | 0.44 | 1.25 |
-| TianKampmann2021_CRISPRi | 72 | 0.80 | 0.84 |
-| parse_pbmc_cytokines | 2525 | -2.50 | 0.69 |
-| tahoe100m | 38692 | -0.95 | 1.31 |
+| AdamsonWeissman2016_GSM2406681_10X010 | 81 | -0.78 | 1.38 |
+| FrangiehIzar2021_RNA | 457 | -0.31 | 1.31 |
+| McFarlandTsherniak2020 | 385 | -1.30 | 1.17 |
+| NadigOConner2024_hepg2 | 954 | -1.40 | 1.76 |
+| NadigOConner2024_jurkat | 1585 | -1.56 | 1.76 |
+| NormanWeissman2019_filtered | 225 | -2.55 | 1.50 |
+| ReplogleWeissman2022_K562_essential | 1653 | -1.58 | 1.78 |
+| ReplogleWeissman2022_K562_gwps | 8273 | -1.75 | 1.92 |
+| ReplogleWeissman2022_rpe1 | 1375 | -1.35 | 1.74 |
+| SrivatsanTrapnell2020_sciplex3 | 2006 | -1.62 | 1.03 |
+| TianKampmann2019_day7neuron | 28 | -0.54 | 1.31 |
+| TianKampmann2019_iPSC | 45 | 0.25 | 1.24 |
+| TianKampmann2021_CRISPRi | 72 | 0.61 | 0.84 |
+| parse_pbmc_cytokines | 10600 | 0.27 | 1.09 |
+| tahoe100m | 38692 | -0.98 | 1.30 |
 
 ## tahoe100m.context
 
