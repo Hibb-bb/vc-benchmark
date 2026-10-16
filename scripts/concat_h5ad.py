@@ -20,12 +20,14 @@ import time
 from pathlib import Path
 
 import anndata as ad
+import h5py
 import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--glob", required=True)
+ap.add_argument("--glob", default=None)
+ap.add_argument("--files", default=None, help="text file with one h5ad path per line (alternative to --glob)")
 ap.add_argument("--out", required=True)
 ap.add_argument("--sample-key", default="srx_accession")
 ap.add_argument("--meta", default=None, help="sample metadata parquet/csv")
@@ -35,11 +37,12 @@ ap.add_argument("--per-file-cap", type=int, default=5000)
 ap.add_argument("--min-cells", type=int, default=200)
 ap.add_argument("--filter", default=None, help="pandas query on obs applied per file, e.g. \"cell_type.notna()\"")
 ap.add_argument("--layer", default=None, help="use this layer as counts instead of X")
+ap.add_argument("--obs-meta", default=None, help="per-cell parquet with columns cell_barcode, SRX_accession, ... joined onto obs (scBaseCount keeps cell_type there)")
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
 
 rng = np.random.default_rng(a.seed)
-files = sorted(glob.glob(a.glob))
+files = sorted(glob.glob(a.glob)) if a.glob else [l.strip() for l in Path(a.files).read_text().splitlines() if l.strip()]
 print(f"{len(files)} files", flush=True)
 meta = None
 if a.meta:
@@ -48,14 +51,21 @@ if a.meta:
     meta = meta.drop_duplicates(a.meta_key).set_index(a.meta_key)[cols]
     print(f"metadata: {len(meta)} samples, columns {cols}", flush=True)
 
+obs_meta = None
+if a.obs_meta:
+    obs_meta = pd.read_parquet(a.obs_meta)
+    obs_meta = obs_meta.drop_duplicates(["SRX_accession", "cell_barcode"]).set_index(["SRX_accession", "cell_barcode"])
+    print(f"per-cell metadata: {len(obs_meta):,} rows, columns {list(obs_meta.columns)}", flush=True)
 parts, t0 = [], time.time()
 for i, f in enumerate(files):
-    x = ad.read_h5ad(f)
-    if a.layer:
-        x.X = x.layers[a.layer]
-    x.layers.clear(); x.obsm.clear(); x.varm.clear(); x.uns.clear()
+    with h5py.File(f) as h:  # read only what is needed (scBaseCount files carry two extra layers)
+        x = ad.AnnData(X=ad.io.read_elem(h["layers"][a.layer] if a.layer else h["X"]), obs=ad.io.read_elem(h["obs"]), var=ad.io.read_elem(h["var"]))
     if a.sample_key not in x.obs:
         x.obs[a.sample_key] = Path(f).stem
+    if obs_meta is not None:
+        key = pd.MultiIndex.from_arrays([[Path(f).stem] * x.n_obs, x.obs_names.astype(str)])
+        for c in obs_meta.columns:  # overwrite the (possibly empty) h5ad columns with the metadata-table values
+            x.obs[c] = obs_meta[c].reindex(key).values
     if a.filter:
         x = x[x.obs.eval(a.filter).values].copy()
     if x.n_obs < a.min_cells:

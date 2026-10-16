@@ -387,3 +387,110 @@ Pool runs 15 s to 8 min per dataset; the component-A pool 87 min on 16 CPUs (the
   perturbations across K562 sets and across Tian/Nadig contexts are the planned anchors.
 - Contamination register not started (irrelevant for the classical pool, required before
   foundation models are placed on the scale).
+
+### 7.6 Component A on scBaseCount (runs of 2026-10-16, Arc workspace)
+
+Source: scBaseCount release 2026-01-12 (Arc Institute, CC BY 4.0), feature type
+`GeneFull_Ex50pAS`, the complete release downloaded to `/datasets/arc` (61,432 files, 6.45 TB;
+human 35,263 SRX samples / 302 M cells, mouse 21,439 / 164 M, 25 further species). Per-sample
+h5ad: `X` = unique-read counts (CSC float32, integer valued), two multi-mapper layers that are
+not used, `var` indexed by Ensembl id with `gene_symbols`. The `obs.cell_type` column inside the
+h5ad files is empty; the labels come from `metadata/<organism>/obs_metadata.parquet`
+(`cell_type`, `cell_ontology_term_id` per `SRX_accession` + `cell_barcode`) and are joined in
+`scripts/concat_h5ad.py --obs-meta`. Sample metadata is LLM-extracted: tissue was selected by
+`tissue_ontology_term_id` (UBERON), and `perturbation` / `cell_line` by regex on
+"none / not applicable / untreated" variants. Sample filter: 10x 3' or 5' GEX, single-cell prep,
+unperturbed, no cell line, >= 500 labelled cells and >= 3 cell types; samples ranked by
+`single_disease_confidence == high` then labelled-cell count, 60 per single-tissue slice,
+3,000 cells per sample. Panel: label `cell_type`, donor `srx_accession`, context
+`tissue_ontology_term_id`, 40 % of samples (or tissues) held out, TEST_CAP 100, TRAIN_CAP 200,
+MIN_STRATUM 20. Machine: 16-CPU workstation without a scheduler (no GPU at the time; `slurm/local_run.sh`,
+`slurm/scbasecount_local_driver.sh`); 3 to 5 min per single-tissue chain on 8 CPUs, 11 to 17 min
+for the multitissue ones. The `src/vcb/data/` package was re-created in this session
+(`repr_generic.py`; the unanchored `data/` ignore rule had dropped it from the first commit) and
+`GMMEmb` gained a regularised refit for the case where a component collapses (human multitissue).
+
+| panel | held out | train cells | test items | types | top model (ability) | PCA-128D | nobody passes |
+|---|---|---|---|---|---|---|---|
+| human lung | samples | 46,086 | 20,521 | 25 | PCA-64D (1.56) | 1.50 | 5.8 % |
+| human skin | samples | 44,290 | 20,009 | 20 | Nystroem k256 (0.47) | 0.37 | 12.7 % |
+| human bone marrow | samples | 35,748 | 15,525 | 19 | Nystroem k256 (0.36) | 0.21 | 13.3 % |
+| human liver | samples | 38,062 | 12,681 | 21 | PCA-128D (0.03) | 0.03 | 15.0 % |
+| human blood | samples | 36,664 | 11,088 | 18 | Nystroem k64 (-0.42) | -0.42 | 10.9 % |
+| human multitissue (12 tissues) | tissues | 69,141 | 23,222 | 65 | PCA-256D (-1.01) | -1.04 | 23.5 % |
+| mouse brain | samples | 40,377 | 16,843 | 30 | Nystroem k256 (-0.10) | -0.24 | 17.5 % |
+| mouse lung | samples | 51,920 | 19,238 | 38 | Nystroem k256 (-0.13) | -0.17 | 24.4 % |
+| mouse bone marrow | samples | 50,019 | 20,531 | 24 | Nystroem k256 (-0.27) | -0.36 | 20.6 % |
+| mouse liver | samples | 36,649 | 19,040 | 25 | Nystroem k64 (-0.27) | -0.38 | 28.5 % |
+| mouse spleen | samples | 34,956 | 18,468 | 23 | Nystroem k256 (-0.43) | -0.66 | 22.6 % |
+| mouse multitissue (12 tissues) | tissues | 80,872 | 21,148 | 109 | GMM-100 (-3.53), degenerate | -3.85 | 59.6 % |
+
+Observations.
+
+- Sanity checks hold on every panel: random embeddings sit at the majority-class rate (0.04 to
+  0.18), depth-only is one rung above, random projections are below PCA at equal dimension, and
+  PCA-128D, Nystroem k256 and ICA-64 are within 0.3 logits of each other at the top.
+- scBaseCount panels are far harder than the CELLxGENE atlases (top raw accuracy 0.46 to 0.72
+  against 0.8 to 0.9). The held-out unit is an SRA sample, and samples come from different
+  studies whose annotation granularity differs ("CD4-positive, alpha-beta T cell" next to
+  "naive thymus-derived CD4-positive, alpha-beta T cell"; "leukocyte" next to specific types),
+  so a share of every panel is unanswerable from expression alone: 6 to 29 % of items are passed
+  by no respondent, mouse worse than human. These items are label-noise floors, not hard biology,
+  and the hardest-type lists are dominated by coarse or progenitor labels (leukocyte, common
+  myeloid progenitor, granulocyte monocyte progenitor).
+- Tissue-held-out transfer is weak here for the same reason: the human multitissue panel keeps
+  a working ladder (top accuracy 0.39, 23.5 % unreachable), the mouse one is degenerate (109
+  label vocabularies across 12 tissue studies, 60 % unreachable) and is excluded from pooling,
+  like the Parse cytokine panel.
+- Pooled scale `runs/repr_pooled_scbasecount_v0` (11 panels, 197,166 items, 35,831 passed by
+  nobody): Nystroem k256 g0.5 (-0.09) ~ Nystroem k64 (-0.12) ~ PCA-128D (-0.13) ~ PCA-64D
+  (-0.14) > ICA-64 > PCA-256D > PCA-32D > NMF-64 ... > depth (-3.2) > random (-3.9). Difficulty
+  falls with depth (Spearman -0.16 with log total counts) and only weakly with train support
+  (-0.03), because label mismatch, not rarity, dominates.
+- Component B is not feasible from this release: the ~21k perturbation samples (K562, RPE1,
+  Jurkat, HepG2 CRISPR screens, clinical treatments) carry only a sample-level LLM-extracted
+  perturbation string and no per-cell guide or target, and there is no study id to pair treated
+  with control samples (a CELLxGENE collection id exists for 370 of them).
+- Storage note: two thirds of every h5ad is the two multi-mapper layers; stripping them would
+  take the release from 5.9 TB to about 1.9 TB with no effect on this pipeline.
+- Slice lists are in `data/raw/scbasecount/lists/` (git-ignored); the per-sample selection is
+  reproducible from `sample_metadata.parquet` with the filters above.
+- Other species: only zebrafish (383 labelled samples, 88 types, 3 to 6 per sample) and fruit fly
+  (411, 19 coarse types) carry labels; macaque, marmoset, rat, pig and the rest have none. Two
+  trial panels (zebrafish brain, fly brain) were built and then dropped because the evaluation
+  is restricted to human; zebrafish brain was degenerate (one study, three motor-neuron labels).
+
+#### 7.6.1 scVI on the six human panels (2026-10-16, three RTX 2080 Ti)
+
+The workstation received GPUs later the same day; `.venv-scvi` (torch 2.14 cu126, scvi-tools
+1.5.1) was built and `slurm/scvi_local_driver.sh` ran the standard three settings on each human
+panel (`scripts/extract_scvi_embedding.py`, early stopping, 116 to 224 epochs, 13 to 15 min per
+setting on one 2080 Ti), appended with `scripts/append_repr_responses.py` and refit. On the
+single-tissue panels `tissue` has one category, so `scvi_k30_btissue` and `scvi_k30_bnone` are
+identical; both names are kept for consistency across runs. Mouse panels were not run (human only).
+
+| panel | best classical (ability, acc) | scVI-30D (ability, acc) | rank of scVI-30D / 30 | scVI-10D |
+|---|---|---|---|---|
+| human lung | PCA-64D (1.57, 0.716) | 1.20, 0.678 | 10 | 0.71 |
+| human skin | Nystroem k256 (0.48, 0.586) | 0.31, 0.566 | 9 | -0.02 |
+| human bone marrow | Nystroem k256 (0.36, 0.575) | **0.42, 0.583** | **1** | 0.25 |
+| human liver | PCA-128D (0.03, 0.530) | -0.08, 0.515 | 9 | -0.54 |
+| human blood | Nystroem k64 (-0.41, 0.455) | **-0.15, 0.497** | **1** | -0.29 |
+| human multitissue | PCA-256D (-1.01, 0.387) | -1.08, 0.378 | 5 | -1.28 |
+
+Human-only pooled scale `runs/repr_pooled_scbasecount_human_v0` (6 panels, 103,046 items,
+13,126 passed by nobody, 30 respondents): PCA-64D (0.10) ~ PCA-128D (0.10) ~ ICA-64 (0.09) ~
+Nystroem k64 (0.09) ~ Nystroem k256 (0.08) ~ **scVI-30D (0.08)** > PCA-256D (0.04) > NMF-64
+(-0.08) > scVI-10D (-0.22) ... > depth (-2.7) > random (-3.5). Observations:
+
+- scVI-30D is a top-cluster respondent on scBaseCount, within 0.02 logits of PCA-64D on the pooled
+  scale, whereas on Tabula Sapiens v2 it sat a quarter logit below PCA-64D. It wins outright on the
+  two hematopoietic panels (blood, bone marrow), where the sample-to-sample library and depth
+  variation is largest and a count-model encoder has the most to correct, and loses to PCA on
+  lung and skin, where the classical ladder is already high.
+- scVI's outfit on the pooled scale is 0.67 against 0.37 to 0.44 for the PCA family: it passes
+  some items the classical pool fails and vice versa, so it adds information to the scale
+  rather than reproducing the PCA ordering.
+- Latent 10 is clearly too small (about 0.5 logits below latent 30 on every panel).
+- The 11-panel pooled scale `repr_pooled_scbasecount_v0` (with mouse) predates the scVI runs and
+  does not include them; the human-only scale is the one to ship.

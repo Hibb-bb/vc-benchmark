@@ -148,7 +148,11 @@ class GMMEmb(Embedder):
         Z = self.pca_.transform(X)
         if Z.shape[0] > self.max_fit:
             Z = Z[rng.choice(Z.shape[0], self.max_fit, replace=False)]
-        self.m_ = GaussianMixture(n_components=self.k, covariance_type="diag", random_state=self.seed, max_iter=200).fit(Z)
+        try:
+            self.m_ = GaussianMixture(n_components=self.k, covariance_type="diag", random_state=self.seed, max_iter=200).fit(Z)
+        except ValueError as e:  # collapsed component on a panel with many near-duplicate cells: regularise and retry
+            print(f"  {self.name}: {str(e)[:60]}...; refitting with reg_covar=1e-3", flush=True)
+            self.m_ = GaussianMixture(n_components=self.k, covariance_type="diag", random_state=self.seed, max_iter=200, reg_covar=1e-3).fit(Z)
         return self
 
     def transform(self, X):

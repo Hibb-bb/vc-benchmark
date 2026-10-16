@@ -39,9 +39,13 @@ Decide and write down:
 - **Genes**: whether `var` is indexed by Ensembl ids or symbols. Either works within a panel
   (every panel is self-contained); if a `feature_name`/`gene_symbols` column exists the
   builder will use it as the index.
-- **Label**: the cell-type column. If no per-cell `cell_type` exists in the download, stop
-  and report back: a panel without labels cannot be built, and the alternatives (annotating
-  with CellTypist, or using `cell_line`/`tissue` as labels) are a design decision for the user.
+- **Label**: the cell-type column. In the 2026-01-12 release the per-sample h5ad files carry an
+  `obs.cell_type` column that is *empty* for every cell; the real labels (`cell_type`,
+  `cell_ontology_term_id`) are in `metadata/GeneFull_Ex50pAS/<organism>/obs_metadata.parquet`
+  (one row per cell, keyed by `SRX_accession` + `cell_barcode`; 302 M rows / 6 GB for human).
+  Pull the rows for the selected samples into a small parquet (row-group streaming with pyarrow,
+  about 2 min) and pass it to `concat_h5ad.py --obs-meta`, which overwrites the empty h5ad
+  columns. If a future release has no labels anywhere, stop and report back.
 - **Split unit**: `srx_accession` (one sample = one donor/library) is the donor key.
 - **Context**: `tissue` (and optionally `disease` or the study/BioProject id if present).
 
@@ -76,14 +80,21 @@ join). Run it under the scheduler (memory: roughly 1 GB per 10k cells kept):
   --out data/raw/scbasecount/human_lung.h5ad
 ```
 
-If the sample metadata is needed to select files (by tissue) before reading, first filter the
-metadata table and pass the matching `file_path`s through a glob or a file list (extend the
-script with `--files file_list.txt` if needed; keep the change small and documented).
+Select files from the sample metadata and pass them as a list: `--files list.txt` (one path per
+line) replaces `--glob`. Filter on `tissue_ontology_term_id` (UBERON) rather than the free-text
+`tissue` (dozens of spellings of PBMC), and treat `perturbation` / `cell_line` as free text
+matched by regex (`none`, `none reported`, `not applicable`, `untreated`, ...). The script reads
+only `X`, `obs` and `var` of each file; the two multi-mapper layers that make up two thirds of
+every file are skipped.
 
 ## 3. Panel, pool, Rasch
 
 Copy `slurm/repr_generic.slurm`, change `#SBATCH` lines for the local cluster (16 CPUs,
-120 to 160 GB, several hours), and submit per slice:
+120 to 160 GB, several hours), and submit per slice. On a machine without a scheduler use
+`slurm/local_run.sh <job script>` with the same env vars, or `slurm/scbasecount_local_driver.sh
+<slice ...>` which chains concat, panel, pool and Rasch for the slice lists in
+`data/raw/scbasecount/lists/`. With 60 samples per slice, 40 % held out (`TEST_FRAC=0.4`) and
+`TEST_CAP=100`, a panel has 11k to 21k test items and the whole chain takes 3 to 5 min on 8 CPUs.
 
 ```bash
 sbatch --export=ALL,NAME=scbasecount_human_lung,H5AD=data/raw/scbasecount/human_lung.h5ad,\
@@ -131,3 +142,13 @@ LLM-extracted metadata may not give. Inspect feasibility and report before build
 | pool + probe | 45k train / 17k test | 6 min | 11 GB |
 | pool + probe | 147k train / 20k test | 90 min | 40 GB |
 | Rasch fits | any | seconds to minutes | small |
+
+## 6. scVI on the scBaseCount panels
+
+With a GPU, `slurm/scvi_local_driver.sh <panel ...>` (or `slurm/scvi_panels.slurm` under Slurm)
+trains the three standard scVI settings on each panel's train cells, embeds train and test cells,
+appends `scvi_k10_btissue`, `scvi_k30_btissue`, `scvi_k30_bnone` to the run and refits Rasch.
+`.venv-scvi` is built with `python3 -m venv .venv-scvi && .venv-scvi/bin/pip install torch
+--index-url https://download.pytorch.org/whl/cu126 && .venv-scvi/bin/pip install scvi-tools scanpy
+pyarrow -e .`. On the single-tissue panels `tissue` has one category, so the two latent-30 settings
+differ only by seed path; they are kept so respondent names stay identical across runs.

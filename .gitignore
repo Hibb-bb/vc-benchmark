@@ -7,7 +7,7 @@ __pycache__/
 cache/
 logs/
 # data: raw downloads, item banks, panels (hundreds of GB; see configs/datasets.yaml and README)
-data/
+/data/
 *.parts
 # run outputs: keep the small Rasch reports and ability tables, drop long response tables and model dumps
 runs/*

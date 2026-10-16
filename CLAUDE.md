@@ -38,8 +38,15 @@ in a separate `.venv-scvi` and are optional.
 4. `slurm/repr_generic.slurm` chains 1 to 3 (env vars NAME, H5AD, LABEL, DONOR, CONTEXT, SPLIT,
    COUNTS, FILTER, TEST_CAP, TRAIN_CAP, MIN_STRATUM). Adapt `#SBATCH` account, partition and
    paths to the local cluster; the Python commands are the same everywhere.
+   `TEST_FRAC` (default 0.25) sets the share of cells whose donors/contexts are held out. Without
+   a scheduler, `slurm/local_run.sh slurm/repr_generic.slurm` runs the same chain in the foreground
+   (wrap in `nohup`), and `slurm/scbasecount_local_driver.sh` chains concat + panel + pool + Rasch
+   for scBaseCount slices.
 5. Learned embeddings are added afterwards: `scripts/extract_scvi_embedding.py` (in
    `.venv-scvi`) then `scripts/append_repr_responses.py --respondent <name>` and a refit.
+   `slurm/scvi_panels.slurm` does the three standard settings per panel; without a scheduler,
+   `slurm/scvi_local_driver.sh <panel ...>` runs the same loop (one stream per GPU via
+   `CUDA_VISIBLE_DEVICES`).
 
 Component B (perturbation) follows the same pattern with `scripts/build_pert_items.py`
 (`--h5ad --pert-col --control-label --context-col`), `scripts/run_pert_pool.py`,
@@ -57,3 +64,6 @@ Component B (perturbation) follows the same pattern with `scripts/build_pert_ite
   `items.parquet` and `rasch/` (parquet files are git-ignored, so use `git add -f` for the two
   small parquet files when shipping a run back, and keep them under GitHub's 100 MB limit).
 - Login nodes kill large processes; run anything that touches a full h5ad under the scheduler.
+  On a dedicated workstation without Slurm (e.g. the Arc workspace) run it directly with `nohup`.
+- The `.gitignore` rule for data is anchored (`/data/`); `src/vcb/data/` is source and must be
+  committed (the unanchored rule had silently dropped it from the first commit).
