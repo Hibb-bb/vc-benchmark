@@ -1,13 +1,13 @@
 # environments, caches, logs
-.venv/
-.venv-scvi/
+/.venv/
+/.venv-scvi/
 __pycache__/
 *.pyc
 *.egg-info/
-cache/
-logs/
+/cache/
+/logs/
 # data: raw downloads, item banks, panels (hundreds of GB; see configs/datasets.yaml and README)
-data/
+/data/
 *.parts
 # run outputs: keep the small Rasch reports and ability tables, drop long response tables and model dumps
 runs/*
