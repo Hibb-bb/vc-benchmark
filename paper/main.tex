@@ -19,21 +19,25 @@ difficulty. Second, a fixed benchmark loses value over time: test cases become t
 the field moves forward, and they become less reliable once they are widely known and enter
 training data. We address both problems with a benchmark that assigns every test case a
 measured difficulty, as standardized tests such as the SAT and GRE do. The current release
-aggregates Tabula Sapiens v2 and fourteen public perturbation screens, about 100 million
-cells in all, into 20,026 cell-type annotation items covering 102 cell types and 74,197
-perturbation items covering roughly 10,000 gene targets and 500 compounds in more than 250
-cell lines and culture conditions. We evaluate [N] models on it, from principal components
-and ridge regression to scVI and scGen. Difficulties are estimated with a one-parameter item
-response model from a pool of deliberately simple models, so the scale is anchored to
-methods that cannot have memorized the test data. The scale reproduces what the field has
-found with raw scores and adds what raw scores hide: a quarter of the perturbation items are
-passed by no model because the average response is unbeatable on them, and annotation
-difficulty falls with how many training cells a cell type has. We find no strong evidence
-that current virtual cell models outperform simple baselines: scVI sits just below PCA on
-held-out donors, and scGen beats the average-response baseline only when a drug has been
-observed in many cell lines. Finally, we quantify maintenance: a model one unit above the
-best current one would retire half of the annotation items, which fixes the rate at which
-new hard items must be written.}
+aggregates fourteen annotation panels drawn from seven public atlases, including Tabula
+Sapiens v2 and the scBaseCount repository, and fifteen public perturbation screens, about
+110 million cells in all, into 249,474 cell-type annotation items covering 298 cell-type
+labels and 88,164 perturbation items covering roughly 10,000 gene targets, 500 compounds and
+90 cytokines in more than 450 cell lines, donors and culture conditions. We evaluate [N]
+models on it, from principal components and ridge regression to scVI and scGen.
+Difficulties are estimated with a one-parameter item response model from a pool of
+deliberately simple models, so the scale is anchored to methods that cannot have memorized
+the test data. The scale reproduces what the field has found with raw scores and adds what
+raw scores hide: a quarter of the perturbation items are passed by no model because the
+average response is unbeatable on them, and annotation panels assembled from heterogeneous
+public submissions are a full logit harder than curated atlases because their labels
+disagree between samples. We find no strong evidence that current virtual cell models
+outperform simple baselines: scVI ties the PCA ladder on the pooled annotation scale, an
+additive model of perturbation and context effects is the best predictor of cytokine
+responses in new donors and cell types, and scGen beats the average-response baseline only
+when a drug has been observed in many cell lines. Finally, we quantify maintenance: a model
+one unit above the best current one would retire half of the annotation items, which fixes
+the rate at which new hard items must be written.}
 
 \begin{document}
 \maketitle
@@ -48,13 +52,10 @@ To be filled.
 \section{Dataset Composition and Statistics}
 \label{sec:data}
 
-We call every test case an \emph{item}. 
+We call every test case an \emph{item}.
 Depending on the task, an item could be one cell or one experimental condition.
-Each item contains a difficulty score.
-For each model, its ability is estimated by considering both the 
-
-
-The bank has two components with different items
+Each item carries a difficulty, and each model an ability, both estimated from which items
+the model passes. The bank has two components with different items
 but the same pass/fail response format.
 
 \paragraph{Component A: representation.}
@@ -65,30 +66,39 @@ identical for every model, so a difference in responses is a difference in embed
 
 \paragraph{Component B: perturbation.}
 An item is one experimental condition: a perturbation applied in one context.
-A perturbation is either a knockout target gene or a chemical perturbation.
-A context is either a cell line, donor or cell type.
-When a dataset contains more than one type of context, the context is the combination of those contexts. For example, (donor, cell type).
-The cells of a condition are replicates, not items; the measured
-A model predicts this response for conditions it has not been trained on. 
-We score a prediction by its Pearson correlation with the measured response over the 2,000 most variable genes, and the item is passed when that correlation exceeds the context-mean baseline.
-We call this reference the \emph{mean shift}, and it is chosen on purpose. Recent benchmarks
-\citep{systema,perturbench,ahlmann2025} found that this average matches deep models on
-standard metrics, because much of any response is shared across perturbations; a pass
-therefore credits the perturbation-specific part of a prediction and not the part every
-perturbation shares.
+A perturbation is a knockout or knockdown target gene, a compound, or a cytokine.
+A context is a cell line, a donor, or a cell type.
+When a dataset contains more than one kind of context, the context is their combination,
+for example a donor and a cell type.
+The cells of a condition are replicates, not items; the measured response of a condition is
+the mean log-normalized expression of its cells minus that of its matched control cells.
+A model predicts this response for conditions it has not been trained on.
+We score a prediction by its Pearson correlation with the measured response over the 2,000
+most variable genes, and the item is passed when that correlation exceeds the context-mean
+baseline. We call this reference the \emph{mean shift}, and it is chosen on purpose. Recent
+benchmarks \citep{systema,perturbench,ahlmann2025} found that this average matches deep
+models on standard metrics, because much of any response is shared across perturbations; a
+pass therefore credits the perturbation-specific part of a prediction and not the part
+every perturbation shares.
 
 \paragraph{Sources.}
-Component A uses Tabula Sapiens v2 \citep{tabulasapiens2}, 28 tissues and 23 donors with
-10x data. Component B uses thirteen screens from the scPerturb collection
-\citep{scperturb} and the Tahoe-100M drug atlas \citep{tahoe}; see \Cref{tab:compB}. All
-sources are public under CC0 or CC BY licences.
+Component A draws on seven sources: Tabula Sapiens v2 \citep{tabulasapiens2}; four curated
+atlases from CELLxGENE, namely the Hao 2021 PBMC reference \citep{hao2021}, the adult heart
+atlas \citep{litvinukova2020}, the Human Lung Cell Atlas core \citep{sikkema2023} and the
+cross-tissue immune atlas \citep{dominguezconde2022}; the Parse 10 million PBMC cytokine
+atlas \citep{parsepbmc}; and scBaseCount \citep{scbasecount}, a repository of uniformly
+reprocessed public single-cell submissions with machine-curated labels. Component B uses
+thirteen screens from the scPerturb collection \citep{scperturb}, the Tahoe-100M drug atlas
+\citep{tahoe} and the Parse cytokine atlas; see \Cref{tab:compB}. All sources are public
+under CC0, CC BY or CC BY-NC licences.
 
 \begin{table}[t]
 \centering
 \caption{Perturbation items by source. An item is a condition with at least 50
-quality-passing cells and a matched control. Contexts are cell lines or culture conditions.
-Tahoe-100M conditions are compound, dose and cell line triples; the Replogle genome-wide
-screen is the largest genetic source. Cell counts are after quality filtering.}
+quality-passing cells and a matched control. Contexts are cell lines, culture conditions,
+or donor and cell type pairs. Tahoe-100M conditions are compound, dose and cell line
+triples; Parse conditions are cytokine, donor and cell type triples; the Replogle
+genome-wide screen is the largest genetic source. Cell counts are after quality filtering.}
 \label{tab:compB}
 \footnotesize
 \begin{tabular}{@{}llrrrr@{}}
@@ -96,6 +106,7 @@ screen is the largest genetic source. Cell counts are after quality filtering.}
 Dataset & Perturbation & Contexts & Perturbations & Items & Cells \\
 \midrule
 Tahoe-100M & compound, 3 doses & 50 & 379 & 53,972 & 95.6M \\
+Parse 10M PBMC & cytokine & 215 & 90 & 13,967 & 9.6M \\
 Replogle 2022, K562 genome-wide & CRISPRi & 1 & 9,326 & 9,326 & 1.97M \\
 sciPlex3, Srivatsan 2020 & compound, 4 doses & 3 & 188 & 2,423 & 762k \\
 Replogle 2022, K562 essential & CRISPRi & 1 & 1,832 & 1,832 & 303k \\
@@ -110,32 +121,42 @@ Adamson 2016 & CRISPRi & 1 & 87 & 87 & 63k \\
 Tian 2019, iPSC & CRISPRi & 1 & 81 & 81 & 29k \\
 Tian 2019, neurons & CRISPRi & 1 & 35 & 35 & 8k \\
 \midrule
-Total & & & & 74,197 & 99.9M \\
+Total & & & & 88,164 & 109.5M \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Representation panel.}
-Donors are split before anything else: 21 donors supply a training panel of 146,800
-cells and 2 donors supply the test items, so no donor appears on both sides and the
-classifier cannot learn donor identity as a stand-in for cell type. We call each
-combination of tissue, cell type and donor a \emph{stratum}; within each stratum we keep at
-most 200 training and 50 test cells and drop strata with fewer than 20 cells. The result is
-20,026 test items in 433 strata across 28 tissues and 102 cell types, with 159 types
-present in training. Immune cells are 58\% of the items, stromal 18\%, epithelial 13\%,
-endothelial 10\%. The 844 test cells whose type is absent from training are kept in the
-panel but not scored. \Cref{tab:compA} gives the panel by tissue. Because the split is by donor,
-six tissues whose donors all fall on the training side contribute training cells but no
-items, and Testis, with a single donor on the test side, contributes items but no training
-cells; both are consequences of the donor-disjoint design rather than of the data.
+\paragraph{Representation panels.}
+Every annotation source is turned into one or more \emph{panels} by the same procedure.
+The unit of the split is chosen first: whole donors, whole studies, or whole tissues are
+held out, so that nothing is shared between the training panel and the test items and the
+classifier cannot learn donor, study, or tissue identity as a stand-in for cell type. We
+call each combination of context, cell type and donor a \emph{stratum}; within each stratum
+we keep at most 200 training and 50 to 100 test cells and drop strata with fewer than 20
+cells. Test cells whose type is absent from training are kept in the panel but not scored.
+\Cref{tab:compA} lists the fourteen panels. Eleven hold out donors, which is the standard
+annotation setting; three hold out whole studies or tissues, so that a type must be
+recognized in a context the classifier has never seen. The HLCA and the immune atlas appear
+twice, once under each split. The scBaseCount panels differ from the curated atlases in
+one respect that matters below: each holds 60 samples from different public submissions on
+one tissue, with labels drawn from the repository's per-cell annotation, so the label
+vocabulary is not uniform across samples. Two further panels were built and set aside as
+floors: a Parse panel whose label is the cytokine a cell was exposed to, which no embedding
+and probe answer above a few percent, and a mouse twelve-tissue scBaseCount panel with 109
+label vocabularies, on which 60\% of items are passed by nothing. Six mouse single-tissue
+panels were also run; this release pools human panels only. \Cref{tab:compA_ts2} in the
+appendix gives the Tabula Sapiens panel by tissue.
 
 \begin{table}[t]
 \centering
-\caption{Representation panel by tissue. Donors and cell types count the whole panel;
-training cells are the classifier's training set; items are the scored test cells and
-strata their tissue, cell type and donor combinations. Tissues are ordered by item count.}
+\caption{Representation panels. Held-out units are the donors, samples, studies or tissues
+whose cells form the test items; types count the cell-type labels among the items; strata
+are context, cell type and donor combinations. Passed by none is the fraction of a panel's
+items that no model labels correctly; mean difficulty is on the pooled scale of
+\Cref{sec:fitting}, over informative items.}
 \label{tab:compA}
-\footnotesize
+\scriptsize
+\setlength{\tabcolsep}{4pt}
 \input{bench/tab_compA.tex}
 \end{table}
 
@@ -144,61 +165,73 @@ Every screen is mapped to one schema with perturbation, target genes, modality, 
 dose, time and a control flag; cells with fewer than 500 counts or 200 detected genes are
 removed; and the per-condition mean is computed in one pass over the raw count matrix. For
 Tahoe-100M this pass streams 95.6 million cells from the public parquet files and reduces
-them to 56,827 conditions, of which 53,972 have at least 50 cells. Median cells per item
-range from 74 for Nadig HepG2 to 1,363 for Tahoe-100M. Each item carries covariates for
-later analysis: cell count, an effect-size measure, which is the Euclidean norm of the
-response, the target gene or the compound's chemical structure, and dose.
+them to 56,827 conditions, of which 53,972 have at least 50 cells; for Parse it streams 9.7
+million cells and yields 13,967 conditions over 90 cytokines, 12 donors and 18 cell types,
+each with its own PBS control. Median cells per item range from 74 for Nadig HepG2 to 1,363
+for Tahoe-100M. Each item carries covariates for later analysis: cell count, an effect-size
+measure, which is the Euclidean norm of the response, the target gene or the compound's
+chemical structure, and dose.
 
 \paragraph{Difficulty distributions.}
 \Cref{fig:difficulty} shows the fitted difficulties. Three features determine how the bank
 can be used.
 
-\emph{The scale is wide.} Informative difficulties span about five to six units in both
-components: the 5th to 95th percentiles are $-3.2$ to $2.6$ for cells and $-3.4$ to $1.1$
-for conditions, with standard deviations of 1.8 and 1.5. The abilities of the simple
+\emph{The scale is wide.} Informative difficulties span about six units in both
+components: the 5th to 95th percentiles are $-3.3$ to $3.0$ for cells and $-3.4$ to $1.4$
+for conditions, with standard deviations of 1.9 and 1.5. The abilities of the simple
 models occupy the shaded band in each panel. The bank already holds items well above its
 best model, which is the stock a living benchmark draws on as the field improves.
 
-\emph{A quarter of the items are off the scale today.} 2,270 cells, or 11\%, are
-labelled correctly by no model, and 18,366 conditions, or 25\%, are passed either by every
-model or by none; all but 56 of them by none. The latter are conditions on which the mean
-shift is the best prediction any model in the pool can make. They are hard in the useful
-sense and stay in the bank, but they carry no information about the current ranking and
-have no finite difficulty until some model passes them. In Tahoe-100M the fraction is 28\%.
+\emph{Part of the bank is off the scale today.} 19,651 cells, or 8\%, are labelled
+correctly by no model and 1,048 by every model; 21,733 conditions, or 25\%, are passed
+either by every model or by none, all but 56 of them by none. The latter are conditions on
+which the mean shift is the best prediction any model in the pool can make. They are hard
+in the useful sense and stay in the bank, but they carry no information about the current
+ranking and have no finite difficulty until some model passes them. In Tahoe-100M the
+fraction is 28\% and in Parse 24\%. Among the annotation panels it ranges from 1\% for
+Parse to 22\% for the twelve-tissue scBaseCount panel.
 
-\emph{Datasets differ by more than their items.} On the pooled perturbation scale the mean
-difficulty by dataset ranges from $-2.3$ for Norman, where every double perturbation has
-both of its singles in training, to $+0.9$ for Tian 2021 neurons, a spread of 3.2 against a
-within-dataset standard deviation of about 1.5; Tahoe-100M sits at $-0.8$. A single pooled
-scale is therefore a first approximation. The K562 screens share thousands of target
-genes, and those shared conditions are the natural anchors for linking datasets in the
-next release.
+\emph{Datasets differ by more than their items.} On the pooled annotation scale the mean
+difficulty by panel ranges from $-1.6$ for Parse, with 18 broad PBMC types, to $+0.6$ for
+the scBaseCount blood and twelve-tissue panels, a spread of 2.3 units; the six scBaseCount
+panels occupy the top of the range and the curated atlases the bottom. On the pooled
+perturbation scale the mean difficulty by dataset ranges from $-2.6$ for Norman, where every
+double perturbation has both of its singles in training, to $+0.6$ for Tian 2021 neurons, a
+spread of 3.2 against a within-dataset standard deviation of about 1.5; Tahoe-100M sits at
+$-1.0$ and Parse at $+0.3$. A single pooled scale is therefore a first approximation. The
+K562 screens share thousands of target genes, and those shared conditions are the natural
+anchors for linking datasets in the next release.
 
 \paragraph{What makes an item hard.}
-Difficulty tracks the covariates the design predicts. For cells, difficulty falls with the
-number of training cells of the same type, with Spearman $\rho=-0.35$ over 17,756 items and
-$-0.47$ at the stratum level, and more weakly with sequencing depth, $\rho=-0.10$. The
-hardest types are sibling immune states such as activated versus naive CD8 T cells,
-gamma-delta T cells, innate lymphoid cells and intermediate monocytes, and stromal types
-that share a lineage such as mural cells, muscle cells and mesenchymal stem cells. For
-conditions the sign is the reverse of what a raw metric would give: difficulty rises weakly
-with effect size, $\rho=+0.15$ pooled, $+0.18$ in the genome-wide K562 screen and $+0.25$ in
-RPE1. Large responses are the ones the mean shift already captures, so beating it there is
-hard, while small responses are close to coin flips. The pass rule thus changes what
+Difficulty tracks the covariates the design predicts, but the strength of the relation
+depends on the source. Within the curated atlases, cell difficulty falls with the number of
+training cells of the same type, with Spearman $\rho$ between $-0.25$ and $-0.40$ for
+Tabula Sapiens, Hao, the HLCA and the immune atlas; the hardest types are sibling immune
+states such as activated versus naive CD8 T cells, gamma-delta T cells, innate lymphoid
+cells and intermediate monocytes, and stromal types that share a lineage. On the
+scBaseCount panels the relation vanishes, $\rho$ between $-0.16$ and $+0.11$, and depth
+takes its place, $\rho=-0.28$ to $-0.35$ for lung and skin: there the hardest items are
+cells whose label in one submission is a coarser or finer term than the label used for the
+same population in another, which no amount of training data resolves. Across the pooled
+scale the two covariates therefore correlate only weakly, $-0.07$ with training support
+and $-0.15$ with depth. For conditions the sign depends on the kind of perturbation:
+difficulty rises with effect size in the genetic screens, $\rho=+0.16$ in the genome-wide
+K562 screen and $+0.19$ in RPE1, because large responses are the ones the mean shift already
+captures, while it falls with effect size in the compound and cytokine screens, $-0.23$ for
+sciPlex3, $-0.27$ for McFarland and $-0.31$ for Parse, where large responses belong to
+perturbation classes with many relatives in training. The pass rule thus changes what
 difficulty means; we keep the continuous scores so that a graded fit can be run alongside
 the binary one.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{fig_difficulty.pdf}
-\caption{Item difficulty. (a) Representation items, one per cell. (b) The same cells grouped
-into strata, one stratum per combination of tissue, cell type and donor, so that each
-stratum is one item answered $k$ times correctly out of its $n$ cells; this removes the
-dependence between cells of the same type from the same donor. (c) Perturbation conditions
-pooled across datasets and (d) the same conditions by dataset; boxes span the interquartile
-range and whiskers the 5th to 95th percentile. The shaded band is the ability range of the
-simple models and the dashed line the best of them. An item is informative when at least one
-model passes it and at least one fails it.}
+\includegraphics[width=0.96\textwidth]{fig_difficulty.pdf}
+\caption{Item difficulty. (a) Representation items, one per cell, on the pooled scale of
+all fourteen panels. (b) The same items by panel. (c) Perturbation conditions pooled across
+datasets and (d) the same conditions by dataset. Boxes span the interquartile range and
+whiskers the 5th to 95th percentile. The shaded band is the ability range of the simple
+models and the dashed line the best of them. An item is informative when at least one model
+passes it and at least one fails it.}
 \label{fig:difficulty}
 \end{figure}
 
@@ -256,22 +289,24 @@ improve; here we use them to build the bank.
 \label{sec:responses}
 
 \begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
-\item \textbf{Build items.} Component A: select the test panel of \Cref{sec:data} and
+\item \textbf{Build items.} Component A: select the test panels of \Cref{sec:data} and
 record each cell's annotated type. Component B: map every screen to the common schema,
 filter cells, and compute each condition's response as the mean log-normalized expression
 of its cells minus that of its matched control cells.
-\item \textbf{Run every model on every item.} Component A: fit the embedding on the
-training panel, embed both panels, train the fixed classifier on the training embedding,
-and predict the test cells. Component B: for each of five folds, fit the model on the
-training conditions and predict the held-out ones, so that every condition receives
-exactly one out-of-fold prediction per model.
+\item \textbf{Run every model on every item.} Component A: for each panel, fit the
+embedding on its training cells, embed both sides, train the fixed classifier on the
+training embedding, and predict the test cells. Component B: for each of five folds, fit
+the model on the training conditions and predict the held-out ones, so that every
+condition receives exactly one out-of-fold prediction per model.
 \item \textbf{Score and binarize.} Component A: $U_{ij}=1$ if the predicted type equals the
 annotated type. Component B: compute the Pearson correlation between the predicted and
 measured response over the 2,000 most variable genes, and set $U_{ij}=1$ if it exceeds the
 mean shift's correlation on the same item. The continuous scores are stored as well.
 \item \textbf{Assemble the matrix.} Rows are models, columns are items, entries are
 $U_{ij}$; a pair that was not run, for example low-rank completion on a single-context
-screen, is left missing and contributes nothing to the likelihood.
+screen, is left missing and contributes nothing to the likelihood. Items from different
+panels or screens are kept distinct even when the same cell appears in two panels under
+two splits.
 \end{enumerate}
 
 \subsection{Fitting difficulties and abilities}
@@ -290,10 +325,12 @@ $\pm\infty$. Such items are flagged and excluded from the summaries in
 We maximize by alternating Newton steps: holding difficulties fixed, every ability is
 updated by one Newton step of its own one-dimensional concave problem; holding abilities
 fixed, every difficulty is updated likewise; the two sweeps repeat until the largest
-change falls below $10^{-6}$, which takes a few hundred sweeps and seconds of compute even
-for 74,000 items. The same code path handles the stratum-level fit for component A, where
-an item is a stratum answered $k$ times correctly out of $n$ cells, by replacing each
-Bernoulli term with a binomial one.
+change falls below $10^{-6}$, which takes a few hundred sweeps and a few minutes of compute
+for the 249,474 annotation items. The same code path handles the stratum-level fit for
+component A, where an item is a stratum answered $k$ times correctly out of $n$ cells, by
+replacing each Bernoulli term with a binomial one. Each component is fit on one pooled
+scale: all fourteen panels together, and all fifteen screens together, linked through the
+models, which answer every panel and every screen under the same name.
 
 Two checks validate the fit. On synthetic data generated from \cref{eq:rasch} with 80
 models and 2,000 items at 30\% missingness, the recovered abilities correlate 0.998 with
@@ -303,8 +340,8 @@ scale, and every capacity ladder must come out in order; \Cref{sec:eval} confirm
 before any other reading of the scale is made.
 
 \paragraph{What the scale does and does not say.}
-Ability is relative to the pool that defined the difficulties: a value of $0.98$ for
-PCA-128D means it passes a typical item of this bank with probability $\sigma(0.98-b)$,
+Ability is relative to the pool that defined the difficulties: a value of $1.16$ for
+PCA-128D means it passes a typical item of this bank with probability $\sigma(1.16-b)$,
 not that it is good in an absolute sense. Difficulty is likewise relative to the models: an
 item is hard because these methods fail it. Both are comparable across models within a
 component and, with the caveats in \Cref{sec:data}, across datasets within a component;
@@ -335,7 +372,11 @@ training conditions, and a feature vector for the condition. Genetic items are r
 by a 64-dimensional embedding of the target gene learned from control cells only, with
 genes as rows, cells as columns and principal components across cells; compounds by Morgan
 fingerprints of their chemical structure \citep{morgan} together with the dose and a
-one-hot context indicator.
+one-hot context indicator. Cytokines have neither a target gene nor a structure in their
+source files, so Parse items carry one-hot indicators of the cytokine and of the context;
+with these features the regression models become additive models of a cytokine effect and
+a context effect, and the nearest-neighbour model becomes the average response of the same
+cytokine in other contexts.
 
 \begin{table}[t]
 \centering
@@ -359,7 +400,7 @@ ICA-$k$D & independent components of PCA-$k$D & $k\in\{16,64\}$ \\
 GMM-$k$ memberships & soft cluster memberships from a Gaussian mixture on PCA-50D & $k\in\{10,30,100\}$ \\
 Depth only & two numbers, log total counts and log detected genes; a floor & \\
 Random-32D & i.i.d.\ Gaussian features; a floor & 2 seeds \\
-scVI-$k$D & variational autoencoder for counts \citep{scvi}, with and without tissue as the batch variable & $k\in\{10,30\}$ \\
+scVI-$k$D & variational autoencoder for counts \citep{scvi}, with and without the panel's context as the batch variable & $k\in\{10,30\}$ \\
 \midrule
 \multicolumn{3}{@{}l}{\emph{Component B: prediction of a condition's response}} \\
 No change & predicts zero response; a floor & \\
@@ -383,8 +424,8 @@ each model is trained on four and predicts the fifth, and every condition theref
 receives a prediction from a model that never saw its perturbation. Screens with several
 contexts are additionally split over perturbation and context pairs, so that a
 perturbation seen in some contexts must be predicted in a new one. Representation models
-are fit on the training panel and scored on the donor-held-out test panel. All models
-share the same folds, panel, classifier, and metrics.
+are fit on each panel's training cells and scored on that panel's held-out donors,
+studies, or tissues. All models share the same folds, panels, classifier, and metrics.
 
 \paragraph{Fit.}
 Abilities and difficulties are estimated as in \Cref{sec:fitting}. For cells we report a
@@ -393,69 +434,112 @@ cell-level fit and a stratum-level binomial fit; the two order the models identi
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_abilities.pdf}
-\caption{Abilities of the model pool. (a) Representation models on the cell-level scale of
-20,026 items. (b) Perturbation models on the pooled scale of all fourteen screens, 74,197
-conditions. Colour marks the family; the two seeds of a stochastic model are averaged. The
-mean shift defines the pass rule and therefore has no ability of its own. The full tables,
-with plain accuracy alongside ability for component A, are in \Cref{app:tables}.}
+\caption{Abilities of the model pool. (a) Representation models on the pooled cell-level
+scale of all fourteen panels, 249,474 items. (b) Perturbation models on the pooled scale
+of all fifteen screens, 88,164 conditions. Colour marks the family; the two seeds of a
+stochastic model are averaged. The mean shift defines the pass rule and therefore has no
+ability of its own. The full tables, with plain accuracy alongside ability for component
+A, are in \Cref{app:tables}.}
 \label{fig:abilities}
 \end{figure}
 
 \paragraph{The ladders behave as ladders.}
 Ability rises with capacity in every representation family that has a capacity setting;
-see \Cref{fig:abilities}a. PCA climbs from $-2.14$ at PCA-4D to $0.98$ at PCA-128D and
-flattens at PCA-256D. Random projections sit 0.6 to 1.4 below PCA at the same dimension,
+see \Cref{fig:abilities}a. PCA climbs from $-1.24$ at PCA-4D to $1.16$ at PCA-128D and
+flattens at PCA-256D. Random projections sit 0.8 to 2.0 below PCA at the same dimension,
 which separates the value of ordering directions by variance from the value of a linear
-subspace as such. In component B the training-fraction ladder is ordered correctly on the
-pooled scale and in every scPerturb screen, and the floors land where floors should:
-random shifts, no change, and random embeddings are the bottom of their panels. These
-checks are what justify reading the rest of the scale.
+subspace as such. In component B the PCA-regression ladder rises from $-1.73$ at 5
+components to $-1.34$ at 200, both training-fraction ladders are ordered correctly on the
+pooled scale and in every screen, and the floors land where floors should: random shifts,
+no change, and random embeddings are the bottom of their panels. These checks are what
+justify reading the rest of the scale.
 
 \paragraph{Ability and accuracy do not tell the same story.}
-Ability is estimated from which items a model passes, not how many, and the difference
-shows in \Cref{app:tables}. Between PCA-32D and PCA-128D plain accuracy rises by four
-points, from 0.61 to 0.65, while ability rises by 0.43, almost half the spread of the
-whole ladder: the extra components buy passes on hard items, which the average cannot
-see. Conversely, tissue-corrected scVI-30D and NMF-64D have the same accuracy of 0.60 and
-nearly the same ability, 0.47 and 0.49, so the two scores agree whenever the items passed
-are of similar difficulty; they diverge exactly where the benchmark is informative.
+Ability is estimated from which items a model passes, not how many. On the pooled
+annotation scale the seven best models are within 0.04 of one another in ability and
+within half a point of accuracy, so the two scores agree at the top; what separates them
+is the outfit statistic, which is 0.68 for scVI-30D against 0.34 to 0.44 for the PCA
+family: scVI passes a different set of items than PCA does, and so adds information to the
+scale rather than reproducing its ordering. On a single panel the two scores can diverge
+outright. On Tabula Sapiens, where the pool was first calibrated, plain accuracy rises by
+four points between PCA-32D and PCA-128D, from 0.61 to 0.65, while ability rises by 0.43,
+almost half the spread of the whole ladder: the extra components buy passes on hard items,
+which the average cannot see (\Cref{tab:abilA_ts2}).
 
 \paragraph{The mean shift is the model to beat.}
-Ranked by raw Pearson correlation, the best model in eight of the fourteen screens,
-Tahoe-100M among them, is the mean shift itself or its on-target variant, which differs
-from it at a single gene; this reproduces the finding of Systema \citep{systema} and
-PerturBench \citep{perturbench} under a different protocol. The item view adds the
-distribution behind that average: 18,310 conditions, or 25\%, are passed by no model, and
-in the Tian 2021 neuronal screen that fraction reaches two thirds. On the pooled scale the
-feature-based families cluster within half a unit of one another: PCA regression at about
-$-1.0$ for every $k$ from 2 to 200, KNN with $K=5$ and the Gaussian processes at $-1.1$ to
-$-1.2$, and ridge at $-1.3$ to $-1.4$. That the PCA-regression ladder is flat in $k$ says
-that, for unseen perturbations, the limiting factor is the features and not the capacity
-of the regression. The one clear exception is Norman, where KNN and the Gaussian process
-lead by a wide margin because every double perturbation has both of its singles in
-training.
+Ranked by raw Pearson correlation, the best model in eight of the fifteen screens,
+Tahoe-100M and Parse among them, is the mean shift itself or its on-target variant, which
+differs from it at a single gene; this reproduces the finding of Systema \citep{systema}
+and PerturBench \citep{perturbench} under a different protocol. The item view adds the
+distribution behind that average: 21,677 conditions, or 25\%, are passed by no model, and
+in the Tian 2021 neuronal screen that fraction reaches 61\%. On the pooled scale the
+feature-based families cluster within two thirds of a unit of one another: KNN with
+$K=20$ and $K=5$ at $-1.1$ and $-1.2$, PCA regression with 200 components at $-1.3$, the
+Gaussian processes at $-1.4$, and ridge at $-1.6$ to $-1.7$. The one clear exception among
+the genetic screens is Norman, where KNN and the Gaussian process lead by a wide margin
+because every double perturbation has both of its singles in training.
 
-\paragraph{A learned embedding does not beat the PCA ladder on held-out donors.}
-scVI-30D without batch correction has ability 0.74, between PCA-64D and PCA-32D and a
-quarter of a unit below PCA-128D. Correcting for tissue as a batch variable lowers ability
-to 0.47, because tissue carries type information that the classifier would otherwise use.
-These placements agree with reports that parameter-free pipelines match learned
-representations on annotation \citep{kedzierska2025,souza2026}.
+\paragraph{A cytokine response transfers across donors and cell types as a main effect.}
+Parse is the first screen in the bank in which the context is a donor and a cell type
+rather than a cell line, and it separates the two splits more sharply than any other.
+In the unseen-context split, where a cytokine has been seen in other donors and cell types,
+the additive model, PCA regression with 200 components on one-hot features, reaches a raw
+correlation of 0.50 against 0.36 for the mean shift, passes 87\% of items and has ability
+$3.74$ on that screen; low-rank completion of the cytokine-by-context matrix, the best
+model on Tahoe-100M, reaches 0.45 and passes 59\%. The response to a cytokine thus
+transfers mostly as a main effect, and the interaction that low-rank completion models is
+second order here. In the unseen-cytokine split no model beats the mean shift on average:
+the best, KNN with $K=20$, which with one-hot features reduces to the average response of
+the context, passes 47\% of items, every other model passes fewer than 17\%, and 24\% of
+conditions are passed by nothing. Without a descriptor of the cytokine the split cannot be
+learned, and these 10,600 informative items are the hardest block of the perturbation
+scale (\Cref{fig:difficulty}d).
+
+\paragraph{A learned embedding ties the PCA ladder on held-out donors.}
+On the pooled annotation scale scVI-30D without batch correction has ability $1.16$, equal
+to PCA-128D and the best kernel model to two decimals; scVI-30D with the panel's context as
+the batch variable has $1.13$ and scVI-10D $0.85$, below PCA-32D. The tie is the sum of
+opposite results on different panels. scVI is the best model on five of the fourteen: on
+the Hao PBMC reference, on the two panels whose held-out unit is its batch variable, the
+HLCA with studies held out and the immune atlas with tissues held out, and on the
+scBaseCount blood and bone marrow panels, where sample-to-sample depth and library
+variation is largest and a count-model encoder has the most to correct. It is below
+PCA-128D on the remaining nine, by a quarter of a unit on Tabula Sapiens and by 0.1 to 0.4
+on the donor-held-out HLCA, immune atlas, lung, skin and liver panels. A learned
+batch-aware latent space earns its ability when the evaluation holds out the batch;
+otherwise a linear projection does the same job. These placements agree with reports that
+parameter-free pipelines match learned representations on annotation
+\citep{kedzierska2025,souza2026}.
+
+\paragraph{Public submissions are a logit harder than curated atlases.}
+The six scBaseCount panels are the hardest annotation panels in the bank: top raw accuracy
+0.39 to 0.72 against 0.61 to 0.89 on the curated atlases, mean difficulty $-0.7$ to $+0.6$
+against $-1.6$ to $+0.3$, and 5\% to 22\% of items passed by no model against 1\% to 11\%.
+The held-out unit is a public sample, and samples on the same tissue come from different
+studies whose annotation granularity differs: a population labelled ``CD4-positive,
+alpha-beta T cell'' in one submission is ``naive thymus-derived CD4-positive, alpha-beta T
+cell'' in another, and ``leukocyte'' sits next to specific types. The hardest-type lists
+are dominated by coarse or progenitor labels. These items are label-noise floors rather
+than hard biology, which the covariate analysis of \Cref{sec:data} confirms: on these
+panels difficulty no longer falls with training support. They are kept because a model
+placed on the scale later will be judged on the same items, and because the repository
+grows continually, which makes it the natural supply of new annotation items.
 
 \paragraph{A learned perturbation model wins only when a drug has many contexts.}
 scGen's result depends on how many contexts a perturbation has been observed in; see
 \Cref{tab:scgen}. On McFarland, where 16 compounds are profiled across 196 cell lines,
-scGen passes 81\% of items, has ability $+2.75$, and is the only model in the bank that
-beats the mean shift on most items of a screen. On sciPlex3 and Frangieh, with three
-contexts each, it falls below the mean shift on raw correlation and below the low-rank
-completion on the scale. Transfer through a learned latent space thus pays off in
-proportion to the contexts available. Tahoe-100M, with fifty cell lines, confirms the
-pattern without any learned model: in its unseen-context split, low-rank completion and
-KNN reach raw correlations of 0.75 and 0.73 against 0.42 for the mean shift, which falls
-to 18th of 21 models, and only 169 of 53,972 conditions are passed by nobody. The same
-simple models that cannot beat the mean shift on an unseen drug beat it easily on a seen
-drug in a new line, once enough lines are available. Because scGen cannot predict a perturbation it has never seen, it is placed per
-screen in the unseen-context setting rather than on the pooled scale.
+scGen passes 81\% of items, has ability $+2.75$, and is one of two models in the bank that
+beat the mean shift on most items of a screen, the other being the additive model on Parse.
+On sciPlex3 and Frangieh, with three contexts each, it falls below the mean shift on raw
+correlation and below the low-rank completion on the scale. Transfer through a learned
+latent space thus pays off in proportion to the contexts available. Tahoe-100M, with fifty
+cell lines, confirms the pattern without any learned model: in its unseen-context split,
+low-rank completion and KNN reach raw correlations of 0.75 and 0.73 against 0.42 for the
+mean shift, which falls to 18th of 21 models, and only 169 of 53,972 conditions are passed
+by nobody. The same simple models that cannot beat the mean shift on an unseen drug beat it
+easily on a seen drug in a new line, once enough lines are available. Because scGen cannot
+predict a perturbation it has never seen, it is placed per screen in the unseen-context
+setting rather than on the pooled scale.
 
 \begin{table}[t]
 \centering
@@ -480,21 +564,22 @@ A benchmark stays informative only while its items sit near the abilities being 
 an item that a model passes with high probability has little left to say about that
 model. We therefore ask how much of the bank a stronger model would retire, as a function
 of the pass-probability threshold that defines retirement; see \Cref{fig:retire}. At a
-threshold of 0.95, a model exactly as able as the best current one already retires 26\% of
+threshold of 0.95, a model exactly as able as the best current one already retires 24\% of
 the informative cell items but only 3\% of the conditions. In a pilot of the same
 annotation protocol on three smaller atlases, the strongest pretrained foundation model sat
-about one unit above PCA. A model one unit above the best current one would retire 51\% of
-the cell items and 10\% of the conditions at the 0.95 threshold, and 76\% and 45\% at a
-looser threshold of 0.75; two units above retires 66\% and 28\% at 0.95. Perturbation items
+about one unit above PCA. A model one unit above the best current one would retire 47\% of
+the cell items and 9\% of the conditions at the 0.95 threshold, and 75\% and 41\% at a
+looser threshold of 0.75; two units above retires 67\% and 26\% at 0.95. Perturbation items
 degrade far more slowly, because their difficulties are spread over a wider range relative
-to the pool and because the 18,310 conditions that no model passes only come into play as
+to the pool and because the 21,677 conditions that no model passes only come into play as
 models improve. The practical content is a writing schedule. The maintenance analysis in
 our companion paper \citep{companion} shows that a benchmark keeps its resolution only when
 new hard items arrive at least as fast as the field moves; at the rates above, a bank that
 loses half its annotation items per unit of progress must add items above the current
 ceiling at the same pace. The yearly Virtual Cell Challenge releases \citep{vcc2026} of
-300 to 10,000 held-out perturbations per cell line and the announced Tahoe follow-on atlas
-are the supply we plan the next rounds around.
+300 to 10,000 held-out perturbations per cell line, the announced Tahoe follow-on atlas and
+the continually growing scBaseCount repository are the supply we plan the next rounds
+around.
 
 \begin{figure}[t]
 \centering
@@ -509,28 +594,35 @@ denominator.}
 
 \paragraph{Limits of this release.}
 The pool has about 30 models per component; the design target of 50 to 100 would halve the
-uncertainty of every difficulty. The pooled perturbation scale carries a dataset factor of
-3.2 that linking through shared perturbations must remove before cross-dataset
-difficulties are compared. The compounds in sciPlex3 and McFarland lack chemical structures
-in their source files, so those screens run only in the unseen-context setting. No
-pretrained foundation model has yet been placed on the perturbation scale; that step, with
-a record of which items each model has seen in pretraining, is what the scale was built
-for.
+uncertainty of every difficulty. Both pooled scales carry a dataset factor, 2.3 units
+between annotation panels and 3.2 between perturbation screens, that linking through shared
+cell types and shared perturbations must remove before cross-dataset difficulties are
+compared. The compounds in sciPlex3 and McFarland lack chemical structures in their source
+files, and cytokines lack any descriptor, so those screens run only in the unseen-context
+setting or, for Parse, as a floor in the unseen-perturbation setting; mapping each cytokine
+to its gene would let the control-derived gene embedding serve as its descriptor. The
+scBaseCount panels inherit the label disagreement of their sources, which a harmonization
+of labels to a common ontology depth would reduce. No pretrained foundation model has yet
+been placed on either scale; that step, with a record of which items each model has seen in
+pretraining, is what the scale was built for.
 
 % ---------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:conclusion}
 
 We have built a benchmark for virtual cell models in which every test case has a measured
-difficulty, assembled from about 100 million cells across Tabula Sapiens v2 and fourteen
-perturbation screens, and calibrated it with a pool of simple models. The scale is wide,
-its ladders are ordered, and its difficulties track the covariates one would expect.
-Placed on it, the learned models we tested give no strong evidence that current virtual
-cell models outperform traditional, simple baselines: an scVI embedding lands below PCA on
-held-out donors, and scGen beats the mean shift only when a drug has been observed in many
-cell lines, while a quarter of all perturbation conditions are passed by no model at all.
-Because the scale is anchored to methods that cannot have memorized the test data, it is
-ready to receive pretrained foundation models next, and because it records which items
+difficulty, assembled from about 110 million cells across fourteen annotation panels and
+fifteen perturbation screens, and calibrated it with a pool of simple models. The scale is
+wide, its ladders are ordered, and its difficulties track the covariates one would expect
+where the labels are clean and expose label disagreement where they are not. Placed on it,
+the learned models we tested give no strong evidence that current virtual cell models
+outperform traditional, simple baselines: an scVI embedding ties PCA on the pooled
+annotation scale and beats it only where the evaluation holds out its batch variable, an
+additive model of cytokine and context effects is the best predictor of cytokine responses
+in new donors and cell types, scGen beats the mean shift only when a drug has been observed
+in many cell lines, and a quarter of all perturbation conditions are passed by no model at
+all. Because the scale is anchored to methods that cannot have memorized the test data, it
+is ready to receive pretrained foundation models next, and because it records which items
 each model passes, it tells us how fast new hard items must be written to keep the
 benchmark alive.
 
@@ -543,19 +635,46 @@ benchmark alive.
 
 \begin{table}[h]
 \centering
-\caption{Representation models on the cell-level scale of 20,026 items: ability and plain
-accuracy, which is the fraction of test cells labelled correctly.}
+\caption{Representation models on the pooled cell-level scale of all fourteen panels,
+249,474 items: ability and plain accuracy, which is the fraction of test cells labelled
+correctly.}
+\label{tab:abilA}
 \small
 \input{bench/tab_abilA.tex}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Perturbation models on the pooled scale of all fourteen screens, 74,197 conditions.
+\caption{Representation models on the Tabula Sapiens v2 panel alone, 20,026 items, the
+panel on which the pool was first calibrated.}
+\label{tab:abilA_ts2}
+\small
+\input{bench/tab_abilA_ts2.tex}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Perturbation models on the pooled scale of all fifteen screens, 88,164 conditions.
 Low-rank completion ran only on multi-context screens and, in the unseen-perturbation
 setting, can only fall back to the context mean for a perturbation it has never seen.}
 \small
 \input{bench/tab_abilB.tex}
+\end{table}
+
+\section{The Tabula Sapiens panel by tissue}
+\label{app:ts2}
+
+\begin{table}[h]
+\centering
+\caption{Tabula Sapiens v2 panel by tissue. Donors and cell types count the whole panel;
+training cells are the classifier's training set; items are the scored test cells and
+strata their tissue, cell type and donor combinations. Tissues are ordered by item count.
+Because the split is by donor, six tissues whose donors all fall on the training side
+contribute training cells but no items, and Testis, with a single donor on the test side,
+contributes items but no training cells.}
+\label{tab:compA_ts2}
+\footnotesize
+\input{bench/tab_compA_ts2.tex}
 \end{table}
 
 \end{document}

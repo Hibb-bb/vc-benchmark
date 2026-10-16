@@ -18,7 +18,7 @@ FAM_COLORS = {"PCA": "#2a78d6", "Random projection": "#eb6834", "Kernel features
               "Ridge": "#2a78d6", "PCA regression": "#1baf7a", "Gaussian process": "#eb6834", "KNN": "#eda100", "Mean shift": "#e87ba4", "Low-rank": "#4a3aa7", "scGen": "#e34948"}
 plt.rcParams.update({"font.size": 8.5, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED, "ytick.color": INK, "axes.grid": True, "grid.color": "#e6e5e1", "grid.linewidth": 0.6, "axes.axisbelow": True})
 
-aA = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv").sort_values("ability")
+aA = pd.read_csv(RUNS / "repr_pooled_v2" / "rasch" / "cell_level.abilities.csv").sort_values("ability")
 aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv").sort_values("ability")
 # collapse seeds: average the two seeds of a stochastic respondent for the figure
 def collapse(a):

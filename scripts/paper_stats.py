@@ -14,6 +14,26 @@ import anndata as ad
 
 from vcb import DATA, RUNS, ROOT
 
+A_RUN = RUNS / "repr_pooled_v2"
+# (run, display name, held-out unit, train cells override for runs whose panel is not on this machine)
+PANELS = [
+    ("repr_pool_v0", "Tabula Sapiens v2", "donors", None),
+    ("repr_hao_pbmc_l2", "Hao 2021 PBMC", "donors", None),
+    ("repr_heart_states", "Adult heart", "donors", None),
+    ("repr_hlca_core_donor", "HLCA core", "donors", None),
+    ("repr_hlca_core_study", "HLCA core", "studies", None),
+    ("repr_immune_atlas_donor", "Cross-tissue immune atlas", "donors", None),
+    ("repr_immune_atlas_tissue", "Cross-tissue immune atlas", "tissues", None),
+    ("repr_parse_pbmc_celltype", "Parse 10M PBMC", "donors", None),
+    ("repr_scbasecount_human_lung", "scBaseCount, lung", "samples", 46086),
+    ("repr_scbasecount_human_skin", "scBaseCount, skin", "samples", 44290),
+    ("repr_scbasecount_human_bone_marrow", "scBaseCount, bone marrow", "samples", 35748),
+    ("repr_scbasecount_human_liver", "scBaseCount, liver", "samples", 38062),
+    ("repr_scbasecount_human_blood", "scBaseCount, blood", "samples", 36664),
+    ("repr_scbasecount_human_multitissue", "scBaseCount, 12 tissues", "tissues", 69141),
+]
+PANEL_FILE = {"repr_pool_v0": "ts2_panel_v0"}
+
 out_dir = ROOT / "paper" / "bench"
 out_dir.mkdir(parents=True, exist_ok=True)
 res = {}
@@ -34,16 +54,41 @@ compB = pd.DataFrame(rows).sort_values("items", ascending=False)
 res["compB"] = compB.to_dict(orient="records")
 print("## Component B composition\n", compB.to_string(index=False))
 
-# ---------- component A composition ----------
-items = pd.read_parquet(RUNS / "repr_pool_v0" / "items.parquet")
-pa = ad.read_h5ad(DATA / "panels" / "ts2_panel_v0.h5ad", backed="r")
-po = pa.obs
-compA = dict(train_cells=int((po["split"] == "train").sum()), test_cells=int((po["split"] == "test").sum()), test_items=len(items),
-             types=int(po["cell_type"].nunique()), types_in_test=int(items["cell_type"].nunique()), tissues=int(po["tissue"].nunique()),
-             donors=int(po["donor"].nunique()), test_donors=int(items["donor"].nunique()), strata=int(items["stratum"].nunique()),
-             compartments=items["compartment"].value_counts().to_dict(), genes=pa.n_vars)
-res["compA"] = compA
-print("\n## Component A composition\n", json.dumps(compA, indent=1))
+# ---------- component A composition: one row per panel ----------
+import h5py
+from anndata.io import read_elem
+dA_pooled = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
+itemsA = pd.read_parquet(A_RUN / "items.parquet")
+dA_pooled = dA_pooled.merge(itemsA[["source_run"]], left_on="item_id", right_index=True)
+rowsA = []
+for run, name, unit, tr_override in PANELS:
+    it = pd.read_parquet(RUNS / run / "items.parquet")
+    pf = DATA / "panels" / f"{PANEL_FILE.get(run, run.replace('repr_', ''))}.h5ad"
+    tr = tr_override
+    if pf.exists():
+        with h5py.File(pf) as f:
+            obs = read_elem(f["obs"])
+        tr = int((obs["split"] == "train").sum())
+    dd = dA_pooled[dA_pooled["source_run"] == run]
+    ab = pd.read_csv(RUNS / run / "rasch" / "cell_level.abilities.csv").set_index("respondent_id")["ability"]
+    rowsA.append(dict(run=run, name=name, held_out=unit, train_cells=tr, items=len(it), strata=int(it["stratum"].nunique()), types=int(it["cell_type"].nunique()),
+                      test_units=int(it["donor"].nunique() if unit in ("donors", "samples") else it["tissue"].nunique()), contexts=int(it["tissue"].nunique()),
+                      nobody=float((dd["p_correct"] == 0).mean()), mean_b=float(dd.loc[~dd["degenerate"], "difficulty"].mean()), top=ab.idxmax(), top_ability=float(ab.max()),
+                      pca128=float(ab.get("pca_k128", np.nan)), scvi30=float(ab.get("scvi_k30_bnone", np.nan))))
+compA = pd.DataFrame(rowsA)
+res["compA_panels"] = compA.to_dict(orient="records")
+res["compA"] = dict(panels=len(compA), train_cells=int(compA["train_cells"].sum()), test_items=int(compA["items"].sum()), strata=int(compA["strata"].sum()),
+                    types=int(pd.concat([pd.read_parquet(RUNS / r / "items.parquet")["cell_type"] for r, *_ in PANELS]).nunique()), donor_panels=int((compA["held_out"].isin(["donors", "samples"])).sum()))
+print("\n## Component A panels\n", compA.round(2).to_string(index=False), "\n", res["compA"])
+def tex_int(x):
+    return f"{int(x):,}"
+lines = []
+for r in compA.itertuples():
+    lines.append(f"{r.name} & {r.held_out} & {r.test_units} & {r.types} & {tex_int(r.train_cells)} & {tex_int(r.items)} & {r.strata} & {100*r.nobody:.0f}\\% & {r.mean_b:+.2f} \\\\")
+lines.append("\\midrule")
+lines.append(f"Total & & & {res['compA']['types']} & {tex_int(res['compA']['train_cells'])} & {tex_int(res['compA']['test_items'])} & {tex_int(res['compA']['strata'])} & {100*(dA_pooled['p_correct']==0).mean():.0f}\\% & \\\\")
+(out_dir / "tab_compA.tex").write_text("\\begin{tabular}{@{}llrrrrrrr@{}}\n\\toprule\nPanel & Held out & Units & Types & Train cells & Items & Strata & None pass & Mean diff. \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n")
+items = pd.read_parquet(RUNS / "repr_pool_v0" / "items.parquet")  # TS2 covariates (compartment) for the appendix
 
 # ---------- difficulty distributions ----------
 def dist(diff):
@@ -55,8 +100,9 @@ def dist(diff):
                 hist=hist.tolist(), edges=edges.tolist())
 
 diffs = {}
-diffs["A_cell"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.difficulties.csv")
-diffs["A_stratum"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "stratum_binomial.difficulties.csv")
+diffs["A_cell"] = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
+diffs["A_stratum"] = pd.read_csv(A_RUN / "rasch" / "stratum_binomial.difficulties.csv")
+diffs["A_ts2"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.difficulties.csv")
 diffs["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.difficulties.csv")
 res["dist"] = {k: dist(v) for k, v in diffs.items()}
 for k, v in res["dist"].items():
@@ -73,13 +119,16 @@ print("\n## per-dataset difficulty (pooled B scale)\n", per_ds.round(2).to_strin
 
 # ---------- abilities ----------
 abil = {}
-abil["A_cell"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv")
+abil["A_cell"] = pd.read_csv(A_RUN / "rasch" / "cell_level.abilities.csv")
+abil["A_ts2"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv")
+for run, *_ in PANELS:
+    res[f"abil_panel_{run}"] = pd.read_csv(RUNS / run / "rasch" / "cell_level.abilities.csv").round(3).to_dict(orient="records")
 abil["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv")
 for k, v in abil.items():
     res[f"abil_{k}"] = v.round(3).to_dict(orient="records")
     print(f"\n## abilities {k}\n", v[["respondent_id", "ability", "se", "p_correct", "outfit"]].round(2).to_string(index=False))
 sg = {}
-for ds in ["FrangiehIzar2021_RNA", "McFarlandTsherniak2020", "SrivatsanTrapnell2020_sciplex3", "tahoe100m"]:
+for ds in ["FrangiehIzar2021_RNA", "McFarlandTsherniak2020", "SrivatsanTrapnell2020_sciplex3", "tahoe100m", "parse_pbmc_cytokines"]:
     f = RUNS / "pert_pool_v0" / "rasch" / f"{ds}.context.abilities.csv"
     if f.exists():
         a_ = pd.read_csv(f); a_["rank"] = np.arange(1, len(a_) + 1)
@@ -88,9 +137,12 @@ res["abil_context"] = sg
 
 # ---------- covariates ----------
 from scipy.stats import spearmanr
-itA = items.copy(); itA["log_n_train"] = np.log10(itA["n_train_same_type"].astype(float)); itA["log_counts"] = np.log10(itA["total_counts"].astype(float))
+itA = itemsA.copy(); itA["log_n_train"] = np.log10(itA["n_train_same_type"].astype(float)); itA["log_counts"] = np.log10(itA["total_counts"].astype(float))
 dA = diffs["A_cell"].merge(itA, left_on="item_id", right_index=True); dA = dA[~dA["degenerate"]]
+dA["log_n_train"] = np.log10(dA["n_train_same_type"].astype(float).clip(lower=1))
 res["corrA"] = {c: spearmanr(dA["difficulty"], dA[c])[0] for c in ["log_n_train", "log_counts"]}
+res["corrA_by_panel"] = {r: {c: spearmanr(g["difficulty"], g[c])[0] for c in ["log_n_train", "log_counts"]} for r, g in dA.groupby("source_run")}
+print("## corrA by panel", {k: {c: round(v, 2) for c, v in d.items()} for k, d in res["corrA_by_panel"].items()})
 dBi = dB[~dB["degenerate"]].copy(); dBi["log_n_cells"] = np.log10(dBi["n_cells"])
 res["corrB"] = {c: spearmanr(dBi["difficulty"], dBi[c])[0] for c in ["delta_l2", "log_n_cells"]}
 res["corrB_by_dataset"] = {ds: spearmanr(g["difficulty"], g["delta_l2"])[0] for ds, g in dBi.groupby("dataset_id") if len(g) > 30}
@@ -100,7 +152,7 @@ print("\n## correlations A", res["corrA"], "\n## correlations B", res["corrB"], 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 scen = {}
-for key, diff, ab in [("A_cell", diffs["A_cell"], abil["A_cell"]), ("A_stratum", diffs["A_stratum"], abil["A_cell"]), ("B_pooled", diffs["B_pooled"], abil["B_pooled"])]:
+for key, diff, ab in [("A_cell", diffs["A_cell"], abil["A_cell"]), ("A_stratum", diffs["A_stratum"], abil["A_cell"]), ("A_ts2", diffs["A_ts2"], abil["A_ts2"]), ("B_pooled", diffs["B_pooled"], abil["B_pooled"])]:
     d = diff[~diff["degenerate"]]
     theta_best = ab["ability"].max(); theta_mean = ab["ability"].mean()
     out = {"theta_best": theta_best, "theta_pool_mean": theta_mean, "n_informative": len(d), "n_all": len(diff), "everybody_now": int((diff["p_correct"] == 1).sum())}

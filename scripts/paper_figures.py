@@ -16,15 +16,17 @@ stats = json.load(open(out / "stats.json"))
 BLUE, ORANGE, GRAY, INK, MUTED = "#2a78d6", "#eb6834", "#b8b7b1", "#0b0b0b", "#52514e"
 plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED, "ytick.color": MUTED, "axes.grid": True, "grid.color": "#e6e5e1", "grid.linewidth": 0.6, "axes.axisbelow": True})
 
-dA = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.difficulties.csv")
-dS = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "stratum_binomial.difficulties.csv")
+A_RUN = RUNS / "repr_pooled_v2"
+dA = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
+itemsA = pd.read_parquet(A_RUN / "items.parquet")
+PANEL_NAMES = {r["run"]: (r["name"] + (", " + r["held_out"] + " held out" if r["held_out"] in ("studies", "tissues") else "")) for r in stats["compA_panels"]}
 dB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.difficulties.csv")
-aA = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv")
+aA = pd.read_csv(A_RUN / "rasch" / "cell_level.abilities.csv")
 aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv")
 cov = pd.concat([pd.read_parquet(p) for p in (RUNS / "pert_pool_v0").glob("*.perturbation.items.parquet")])
 cov = cov[~cov.index.duplicated()]
 
-fig, axes = plt.subplots(2, 2, figsize=(9.5, 7.2))
+fig, axes = plt.subplots(2, 2, figsize=(10, 7.8))
 axes = axes.ravel()
 bins = np.arange(-6, 6.01, 0.5)
 
@@ -42,14 +44,27 @@ def hist_panel(ax, diff, abil, color, title, ylabel):
     ax.set_xlim(-6, 6)
 
 
-hist_panel(axes[0], dA, aA, BLUE, "a  Representation: cells", "items")
-hist_panel(axes[1], dS, aA, BLUE, "b  Representation: strata (binomial)", "strata")
+hist_panel(axes[0], dA, aA, BLUE, "a  Representation: cells (pooled)", "items")
+# b: per-panel distributions on the pooled representation scale
+mA = dA.merge(itemsA[["source_run"]], left_on="item_id", right_index=True)
+mA = mA[~mA["degenerate"]]
+orderA = mA.groupby("source_run")["difficulty"].median().sort_values().index
+ax = axes[1]
+dataA = [mA.loc[mA["source_run"] == r, "difficulty"].values for r in orderA]
+ax.boxplot(dataA, vert=False, widths=0.6, showfliers=False, patch_artist=True, medianprops=dict(color=INK, lw=1.2), boxprops=dict(facecolor=BLUE, alpha=0.55, edgecolor=BLUE, lw=0.8), whiskerprops=dict(color=MUTED, lw=0.8), capprops=dict(color=MUTED, lw=0.8))
+ax.set_yticks(range(1, len(orderA) + 1))
+ax.set_yticklabels([f"{PANEL_NAMES.get(r, r)}  (n={len(d):,})" for r, d in zip(orderA, dataA)], fontsize=7)
+ax.axvspan(aA["ability"].min(), aA["ability"].max(), color=GRAY, alpha=0.25, lw=0, zorder=0)
+ax.axvline(aA["ability"].max(), color=INK, lw=1, ls="--")
+ax.set_xlim(-6, 6)
+ax.set_xlabel("item difficulty (logits), pooled scale", fontsize=8.5)
+ax.set_title("b  Representation: by panel\n(informative items, pooled scale)\n", loc="left", fontsize=8, color=INK)
 hist_panel(axes[2], dB, aB, ORANGE, "c  Perturbation: conditions (pooled)", "items")
 
 # d: per-dataset distributions on the pooled perturbation scale
 m = dB.merge(cov, left_on="item_id", right_index=True)
 m = m[~m["degenerate"]]
-short = {"ReplogleWeissman2022_K562_gwps": "Replogle K562 genome-wide", "ReplogleWeissman2022_K562_essential": "Replogle K562 essential", "ReplogleWeissman2022_rpe1": "Replogle RPE1", "NadigOConner2024_jurkat": "Nadig Jurkat", "NadigOConner2024_hepg2": "Nadig HepG2", "SrivatsanTrapnell2020_sciplex3": "sciPlex3 (drug)", "McFarlandTsherniak2020": "McFarland (drug)", "FrangiehIzar2021_RNA": "Frangieh (KO)", "NormanWeissman2019_filtered": "Norman (CRISPRa)", "AdamsonWeissman2016_GSM2406681_10X010": "Adamson", "TianKampmann2021_CRISPRi": "Tian 2021 neurons", "TianKampmann2019_iPSC": "Tian 2019 iPSC", "TianKampmann2019_day7neuron": "Tian 2019 neurons", "tahoe100m": "Tahoe-100M (drug)"}
+short = {"ReplogleWeissman2022_K562_gwps": "Replogle K562 genome-wide", "ReplogleWeissman2022_K562_essential": "Replogle K562 essential", "ReplogleWeissman2022_rpe1": "Replogle RPE1", "NadigOConner2024_jurkat": "Nadig Jurkat", "NadigOConner2024_hepg2": "Nadig HepG2", "SrivatsanTrapnell2020_sciplex3": "sciPlex3 (drug)", "McFarlandTsherniak2020": "McFarland (drug)", "FrangiehIzar2021_RNA": "Frangieh (KO)", "NormanWeissman2019_filtered": "Norman (CRISPRa)", "AdamsonWeissman2016_GSM2406681_10X010": "Adamson", "TianKampmann2021_CRISPRi": "Tian 2021 neurons", "TianKampmann2019_iPSC": "Tian 2019 iPSC", "TianKampmann2019_day7neuron": "Tian 2019 neurons", "tahoe100m": "Tahoe-100M (drug)", "parse_pbmc_cytokines": "Parse PBMC (cytokine)"}
 order = m.groupby("dataset_id")["difficulty"].median().sort_values().index
 ax = axes[3]
 data = [m.loc[m["dataset_id"] == ds, "difficulty"].values for ds in order]
