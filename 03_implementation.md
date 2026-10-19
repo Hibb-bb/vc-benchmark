@@ -543,7 +543,7 @@ Nystroem k64 (0.09) ~ Nystroem k256 (0.08) ~ **scVI-30D (0.08)** > PCA-256D (0.0
 - The 11-panel pooled scale `repr_pooled_scbasecount_v0` (with mouse) predates the scVI runs and
   does not include them; the human-only scale is the one to ship.
 
-#### 7.6.2 Scaled-up human panels, `human200` (2026-10-19)
+#### 7.7.2 Scaled-up human panels, `human200` (2026-10-19)
 
 Same recipe and caps, but every filter-passing sample is used up to 200 per tissue (blood 200 of
 713 available, lung 195, bone marrow 171, skin 97, liver 78) and the multitissue panel takes the
