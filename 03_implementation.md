@@ -542,3 +542,43 @@ Nystroem k64 (0.09) ~ Nystroem k256 (0.08) ~ **scVI-30D (0.08)** > PCA-256D (0.0
 - Latent 10 is clearly too small (about 0.5 logits below latent 30 on every panel).
 - The 11-panel pooled scale `repr_pooled_scbasecount_v0` (with mouse) predates the scVI runs and
   does not include them; the human-only scale is the one to ship.
+
+#### 7.6.2 Scaled-up human panels, `human200` (2026-10-19)
+
+Same recipe and caps, but every filter-passing sample is used up to 200 per tissue (blood 200 of
+713 available, lung 195, bone marrow 171, skin 97, liver 78) and the multitissue panel takes the
+12 largest single-UBERON tissues x 30 samples (355: PBMC, lung, bone marrow, skin, liver, cornea,
+pancreatic islets, lymph node, brain, breast, prostate, pancreas; tissues held out). Runs are
+`repr_scbasecount_human200_<slice>` so the 60-sample runs stay valid; slice lists
+`data/raw/scbasecount/lists/human200_*.txt`. Concat 15 to 40 min per slice (0.26 to 0.99 M cells
+read), probe 15 to 25 min on 5 CPUs, scVI 14 min per setting on a 2080 Ti; whole set in 3 h on
+three streams. Pooled scale `runs/repr_pooled_scbasecount_human200_v0` (278,050 items, 46,365
+passed by nobody; its responses file is 122 MB and stays out of git).
+
+| panel | samples | train cells | test items | nobody passes | best classical (ability, acc) | scVI-30D (ability, acc, rank/30) |
+|---|---|---|---|---|---|---|
+| human200 lung | 195 | 145,543 | 64,635 | 6.7 % | Nystroem k256 (1.44, 0.702) | 1.14, 0.671, 9 |
+| human200 skin | 97 | 68,112 | 28,812 | 10.8 % | Nystroem k256 (0.41, 0.572) | 0.34, 0.564, 3 |
+| human200 bone marrow | 171 | 104,777 | 41,262 | 13.7 % | Nystroem k256 (0.16, 0.550) | **0.31, 0.569, 1** |
+| human200 liver | 78 | 51,432 | 17,559 | 14.5 % | Nystroem k256 (-0.03, 0.518) | -0.08, 0.513, 4 |
+| human200 blood | 200 | 129,019 | 46,625 | 11.5 % | Nystroem k256 (0.21, 0.557) | **0.53, 0.598, 1** |
+| human200 multitissue | 355 | 180,127 | 79,157 | 32.1 % | Nystroem k64 (-1.15, 0.386) | -1.31, 0.370, 13 |
+
+Pooled human200 ladder: **scVI-30D tissue (0.10)** ~ Nystroem k256 (0.08) ~ scVI-30D none (0.07)
+> PCA-128D (0.04) ~ PCA-256D (0.04) ~ Nystroem k64 (0.04) > ICA-64 ~ PCA-64D (0.03) > ... > NMF-64
+(-0.16) ... > depth (-3.1) > random (-3.6). Observations:
+
+- More samples do not make the single-tissue panels easier: top accuracy is flat on lung, skin and
+  liver and drops a little on bone marrow, because the extra samples add more label vocabularies
+  (the share passed by nobody rises 1 to 2 points). Blood is the exception (0.455 to 0.557 for the
+  classical top, 0.497 to 0.598 for scVI): the 60-sample slice was dominated by a few low-depth
+  PBMC studies, and the 200-sample slice averages over 200 libraries.
+- scVI-30D moves from a tie with PCA to the top of the pooled scale, and from rank 9/10 to rank
+  3/4 on skin and liver. With 50 k to 180 k training cells the count-model encoder benefits from
+  the extra data more than the linear maps do, which is the first panel family where that holds.
+- The 355-sample tissue-held-out panel is harder than the 120-sample one (32 % unreachable vs
+  22 %): the six added tissues (cornea, islets, lymph node, brain, breast, prostate) bring label
+  vocabularies with little overlap, and 21,568 held-out cells had types absent from training and
+  were dropped before scoring.
+- Kept for the item bank: both the 60-sample and the 200-sample families; the 200-sample pooled
+  scale is the current reference for scBaseCount human.
