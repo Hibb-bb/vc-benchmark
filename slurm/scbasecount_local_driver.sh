@@ -12,7 +12,7 @@ PY=.venv/bin/python
 mkdir -p logs data/raw/scbasecount data/panels
 for SLICE in "$@"; do
   echo "=== $SLICE  $(date)"
-  case $SLICE in human_*) ORG=Homo_sapiens;; mouse_*) ORG=Mus_musculus;; zebrafish_*) ORG=Danio_rerio;; fly_*) ORG=Drosophila_melanogaster;; *) echo "unknown organism for $SLICE"; continue;; esac
+  case $SLICE in human*) ORG=Homo_sapiens;; mouse_*) ORG=Mus_musculus;; zebrafish_*) ORG=Danio_rerio;; fly_*) ORG=Drosophila_melanogaster;; *) echo "unknown organism for $SLICE"; continue;; esac
   LIST=data/raw/scbasecount/lists/${SLICE}.txt
   H5AD=data/raw/scbasecount/${SLICE}.h5ad
   if [ ! -f "$H5AD" ]; then
