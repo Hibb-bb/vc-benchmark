@@ -582,3 +582,11 @@ Pooled human200 ladder: **scVI-30D tissue (0.10)** ~ Nystroem k256 (0.08) ~ scVI
   were dropped before scoring.
 - Kept for the item bank: both the 60-sample and the 200-sample families; the 200-sample pooled
   scale is the current reference for scBaseCount human.
+
+#### 7.7.3 Pooled representation scale v3 (Quest, 2026-10-19)
+
+`runs/repr_pooled_v3`: the eight curated panels plus the six `human200` scBaseCount panels (the 60-sample
+scBaseCount runs are kept but no longer pooled). 424,478 items, 370,341 informative, 52,890 passed by
+nobody; fit 8.5 min. Top: Nystroem k256 0.72 ~ scVI-30D tissue 0.72 ~ scVI-30D none 0.71 ~ PCA-128D 0.69.
+Paper (`paper/main.tex`) and `paper/bench/*` regenerated from this scale (`scripts/paper_stats.py`
+PANELS list). `humanall` scBaseCount panels are still running on the Arc workstation.

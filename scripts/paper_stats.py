@@ -14,7 +14,7 @@ import anndata as ad
 
 from vcb import DATA, RUNS, ROOT
 
-A_RUN = RUNS / "repr_pooled_v2"
+A_RUN = RUNS / "repr_pooled_v3"
 # (run, display name, held-out unit, train cells override for runs whose panel is not on this machine)
 PANELS = [
     ("repr_pool_v0", "Tabula Sapiens v2", "donors", None),
@@ -25,12 +25,12 @@ PANELS = [
     ("repr_immune_atlas_donor", "Cross-tissue immune atlas", "donors", None),
     ("repr_immune_atlas_tissue", "Cross-tissue immune atlas", "tissues", None),
     ("repr_parse_pbmc_celltype", "Parse 10M PBMC", "donors", None),
-    ("repr_scbasecount_human_lung", "scBaseCount, lung", "samples", 46086),
-    ("repr_scbasecount_human_skin", "scBaseCount, skin", "samples", 44290),
-    ("repr_scbasecount_human_bone_marrow", "scBaseCount, bone marrow", "samples", 35748),
-    ("repr_scbasecount_human_liver", "scBaseCount, liver", "samples", 38062),
-    ("repr_scbasecount_human_blood", "scBaseCount, blood", "samples", 36664),
-    ("repr_scbasecount_human_multitissue", "scBaseCount, 12 tissues", "tissues", 69141),
+    ("repr_scbasecount_human200_lung", "scBaseCount, lung", "samples", 145543),
+    ("repr_scbasecount_human200_skin", "scBaseCount, skin", "samples", 68112),
+    ("repr_scbasecount_human200_bone_marrow", "scBaseCount, bone marrow", "samples", 104777),
+    ("repr_scbasecount_human200_liver", "scBaseCount, liver", "samples", 51432),
+    ("repr_scbasecount_human200_blood", "scBaseCount, blood", "samples", 129019),
+    ("repr_scbasecount_human200_multitissue", "scBaseCount, 12 tissues", "tissues", 180127),
 ]
 PANEL_FILE = {"repr_pool_v0": "ts2_panel_v0"}
 

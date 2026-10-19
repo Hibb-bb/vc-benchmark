@@ -16,7 +16,7 @@ stats = json.load(open(out / "stats.json"))
 BLUE, ORANGE, GRAY, INK, MUTED = "#2a78d6", "#eb6834", "#b8b7b1", "#0b0b0b", "#52514e"
 plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED, "ytick.color": MUTED, "axes.grid": True, "grid.color": "#e6e5e1", "grid.linewidth": 0.6, "axes.axisbelow": True})
 
-A_RUN = RUNS / "repr_pooled_v2"
+A_RUN = RUNS / "repr_pooled_v3"
 dA = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
 itemsA = pd.read_parquet(A_RUN / "items.parquet")
 PANEL_NAMES = {r["run"]: (r["name"] + (", " + r["held_out"] + " held out" if r["held_out"] in ("studies", "tissues") else "")) for r in stats["compA_panels"]}
