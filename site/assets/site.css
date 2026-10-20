@@ -207,6 +207,12 @@ input.inp { min-width: 0; width: min(100%, 320px); }
 .mini .val { font-family: var(--mono); text-align: right; }
 .mini .bar-mini { height: 4px; background: var(--bg-3); border-radius: 2px; position: relative; overflow: hidden; grid-column: 1 / -1; }
 .mini .bar-mini i { position: absolute; top: 0; bottom: 0; background: var(--c, var(--accent)); left: var(--l); width: var(--w); }
+.why4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 1rem; }
+.why4 .fig h3 { font-size: 1.05rem; }
+ul.spec { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; font-size: 0.92rem; color: var(--fg-2); }
+ul.spec li::marker { color: var(--fg-3); }
+.card pre { font-size: 0.74rem; margin: 0; }
+.card .sub { font-size: 0.85rem; color: var(--fg-2); }
 .rules6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; }
 .rule { display: grid; gap: 0.35rem; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); }
 .rule h4 { font-size: 0.98rem; }

@@ -19,49 +19,114 @@
   <header class="wrap page-head">
     <p class="kicker">Contribute</p>
     <h1>Put a model on the scale</h1>
-    <p>Two routes, one response format. For version 0.1 the pipeline is run by the maintainers: send a pull request or an email with the files described here, and the model is placed with item difficulties anchored, then published with its ability and standard error.</p>
+    <p>Three ways in, one response format. For version 0.1 the maintainers run the pipeline: open a pull request against the <a href="https://github.com/Hibb-bb/vc-benchmark">repository</a> or write to us, and the model is placed with item difficulties anchored and published with its ability and standard error.</p>
   </header>
 
   <section class="wrap section tight">
-    <div class="prose">
-      <div class="callout">Version 0.1 has no automated submission service. Open a pull request against the <a href="https://github.com/Hibb-bb/vc-benchmark">repository</a> or write to the maintainers; turnaround is a few days for the representation panels and depends on screen size for perturbation.</div>
+    <figure class="scene">
+      <svg class="scene-svg" viewBox="0 0 1240 300" role="img" aria-label="Three submission routes, embeddings scored by the frozen probe, predictions scored by the pass rule, or a ready response table, converge on one response table, are placed with item difficulties held fixed, and appear on the board with ability, standard error, outfit, version and contamination register." style="width:100%;height:auto;display:block" font-family="var(--body)">
+<defs><marker id="rt-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 z" fill="var(--fg-3)"/></marker></defs>
+<rect x="20" y="26" width="250" height="68" rx="10" fill="var(--bg-2)" stroke="var(--s1)" stroke-width="1.2"/>
+<text x="145.0" y="48" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">Route 1 · embeddings</text>
+<text x="145.0" y="65" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">cells × dims per panel</text>
+<text x="145.0" y="80" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">.npy or obsm, panel cell order</text>
+<line x1="270" y1="60" x2="318" y2="60" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="320" y="26" width="190" height="68" rx="10" fill="var(--bg-3)" stroke="var(--line-2)" stroke-width="1.2"/>
+<text x="415.0" y="48" text-anchor="middle" font-size="14" fill="var(--fg)" font-weight="600">frozen probe</text>
+<text x="415.0" y="65" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">one multinomial read-out,</text>
+<text x="415.0" y="80" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">fixed settings, run by us</text>
+<line x1="510" y1="60" x2="560" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="20" y="116" width="250" height="68" rx="10" fill="var(--bg-2)" stroke="var(--s2)" stroke-width="1.2"/>
+<text x="145.0" y="138" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">Route 2 · predictions</text>
+<text x="145.0" y="155" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">held-out conditions × genes</text>
+<text x="145.0" y="170" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">per screen and split, fold_group</text>
+<line x1="270" y1="150" x2="318" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="320" y="116" width="190" height="68" rx="10" fill="var(--bg-3)" stroke="var(--line-2)" stroke-width="1.2"/>
+<text x="415.0" y="138" text-anchor="middle" font-size="14" fill="var(--fg)" font-weight="600">pass rule</text>
+<text x="415.0" y="155" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">Pearson@HVG beats</text>
+<text x="415.0" y="170" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">the context's mean shift</text>
+<line x1="510" y1="150" x2="560" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="20" y="206" width="250" height="68" rx="10" fill="var(--bg-2)" stroke="var(--line-2)" stroke-width="1.2"/>
+<text x="145.0" y="228" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">Route 3 · response table</text>
+<text x="145.0" y="245" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">you ran the probe or rule</text>
+<text x="145.0" y="260" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">yourself</text>
+<line x1="270" y1="240" x2="560" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="562" y="110" width="200" height="80" rx="10" fill="var(--bg-2)" stroke="var(--fg)" stroke-width="1.2"/>
+<text x="662.0" y="132" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">response table</text>
+<text x="662.0" y="149" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">item_id · respondent_id · k · n</text>
+<text x="662.0" y="164" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">k passes out of n trials</text>
+<text x="662.0" y="179" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">checked against held-out items</text>
+<line x1="762" y1="150" x2="812" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="814" y="110" width="190" height="80" rx="10" fill="var(--bg-2)" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="909.0" y="132" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">anchored placement</text>
+<text x="909.0" y="149" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">difficulties held fixed</text>
+<text x="909.0" y="164" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">takes seconds</text>
+<text x="909.0" y="179" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">no published ability moves</text>
+<line x1="1004" y1="150" x2="1054" y2="150" stroke="var(--line-2)" stroke-width="1.3" marker-end="url(#rt-a)"/>
+<rect x="1056" y="96" width="170" height="108" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.2"/>
+<text x="1141.0" y="118" text-anchor="middle" font-size="14.5" fill="var(--fg)" font-weight="600">on the board</text>
+<text x="1141.0" y="135" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">ability ± SE</text>
+<text x="1141.0" y="150" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">outfit, pass rate</text>
+<text x="1141.0" y="165" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">scale version</text>
+<text x="1141.0" y="180" text-anchor="middle" font-size="12.6" fill="var(--fg-2)">contamination register</text>
+<text x="912" y="236" text-anchor="middle" font-size="12.2" fill="var(--fg-3)">next recalibration: every model refit together, version advances</text>
+<line x1="912" y1="190" x2="912" y2="222" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="2 3"/>
+<text x="20" y="290" text-anchor="start" font-size="12.5" fill="var(--fg-3)">Three ways in, one response format, one placement step.</text>
+</svg>
+      <figcaption>Placement holds every item difficulty at its current value, so it takes seconds and moves no published ability. At the next recalibration every model is refit together and the version advances.</figcaption>
+    </figure>
+  </section>
 
-      <h2>Route 1: embeddings</h2>
-      <p>For the representation component you ship embeddings and we run the frozen probe. For each panel you want to be scored on, provide one matrix per panel of shape (cells × dimensions) for every cell in the panel, training and test, in the panel's cell order, as <code>.npy</code> or an <code>.h5ad</code> with the embedding in <code>obsm</code>. Panels are distributed as <code>.h5ad</code> files with raw counts, the <code>split</code> column and the stratum labels; the test labels are included, because the probe is ours and the split is by whole donors, studies or tissues. State which cells your model saw during pretraining.</p>
-      <p>This is the same route the scVI respondents took: <code>scripts/extract_scvi_embedding.py</code> writes the matrix, <code>scripts/append_repr_responses.py</code> runs the probe and appends the responses, and a refit places the model.</p>
+  <section class="wrap section">
+    <div class="grid cols-3">
+      <div class="card"><h3>Route 1 · embeddings</h3>
+        <ul class="spec">
+          <li>One matrix per panel, cells × dimensions, every cell (training and test) in the panel's cell order.</li>
+          <li><code>.npy</code>, or <code>.h5ad</code> with the embedding in <code>obsm</code>.</li>
+          <li>Panels ship as <code>.h5ad</code> with raw counts, the <code>split</code> column and strata. Test labels are included: the probe is ours and the split is by whole donors, studies or tissues.</li>
+          <li>State which cells the model saw in pretraining.</li>
+        </ul>
+        <p class="sub">The scVI respondents took this route: <code>scripts/extract_scvi_embedding.py</code>, then <code>scripts/append_repr_responses.py</code>.</p></div>
+      <div class="card"><h3>Route 2 · predictions</h3>
+        <ul class="spec">
+          <li>One matrix per screen and split, held-out conditions × genes, in the screen's gene order.</li>
+          <li>Rows follow the published fold assignment (<code>fold_group</code> in the items table).</li>
+          <li>Train on the training folds and all control cells; never on the held-out conditions.</li>
+          <li>Scored with the fixed metric and pass rule.</li>
+        </ul>
+        <p class="sub">scGen and the scVI counterfactual took this route through <code>scripts/append_pert_scores.py</code>.</p></div>
+      <div class="card"><h3>Route 3 · response table</h3>
+        <p class="sub">If you reproduce the probe or the pass rule yourself, send the table both components share:</p>
+        <pre><code>item_id                  respondent_id  k  n
+repr_pool_v0::cell_0001  my_model_v1    1  1
+tahoe100m::drugX::ctx=A549::dose=0.05  my_model_v1  0  1</code></pre>
+        <ul class="spec">
+          <li><code>k</code> passes out of <code>n</code> trials: cell items have <code>n = 1</code>, stratum items the stratum size.</li>
+          <li>Item identifiers must match the published items tables exactly.</li>
+          <li>Tables are checked against the items we hold out before placement.</li>
+        </ul></div>
+    </div>
+  </section>
 
-      <h2>Route 2: predictions</h2>
-      <p>For the perturbation component you ship predicted pseudobulk deltas. For each screen and split, provide one matrix of shape (test items × genes) in the screen's gene order, one row per held-out condition of each fold, using the published fold assignment in the items table (<code>fold_group</code>). Your model may train on the training folds' cells and conditions and on all control cells; it must not see the held-out conditions. Scoring applies the fixed metric and pass rule. The scGen and scVI counterfactual respondents took this route through <code>scripts/append_pert_scores.py</code>.</p>
-
-      <h2>Route 3: a response table</h2>
-      <p>If you reproduce the probe or the pass rule yourself, the minimal submission is the response table both components share, one row per item and model:</p>
-      <pre><code>item_id            respondent_id     k   n
-repr_pool_v0::cell_0001   my_model_v1   1   1
-tahoe100m::drugX::ctx=A549::dose=0.05   my_model_v1   0   1</code></pre>
-      <p><code>k</code> is the number of passes out of <code>n</code> trials, so cell-level items have <code>n = 1</code> and stratum-level items the stratum size. Item identifiers must match the published items tables exactly. Response tables are checked against the items we hold out: a table that passes items the published pool shows as unreachable triggers a manual look before placement.</p>
-
-      <h2>Anchored placement</h2>
-      <p>A new model is first placed with every item difficulty fixed at its current value, which takes seconds and leaves every published ability unchanged. Its ability, standard error, pass rate and outfit go on the board with the scale version it was placed on. At the next recalibration every model is refit together.</p>
-
-      <h2>The contamination register</h2>
-      <p>For every learned model, declare for each source whether it was in the pretraining corpus, in any fine-tuning data, or clean. Sources are listed on the <a href="../datasets/">datasets</a> page; CELLxGENE atlases and scBaseCount overlap heavily with the pretraining data of current single-cell foundation models, so most entries will not be clean, and that is fine. The register is published alongside the ability and is what makes it interpretable.</p>
-
-      <h2>House rules</h2>
-      <ul>
-        <li>Respondent names are stable strings reused across every run and version; a model is never renamed in one run only.</li>
-        <li>Published items are never modified. A fix to a panel or screen produces a new panel or screen and a new scale version.</li>
-        <li>Classical respondents and floors are always refit alongside submissions, so the bottom of the scale is checked every time.</li>
-        <li>Abilities from different scale versions are never compared without saying so.</li>
-        <li>Submissions that only tie the baseline on most items are kept as diagnostics and flagged as misfit, not ranked.</li>
-      </ul>
-
-      <h2>Where a new source helps most</h2>
-      <ul>
-        <li>Representation items above +2 logits that are not label noise: state-level annotations such as treatment or disease state, at pseudobulk resolution.</li>
-        <li>Perturbation screens with chemical descriptors, so that unseen-compound prediction becomes a learnable split.</li>
-        <li>A cytokine to gene mapping for the Parse screen, so that unseen-cytokine items can use the control-coexpression gene embedding.</li>
-        <li>Foundation-model embeddings and perturbation predictions with a complete contamination declaration.</li>
-      </ul>
+  <section class="wrap section">
+    <div class="grid cols-3">
+      <div class="card"><h3>Contamination register</h3>
+        <p>For every learned model, declare per <a href="../datasets/">source</a> whether it was in pretraining, in fine-tuning, or clean. Most entries for current foundation models will not be clean, and that is fine: the register is published next to the ability and is what makes it interpretable.</p></div>
+      <div class="card"><h3>House rules</h3>
+        <ul class="spec">
+          <li>Respondent names are stable across every run and version.</li>
+          <li>Published items are never modified; a fix produces a new panel or screen and a new version.</li>
+          <li>Classical respondents and floors are refit alongside every submission.</li>
+          <li>Abilities from different versions are never compared without saying so.</li>
+          <li>Submissions that only tie the baseline are flagged as misfit, not ranked.</li>
+        </ul></div>
+      <div class="card"><h3>Where a new source helps most</h3>
+        <ul class="spec">
+          <li>Representation items above +2 logits that are not label noise: treatment or disease state, at pseudobulk resolution.</li>
+          <li>Perturbation screens with chemical descriptors, so unseen-compound prediction becomes learnable.</li>
+          <li>A cytokine to gene mapping for the Parse screen.</li>
+          <li>Foundation-model embeddings and predictions with a complete contamination declaration.</li>
+        </ul></div>
     </div>
   </section>
 
