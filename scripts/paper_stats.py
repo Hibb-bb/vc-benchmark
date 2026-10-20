@@ -87,7 +87,7 @@ for r in compA.itertuples():
     lines.append(f"{r.name} & {r.held_out} & {r.test_units} & {r.types} & {tex_int(r.train_cells)} & {tex_int(r.items)} & {r.strata} & {100*r.nobody:.0f}\\% & {r.mean_b:+.2f} \\\\")
 lines.append("\\midrule")
 lines.append(f"Total & & & {res['compA']['types']} & {tex_int(res['compA']['train_cells'])} & {tex_int(res['compA']['test_items'])} & {tex_int(res['compA']['strata'])} & {100*(dA_pooled['p_correct']==0).mean():.0f}\\% & \\\\")
-(out_dir / "tab_compA.tex").write_text("\\begin{tabular}{@{}llrrrrrrr@{}}\n\\toprule\nPanel & Held out & Units & Types & Train cells & Items & Strata & None pass & Mean diff. \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n")
+(out_dir / "tab_compA.tex").write_text("\\begin{tabular}{@{}llrrrrrrr@{}}\n\\toprule\nPanel & Held out & N held out & Cell types & Train cells & Items & Strata & None pass & Mean diff. \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n")
 items = pd.read_parquet(RUNS / "repr_pool_v0" / "items.parquet")  # TS2 covariates (compartment) for the appendix
 
 # ---------- difficulty distributions ----------

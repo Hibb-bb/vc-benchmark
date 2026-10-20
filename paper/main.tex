@@ -92,6 +92,43 @@ thirteen screens from the scPerturb collection \citep{scperturb}, the Tahoe-100M
 \citep{tahoe} and the Parse cytokine atlas; see \Cref{tab:compB}. All sources are public
 under CC0, CC BY or CC BY-NC licences.
 
+
+\paragraph{Representation panels.}
+Every annotation source is turned into one or more \emph{panels} by the same procedure.
+The unit of the split is chosen first: whole donors, whole studies, or whole tissues are
+held out, so that nothing is shared between the training panel and the test items and the
+classifier cannot learn donor, study, or tissue identity as a stand-in for cell type. We
+call each combination of context, cell type and donor a \emph{stratum}; within each stratum
+we keep at most 200 training and 50 to 100 test cells and drop strata with fewer than 20
+cells. Test cells whose type is absent from training are kept in the panel but not scored.
+\Cref{tab:compA} lists the fourteen panels. Eleven hold out donors, which is the standard
+annotation setting; three hold out whole studies or tissues, so that a type must be
+recognized in a context the classifier has never seen. The HLCA and the immune atlas appear
+twice, once under each split. The scBaseCount panels differ from the curated atlases in
+one respect that matters below: each holds every filter-passing sample up to 200 per tissue,
+between 78 and 200 samples from different public submissions, and the twelve-tissue panel
+355 samples; labels are drawn from the repository's per-cell annotation, so the label
+vocabulary is not uniform across samples. Two further panels were built and set aside as
+floors: a Parse panel whose label is the cytokine a cell was exposed to, which no embedding
+and probe answer above a few percent, and a mouse twelve-tissue scBaseCount panel with 109
+label vocabularies, on which 60\% of items are passed by nothing. Six mouse single-tissue
+panels were also run; this release pools human panels only. \Cref{tab:compA_ts2} in the
+appendix gives the Tabula Sapiens panel by tissue.
+
+\begin{table}[t]
+\centering
+\caption{Representation panels. Held out names the unit whose members are held out and N
+held out counts them: the donors, samples, studies or tissues whose cells form the test
+items. Cell types counts the distinct labels among the items; strata are context, cell type
+and donor combinations. Passed by none is the fraction of a panel's
+items that no model labels correctly; mean difficulty is on the pooled scale of
+\Cref{sec:fitting}, over informative items.}
+\label{tab:compA}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\input{bench/tab_compA.tex}
+\end{table}
+
 \begin{table}[t]
 \centering
 \caption{Perturbation items by source. An item is a condition with at least 50
@@ -124,41 +161,6 @@ Tian 2019, neurons & CRISPRi & 1 & 35 & 35 & 8k \\
 Total & & & & 88,164 & 109.5M \\
 \bottomrule
 \end{tabular}
-\end{table}
-
-\paragraph{Representation panels.}
-Every annotation source is turned into one or more \emph{panels} by the same procedure.
-The unit of the split is chosen first: whole donors, whole studies, or whole tissues are
-held out, so that nothing is shared between the training panel and the test items and the
-classifier cannot learn donor, study, or tissue identity as a stand-in for cell type. We
-call each combination of context, cell type and donor a \emph{stratum}; within each stratum
-we keep at most 200 training and 50 to 100 test cells and drop strata with fewer than 20
-cells. Test cells whose type is absent from training are kept in the panel but not scored.
-\Cref{tab:compA} lists the fourteen panels. Eleven hold out donors, which is the standard
-annotation setting; three hold out whole studies or tissues, so that a type must be
-recognized in a context the classifier has never seen. The HLCA and the immune atlas appear
-twice, once under each split. The scBaseCount panels differ from the curated atlases in
-one respect that matters below: each holds every filter-passing sample up to 200 per tissue,
-between 78 and 200 samples from different public submissions, and the twelve-tissue panel
-355 samples; labels are drawn from the repository's per-cell annotation, so the label
-vocabulary is not uniform across samples. Two further panels were built and set aside as
-floors: a Parse panel whose label is the cytokine a cell was exposed to, which no embedding
-and probe answer above a few percent, and a mouse twelve-tissue scBaseCount panel with 109
-label vocabularies, on which 60\% of items are passed by nothing. Six mouse single-tissue
-panels were also run; this release pools human panels only. \Cref{tab:compA_ts2} in the
-appendix gives the Tabula Sapiens panel by tissue.
-
-\begin{table}[t]
-\centering
-\caption{Representation panels. Held-out units are the donors, samples, studies or tissues
-whose cells form the test items; types count the cell-type labels among the items; strata
-are context, cell type and donor combinations. Passed by none is the fraction of a panel's
-items that no model labels correctly; mean difficulty is on the pooled scale of
-\Cref{sec:fitting}, over informative items.}
-\label{tab:compA}
-\scriptsize
-\setlength{\tabcolsep}{4pt}
-\input{bench/tab_compA.tex}
 \end{table}
 
 \paragraph{Perturbation items.}
