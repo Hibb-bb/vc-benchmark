@@ -24,7 +24,7 @@ Sapiens v2 and the scBaseCount repository, and fifteen public perturbation scree
 110 million cells in all, into 424,478 cell-type annotation items covering 299 cell-type
 labels and 88,164 perturbation items covering roughly 10,000 gene targets, 500 compounds and
 90 cytokines in more than 450 cell lines, donors and culture conditions. We evaluate [N]
-models on it, from principal components and ridge regression to scVI and scGen.
+models on it, from principal components and ridge regression to scVI.
 Difficulties are estimated with a one-parameter item response model from a pool of
 deliberately simple models, so the scale is anchored to methods that cannot have memorized
 the test data. We report the resulting difficulty distributions, the abilities of every
@@ -388,7 +388,6 @@ PCA regression-$k$D & ridge to the top-$k$ components with a fixed penalty; the 
 Gaussian process (kernel width) & Gaussian-process regression with an RBF kernel on features, to the top-50 components & kernel width 0.5 or 2 \\
 Training-fraction ladder & ridge and KNN trained on a random 30\% or 10\% of the training conditions & 2 fractions \\
 Low-rank completion & soft-impute of the perturbation-by-context response matrix; multi-context screens only & rank $\in\{2,5,10\}$ \\
-scGen & variational autoencoder with latent arithmetic \citep{scgen}; unseen-context setting only & \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -478,30 +477,7 @@ against 0.36 for the mean shift and passes 87\% of items, with ability $3.74$ on
 low-rank completion reaches 0.45 and passes 59\%; 719 of 13,967 conditions are passed by
 no model. In Parse's unseen-cytokine split, KNN ($K=20$) passes 47\% of items and every other
 model fewer than 17\%, none exceeds the mean shift's raw correlation of 0.36 on average, and
-3,367 conditions are passed by no model. scGen was run in this split on the three screens
-of \Cref{tab:scgen}: on McFarland it passes 81\% of items with ability $+2.75$, first of
-nine models, with a raw correlation of 0.53 against 0.32 for the mean shift; on sciPlex3 it
-is fourth of nine at $-1.76$ with 0.13 against 0.26; on Frangieh tenth of 22 at $-2.77$ with
-0.18 against 0.32. Because it is run per screen in this split, it is not on the pooled
-scale of \Cref{fig:abilities}b.
-
-\begin{table}[t]
-\centering
-\caption{scGen in the unseen-combination split. Raw is the mean Pearson correlation on the
-2,000 most variable genes, next to the mean shift's value. Rank is among the models that
-ran on that screen.}
-\label{tab:scgen}
-\small
-\begin{tabular}{@{}lrrrrl@{}}
-\toprule
-Screen & Contexts & Raw scGen & Raw mean shift & Ability and rank & Best model \\
-\midrule
-McFarland 2020 & 196 & 0.53 & 0.32 & $+2.75$, 1 of 9 & scGen \\
-sciPlex3, Srivatsan 2020 & 3 & 0.13 & 0.26 & $-1.76$, 4 of 9 & low-rank, rank 10 \\
-Frangieh 2021 & 3 & 0.18 & 0.32 & $-2.77$, 10 of 22 & low-rank, rank 5 \\
-\bottomrule
-\end{tabular}
-\end{table}
+3,367 conditions are passed by no model.
 
 \Cref{fig:retire} gives the fraction of items that are already uninformative for the
 evaluated models: an item is too easy at threshold $t$ when every model other than the
