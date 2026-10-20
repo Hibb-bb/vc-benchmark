@@ -67,8 +67,9 @@ if a.component == "pert":
         L.append(f"\n## {tag}")
         dist_block(diff)
         abil_block(abil, "Abilities")
-        if tag == "pooled":
-            cov = pd.concat([pd.read_parquet(p) for p in run.glob("*.perturbation.items.parquet")])
+        if tag.startswith("pooled"):
+            scheme = "context" if tag == "pooled_context" else "perturbation"
+            cov = pd.concat([pd.read_parquet(p) for p in run.glob(f"*.{scheme}.items.parquet")])
             cov = cov[~cov.index.duplicated()]
             # per-dataset difficulty means show the dataset factor
             d = diff.merge(cov, left_on="item_id", right_index=True)

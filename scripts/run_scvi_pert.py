@@ -78,7 +78,9 @@ for i in range(0, len(sel), 200_000):  # chunked read, HVG columns only
     blocks.append(sp.csr_matrix(cells_b[sel[i:i + 200_000]].to_memory().X)[:, hv_idx])
 X = sp.vstack(blocks).tocsr().astype(np.float32)
 obs = cobs.iloc[sel].copy()
-pert_key = pert_dose_key(obs)
+# key cells through their item (cell tables of some screens carry no dose column)
+item_key = dict(zip(meta.index, pert_dose_key(meta)))
+pert_key = np.array([item_key.get(i, "control") for i in obs["item_id"].astype(str).tolist()], dtype=object)
 pert_key[obs["is_control"].values.astype(bool)] = "control"
 obs["pert_key"] = pert_key  # plain object strings; scvi makes the categorical itself
 obs["ctx"] = np.array([str(x) for x in obs["context"].tolist()], dtype=object)
@@ -93,7 +95,6 @@ model.train(max_epochs=max_epochs, early_stopping=True, batch_size=512 if n > 20
 log(f"trained {len(model.history['elbo_train'])} epochs")
 
 # prediction: control cells of the target context decoded under the target perturbation vs under control
-item_key = dict(zip(meta.index, pert_dose_key(meta)))
 item_ctx = dict(zip(meta.index, [str(x) for x in meta["context"].tolist()]))
 X_items = np.asarray(items.X)
 ms = D[tr].mean(0)
