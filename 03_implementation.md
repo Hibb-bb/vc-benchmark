@@ -665,7 +665,33 @@ Scores are kept in a separate run and fitted jointly with the main pool (`fit_ra
 pert_pool_v0,pert_latent_v0`) so the published `pert_pool_v0` scale is untouched. Smoke test on Adamson and Tian
 iPSC: the ladder is ordered as in component A (random 0.02 Pearson, depth 0.16, random projection below PCA,
 Nystroem on top at 0.29; mean shift 0.45 in the unseen-perturbation scheme). Twenty (screen, scheme) tasks
-submitted as array 4624678; results to be added here and to `runs/link_parse_v0/link.md` (encoders section).
+submitted as array 4624678 (3 to 80 min per task; Tahoe 80 min per scheme at 10 cells per item), joint fit
+`runs/pert_joint_v0` (58 respondents on the context scale, 56 on the perturbation scale). Results
+(`runs/link_parse_v0/link.md`, encoders section, and the website's link page):
+
+- Across the 27 shared encoders the A ability and the B ability of the same encoder correlate at Spearman
+  +0.94 (context scheme) and +0.95 (perturbation scheme); +0.95 without the random projections. A
+  representation that annotates cells well is, on this pool, also a better basis for perturbation responses.
+- It is not only dimension: at equal dimension the random-projection null is far below PCA in both
+  components (128D: A -0.07 / B -1.27 against PCA +0.69 / +0.63; 32D: -1.29 / -3.02 against +0.53 / -2.09),
+  and ICA-64D equals PCA-64D in both (a rotation of the same subspace), as it should.
+- The mapping breaks inside the top cluster. Nyström kernel features are the best A encoder (+0.72) but a
+  poor B basis (-0.57 against +0.87 for PCA-256D): the nonlinear features that separate cell types do not
+  decode perturbation responses through a linear read-out. NMF-64D is similar (A +0.41, B -0.94).
+- The whole family is far below the models that learn their basis from responses: best latent respondent
+  PCA-256D at +0.87 on the context scale against pcareg_k200 +5.8, MLP +4.9, low-rank +4.5; in the
+  unseen-perturbation scheme -2.57 against -1.60 for pcareg_k200. A subspace fitted to cells carries
+  perturbation responses much worse than a subspace fitted to responses, by 2 to 5 logits. The GMM
+  memberships and PCA-4D/8D misfit (outfit 2 to 5): a handful of coordinates is not a response basis at all.
+- Joint-fit caveat: with 27 latent respondents added, the delta-basis models' outfit rises to 10 to 60 on the
+  context scale (they pass items the latent family fails in a pattern the 1PL does not expect), so the
+  published `pert_pool_v0` scale stays the reference and `pert_joint_v0` is for this comparison only. The
+  two-dimensional IRT (next step) is the right model for exactly this: two abilities, one per basis type.
+
+Reading for the website: a good representation makes a better perturbation basis than a poor one, but
+representation quality explains the ordering within a family, not the gap between a cell basis and a
+response basis; foundation-model encoders enter this table through `scripts/extract_fm_embedding.py`
+(their B side needs the same latent recipe, `latent_fm_<model>`, not yet run).
 
 **Joint two-dimensional IRT** (not started): pool A and B responses of the shared-encoder respondents and estimate
 the correlation between the two latent abilities.

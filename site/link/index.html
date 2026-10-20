@@ -40,6 +40,12 @@
   <section class="wrap section" id="encoders">
     <div class="head"><h2>Model level: shared encoders</h2><p class="lead">A perturbation respondent family in which the predictor is held fixed and only the encoder varies: cells are embedded with each representation model, the perturbation's latent shift is learned in that space, and the prediction is decoded back to genes. Every encoder then has an ability on both scales. Random projections at the same dimension are the null: if they track PCA in the perturbation component, dimension matters and representation quality does not.</p></div>
     <div id="enc-body"></div>
+    <div class="prose" id="enc-reading">
+      <h3>Reading</h3>
+      <p>Across the 27 classical encoders the two abilities move together: Spearman +0.94 on the unseen-combination scale and +0.95 on the unseen-perturbation scale, and still +0.95 with the random projections removed. It is not only dimension. At equal dimension the random-projection null sits far below PCA in both components (128D: −0.07 and −1.27 against +0.69 and +0.63 for PCA), and ICA-64D lands exactly where PCA-64D does, as a rotation of the same subspace should.</p>
+      <p>The mapping breaks inside the top cluster. Nyström kernel features are the best annotation encoder (+0.72) but a poor response basis (−0.57, against +0.87 for PCA-256D): the nonlinear features that separate cell types do not decode perturbation responses through a linear read-out. And the whole family sits two to five logits below the models that learn their basis from responses (PCA regression +5.8, MLP +4.9, low-rank +4.5 on the same scale). A subspace fitted to cells carries perturbation responses much worse than a subspace fitted to responses; representation quality orders the encoders within a family, it does not close that gap.</p>
+      <p>Foundation-model encoders enter this table through the same recipe once their embeddings are on the representation scale; see the contribute page.</p>
+    </div>
     <p id="err" class="empty" hidden></p>
   </section>
 

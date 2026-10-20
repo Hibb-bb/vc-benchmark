@@ -1,0 +1,55 @@
+scale,encoder,name,family,a_ability,a_se,b_ability,b_se,b_pass,b_outfit
+pooled_context,pca_k256,PCA-256D,PCA,0.668,0.005,0.87,0.011,0.584,0.336
+pooled_context,pca_k128,PCA-128D,PCA,0.688,0.005,0.635,0.011,0.558,0.328
+pooled_context,ica_k64,ICA-64D,ICA,0.665,0.005,-0.016,0.011,0.488,0.312
+pooled_context,pca_k64,PCA-64D,PCA,0.664,0.005,-0.016,0.011,0.488,0.312
+pooled_context,nystroem_k256_g0.5,Nyström-256D (kernel width = 0.5),Kernel features,0.719,0.005,-0.573,0.012,0.43,0.285
+pooled_context,nystroem_k256_g2,Nyström-256D (kernel width = 2),Kernel features,0.62,0.005,-0.813,0.012,0.406,0.288
+pooled_context,nystroem_k64_g0.5,Nyström-64D (kernel width = 0.5),Kernel features,0.668,0.005,-0.909,0.012,0.396,0.294
+pooled_context,nmf_k64,NMF-64D,NMF,0.408,0.005,-0.942,0.012,0.393,0.498
+pooled_context,rproj_k128_s0,Random projection-128D (seed 0),Random projection,-0.069,0.004,-1.27,0.012,0.362,0.375
+pooled_context,rproj_k128_s1,Random projection-128D (seed 1),Random projection,-0.086,0.004,-1.35,0.012,0.354,0.367
+pooled_context,nystroem_k64_g2,Nyström-64D (kernel width = 2),Kernel features,0.417,0.005,-1.592,0.012,0.332,0.334
+pooled_context,pca_k32,PCA-32D,PCA,0.525,0.005,-2.095,0.013,0.288,0.408
+pooled_context,nmf_k16,NMF-16D,NMF,-0.368,0.004,-2.381,0.013,0.264,0.585
+pooled_context,ica_k16,ICA-16D,ICA,0.113,0.004,-2.863,0.014,0.226,0.569
+pooled_context,pca_k16,PCA-16D,PCA,0.114,0.004,-2.863,0.014,0.226,0.569
+pooled_context,rproj_k32_s0,Random projection-32D (seed 0),Random projection,-1.291,0.004,-3.021,0.014,0.215,0.798
+pooled_context,rproj_k32_s1,Random projection-32D (seed 1),Random projection,-1.313,0.004,-3.134,0.014,0.207,0.63
+pooled_context,gmm_k100,GMM-100 memberships,GMM,-0.176,0.004,-3.143,0.014,0.206,0.939
+pooled_context,pca_k8,PCA-8D,PCA,-0.674,0.004,-3.746,0.015,0.166,1.871
+pooled_context,pca_k4,PCA-4D,PCA,-1.495,0.004,-4.047,0.015,0.147,5.523
+pooled_context,depth2,Depth only (2D),Floor,-3.14,0.005,-4.345,0.016,0.13,8.337
+pooled_context,gmm_k10,GMM-10 memberships,GMM,-1.878,0.004,-4.349,0.016,0.13,2.688
+pooled_context,rproj_k8_s0,Random projection-8D (seed 0),Random projection,-2.696,0.005,-4.424,0.016,0.126,1.833
+pooled_context,gmm_k30,GMM-30 memberships,GMM,-0.677,0.004,-4.579,0.017,0.118,3.937
+pooled_context,rproj_k8_s1,Random projection-8D (seed 1),Random projection,-2.699,0.005,-4.733,0.017,0.11,2.926
+pooled_context,random_k32_s1,Random-32D (seed 1),Floor,-3.829,0.006,-6.335,0.023,0.05,4.97
+pooled_context,random_k32_s0,Random-32D (seed 0),Floor,-3.831,0.006,-6.348,0.023,0.05,3.715
+pooled,pca_k256,PCA-256D,PCA,0.668,0.005,-2.569,0.011,0.187,0.337
+pooled,pca_k128,PCA-128D,PCA,0.688,0.005,-2.595,0.011,0.185,0.324
+pooled,nystroem_k256_g2,Nyström-256D (kernel width = 2),Kernel features,0.62,0.005,-2.719,0.011,0.174,0.424
+pooled,nystroem_k256_g0.5,Nyström-256D (kernel width = 0.5),Kernel features,0.719,0.005,-2.72,0.011,0.174,0.327
+pooled,ica_k64,ICA-64D,ICA,0.665,0.005,-2.733,0.011,0.172,0.289
+pooled,pca_k64,PCA-64D,PCA,0.664,0.005,-2.733,0.011,0.172,0.289
+pooled,nystroem_k64_g0.5,Nyström-64D (kernel width = 0.5),Kernel features,0.668,0.005,-2.83,0.012,0.164,0.31
+pooled,nystroem_k64_g2,Nyström-64D (kernel width = 2),Kernel features,0.417,0.005,-2.943,0.012,0.155,0.451
+pooled,pca_k32,PCA-32D,PCA,0.525,0.005,-2.984,0.012,0.151,0.324
+pooled,gmm_k100,GMM-100 memberships,GMM,-0.176,0.004,-2.986,0.012,0.151,0.677
+pooled,nmf_k64,NMF-64D,NMF,0.408,0.005,-2.986,0.012,0.151,0.574
+pooled,nmf_k16,NMF-16D,NMF,-0.368,0.004,-3.071,0.012,0.144,0.413
+pooled,pca_k16,PCA-16D,PCA,0.114,0.004,-3.106,0.012,0.142,0.332
+pooled,ica_k16,ICA-16D,ICA,0.113,0.004,-3.107,0.012,0.142,0.332
+pooled,rproj_k128_s1,Random projection-128D (seed 1),Random projection,-0.086,0.004,-3.195,0.012,0.135,0.372
+pooled,rproj_k128_s0,Random projection-128D (seed 0),Random projection,-0.069,0.004,-3.226,0.012,0.133,0.328
+pooled,gmm_k30,GMM-30 memberships,GMM,-0.677,0.004,-3.329,0.013,0.125,0.783
+pooled,pca_k8,PCA-8D,PCA,-0.674,0.004,-3.351,0.013,0.124,0.478
+pooled,pca_k4,PCA-4D,PCA,-1.495,0.004,-3.431,0.013,0.118,0.798
+pooled,gmm_k10,GMM-10 memberships,GMM,-1.878,0.004,-3.444,0.013,0.117,0.828
+pooled,depth2,Depth only (2D),Floor,-3.14,0.005,-3.508,0.013,0.113,1.323
+pooled,rproj_k32_s1,Random projection-32D (seed 1),Random projection,-1.313,0.004,-3.543,0.013,0.111,0.646
+pooled,rproj_k32_s0,Random projection-32D (seed 0),Random projection,-1.291,0.004,-3.572,0.013,0.109,0.621
+pooled,rproj_k8_s0,Random projection-8D (seed 0),Random projection,-2.696,0.005,-3.768,0.014,0.097,0.819
+pooled,rproj_k8_s1,Random projection-8D (seed 1),Random projection,-2.699,0.005,-3.77,0.014,0.097,0.942
+pooled,random_k32_s0,Random-32D (seed 0),Floor,-3.831,0.006,-3.991,0.015,0.085,0.811
+pooled,random_k32_s1,Random-32D (seed 1),Floor,-3.829,0.006,-4.001,0.015,0.084,0.849

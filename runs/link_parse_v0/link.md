@@ -41,3 +41,67 @@ A: `repr_parse_pbmc_celltype` cell-level difficulties (donors held out). B: `par
 | CD4 Naive | 1000 | +1.57 | 0.01 | 1074 | -1.44 | 0.02 | 1261 |
 | CD8 Memory | 1000 | +2.14 | 0.07 | 1080 | -0.69 | 0.05 | 603 |
 | CD4 Memory | 1000 | +2.39 | 0.06 | 1080 | -1.45 | 0.02 | 1909 |
+
+## Shared encoders
+
+| scale | n | Spearman | p | without random projections |
+|---|---|---|---|---|
+| pooled_context | 27 | +0.937 | 6.6e-13 | +0.953 (n=21) |
+| pooled | 27 | +0.954 | 1.3e-14 | +0.957 (n=21) |
+
+| encoder | family | A ability | B ability | B pass | B outfit | scale |
+|---|---|---|---|---|---|---|
+| Nyström-256D (kernel width = 0.5) | Kernel features | +0.72 | -0.57 | 0.43 | 0.29 | pooled_context |
+| Nyström-256D (kernel width = 0.5) | Kernel features | +0.72 | -2.72 | 0.17 | 0.33 | pooled |
+| PCA-128D | PCA | +0.69 | +0.63 | 0.56 | 0.33 | pooled_context |
+| PCA-128D | PCA | +0.69 | -2.60 | 0.18 | 0.32 | pooled |
+| PCA-256D | PCA | +0.67 | +0.87 | 0.58 | 0.34 | pooled_context |
+| PCA-256D | PCA | +0.67 | -2.57 | 0.19 | 0.34 | pooled |
+| Nyström-64D (kernel width = 0.5) | Kernel features | +0.67 | -0.91 | 0.40 | 0.29 | pooled_context |
+| Nyström-64D (kernel width = 0.5) | Kernel features | +0.67 | -2.83 | 0.16 | 0.31 | pooled |
+| ICA-64D | ICA | +0.67 | -0.02 | 0.49 | 0.31 | pooled_context |
+| ICA-64D | ICA | +0.67 | -2.73 | 0.17 | 0.29 | pooled |
+| PCA-64D | PCA | +0.66 | -0.02 | 0.49 | 0.31 | pooled_context |
+| PCA-64D | PCA | +0.66 | -2.73 | 0.17 | 0.29 | pooled |
+| Nyström-256D (kernel width = 2) | Kernel features | +0.62 | -0.81 | 0.41 | 0.29 | pooled_context |
+| Nyström-256D (kernel width = 2) | Kernel features | +0.62 | -2.72 | 0.17 | 0.42 | pooled |
+| PCA-32D | PCA | +0.53 | -2.09 | 0.29 | 0.41 | pooled_context |
+| PCA-32D | PCA | +0.53 | -2.98 | 0.15 | 0.32 | pooled |
+| Nyström-64D (kernel width = 2) | Kernel features | +0.42 | -1.59 | 0.33 | 0.33 | pooled_context |
+| Nyström-64D (kernel width = 2) | Kernel features | +0.42 | -2.94 | 0.15 | 0.45 | pooled |
+| NMF-64D | NMF | +0.41 | -0.94 | 0.39 | 0.50 | pooled_context |
+| NMF-64D | NMF | +0.41 | -2.99 | 0.15 | 0.57 | pooled |
+| PCA-16D | PCA | +0.11 | -2.86 | 0.23 | 0.57 | pooled_context |
+| PCA-16D | PCA | +0.11 | -3.11 | 0.14 | 0.33 | pooled |
+| ICA-16D | ICA | +0.11 | -2.86 | 0.23 | 0.57 | pooled_context |
+| ICA-16D | ICA | +0.11 | -3.11 | 0.14 | 0.33 | pooled |
+| Random projection-128D (seed 0) | Random projection | -0.07 | -1.27 | 0.36 | 0.38 | pooled_context |
+| Random projection-128D (seed 0) | Random projection | -0.07 | -3.23 | 0.13 | 0.33 | pooled |
+| Random projection-128D (seed 1) | Random projection | -0.09 | -1.35 | 0.35 | 0.37 | pooled_context |
+| Random projection-128D (seed 1) | Random projection | -0.09 | -3.20 | 0.14 | 0.37 | pooled |
+| GMM-100 memberships | GMM | -0.18 | -3.14 | 0.21 | 0.94 | pooled_context |
+| GMM-100 memberships | GMM | -0.18 | -2.99 | 0.15 | 0.68 | pooled |
+| NMF-16D | NMF | -0.37 | -2.38 | 0.26 | 0.58 | pooled_context |
+| NMF-16D | NMF | -0.37 | -3.07 | 0.14 | 0.41 | pooled |
+| PCA-8D | PCA | -0.67 | -3.75 | 0.17 | 1.87 | pooled_context |
+| PCA-8D | PCA | -0.67 | -3.35 | 0.12 | 0.48 | pooled |
+| GMM-30 memberships | GMM | -0.68 | -4.58 | 0.12 | 3.94 | pooled_context |
+| GMM-30 memberships | GMM | -0.68 | -3.33 | 0.13 | 0.78 | pooled |
+| Random projection-32D (seed 0) | Random projection | -1.29 | -3.02 | 0.21 | 0.80 | pooled_context |
+| Random projection-32D (seed 0) | Random projection | -1.29 | -3.57 | 0.11 | 0.62 | pooled |
+| Random projection-32D (seed 1) | Random projection | -1.31 | -3.13 | 0.21 | 0.63 | pooled_context |
+| Random projection-32D (seed 1) | Random projection | -1.31 | -3.54 | 0.11 | 0.65 | pooled |
+| PCA-4D | PCA | -1.50 | -4.05 | 0.15 | 5.52 | pooled_context |
+| PCA-4D | PCA | -1.50 | -3.43 | 0.12 | 0.80 | pooled |
+| GMM-10 memberships | GMM | -1.88 | -4.35 | 0.13 | 2.69 | pooled_context |
+| GMM-10 memberships | GMM | -1.88 | -3.44 | 0.12 | 0.83 | pooled |
+| Random projection-8D (seed 0) | Random projection | -2.70 | -4.42 | 0.13 | 1.83 | pooled_context |
+| Random projection-8D (seed 0) | Random projection | -2.70 | -3.77 | 0.10 | 0.82 | pooled |
+| Random projection-8D (seed 1) | Random projection | -2.70 | -4.73 | 0.11 | 2.93 | pooled_context |
+| Random projection-8D (seed 1) | Random projection | -2.70 | -3.77 | 0.10 | 0.94 | pooled |
+| Depth only (2D) | Floor | -3.14 | -4.35 | 0.13 | 8.34 | pooled_context |
+| Depth only (2D) | Floor | -3.14 | -3.51 | 0.11 | 1.32 | pooled |
+| Random-32D (seed 1) | Floor | -3.83 | -6.34 | 0.05 | 4.97 | pooled_context |
+| Random-32D (seed 1) | Floor | -3.83 | -4.00 | 0.08 | 0.85 | pooled |
+| Random-32D (seed 0) | Floor | -3.83 | -6.35 | 0.05 | 3.72 | pooled_context |
+| Random-32D (seed 0) | Floor | -3.83 | -3.99 | 0.08 | 0.81 | pooled |
