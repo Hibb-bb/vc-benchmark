@@ -1,6 +1,15 @@
 import { $, $$, bench, getJSON, board, wright, legend, famOrder, familyOf, nameOf, int, sgn, fmt, pct, compact, esc, scatter } from './app.js';
 
 export default async function home() {
+  // pipeline figure: play the staged reveal once it scrolls into view
+  const pipe = document.querySelector('.scene-svg.pipeline');
+  if (pipe) {
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { pipe.classList.add('anim'); io.disconnect(); } }, { threshold: 0.35 });
+      io.observe(pipe);
+    } else pipe.classList.add('anim');
+  }
+
   const b = await bench();
   // hero Wright map
   wright($('#wright-hero'), b, 'repr', b.scales.repr.pooled, { animate: true });

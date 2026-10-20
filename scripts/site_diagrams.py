@@ -264,8 +264,8 @@ for name, fn in [("test", d_test), ("history", d_history), ("info", d_info), ("w
 
 # ---------- 8. home page pipeline ----------
 def d_pipeline():
+    """Five panels; groups carry classes so site.css can animate them (pp-step, pp-arrow, pp-cell, pp-loop)."""
     W, H = 1320, 330
-    b = [f"<defs>{marker('pp-a')}</defs>"]
     pw, ph, gap, top = 214, 170, 52, 70
     xs = [40 + i * (pw + gap) for i in range(5)]
     titles = [("Items", "cells and perturbations"),
@@ -273,13 +273,12 @@ def d_pipeline():
               ("Answers", "every model on every item"),
               ("IRT fit", "one model of all the answers"),
               ("One scale", "models and items on the same axis")]
-    for (x, (t, sub)) in zip(xs, titles):
-        b.append(T(x, 34, t, "start", 15, FG, 700)); b.append(T(x, 52, sub, "start", 11.5, FG3))
-        b.append(R(x, top, pw, ph, BG2, LINE2, 12))
-    for i in range(4):
-        b.append(L(xs[i] + pw + 8, top + ph / 2, xs[i + 1] - 8, top + ph / 2, FG3, 1.6, arrow='pp-a'))
+    P = [[] for _ in range(5)]
+    for i, (x, (t, sub)) in enumerate(zip(xs, titles)):
+        P[i] += [T(x, 34, t, "start", 15, FG, 700), T(x, 52, sub, "start", 11.5, FG3), R(x, top, pw, ph, BG2, LINE2, 12)]
+    arrows = [L(xs[i] + pw + 8, top + ph / 2, xs[i + 1] - 8, top + ph / 2, FG3, 1.6, arrow='pp-a', extra=f' class="pp-arrow" style="--i:{i}"') for i in range(4)]
     # panel 1: cells and a perturbation pair
-    x = xs[0]; random.seed(5)
+    b = P[0]; x = xs[0]; random.seed(5)
     for cx, cy, col in [(x + 60, top + 70, S1), (x + 45, top + 118, S3), (x + 95, top + 110, S2)]:
         for k in range(9):
             b.append(C(round(cx + random.gauss(0, 11), 1), round(cy + random.gauss(0, 9), 1), 3.2, col, extra=' opacity="0.85"'))
@@ -288,56 +287,58 @@ def d_pipeline():
     b.append(L(x + 154, top + 72, x + 166, top + 109, FG3, 1.4, arrow='pp-a'))
     b.append(T(x + 160, top + 150, "perturbations", "middle", 11.5, FG2))
     # panel 2: rows of models with ticks and crosses
-    x = xs[1]
+    b = P[1]; x = xs[1]
     rows = [("PCA", S1, "✓✓✗✓"), ("scVI", "var(--s7)", "✓✓✓✗"), ("Nyström", S2, "✓✗✓✓"), ("random", S0, "✗✗✓✗")]
     for i, (n, col, marks) in enumerate(rows):
         y = top + 36 + i * 32
         b.append(C(x + 22, y - 4, 5, col)); b.append(T(x + 34, y, n, "start", 12, FG, 500))
         b.append(T(x + 122, y, "→", "middle", 12, FG3))
         for j, m in enumerate(marks):
-            b.append(T(x + 150 + j * 16, y + 1, m, "middle", 12.5, S3 if m == "✓" else S2, 700))
+            b.append(T(x + 150 + j * 16, y + 1, m, "middle", 12.5, S3 if m == "✓" else S2, 700, f' class="pp-mark" style="--j:{i * 4 + j}"'))
     b.append(T(x + pw / 2, top + 158, "one frozen probe, one pass rule", "middle", 11, FG3))
     # panel 3: pass/fail matrix
-    x = xs[2]
-    cols_, rws = 12, 7
-    cw = 13
+    b = P[2]; x = xs[2]
+    cols_, rws, cw = 12, 7, 13
     mx0, my0 = x + 34, top + 30
     for r in range(rws):
         for c in range(cols_):
-            p = 0.9 - r * 0.11 - c * 0.045
-            on = random.random() < p
-            b.append(R(mx0 + c * cw, my0 + r * cw, cw - 3, cw - 3, S1 if on else BG3, "none" if on else LINE, 2, 0.8))
+            on = random.random() < 0.9 - r * 0.11 - c * 0.045
+            b.append(R(mx0 + c * cw, my0 + r * cw, cw - 3, cw - 3, S1 if on else BG3, "none" if on else LINE, 2, 0.8, extra=f' class="pp-cell{" on" if on else ""}" style="--j:{r * cols_ + c}"'))
     b.append(T(mx0 - 8, my0 + rws * cw / 2, "one row per model", "middle", 10.5, FG2, None, f' transform="rotate(-90 {mx0 - 8} {my0 + rws * cw / 2})"'))
     b.append(T(mx0 + cols_ * cw / 2, my0 + rws * cw + 14, "one column per item", "middle", 10.5, FG2))
     lx = mx0 + 40
     b.append(R(lx, top + 150, 9, 9, S1, "none", 2)); b.append(T(lx + 13, top + 158, "pass", "start", 10.5, FG3))
     b.append(R(lx + 46, top + 150, 9, 9, BG3, LINE, 2, 0.8)); b.append(T(lx + 59, top + 158, "fail", "start", 10.5, FG3))
     # panel 4: IRT fit -> two outputs
-    x = xs[3]
+    b = P[3]; x = xs[3]
     b.append(R(x + 22, top + 60, 80, 50, ACCS, ACC, 10, 1.4)); b.append(T(x + 62, top + 81, "IRT", "middle", 15, FG, 700)); b.append(T(x + 62, top + 98, "model", "middle", 11, FG2))
     b.append(L(x + 104, top + 76, x + 124, top + 56, FG3, 1.4, arrow='pp-a')); b.append(L(x + 104, top + 94, x + 124, top + 114, FG3, 1.4, arrow='pp-a'))
     b.append(T(x + 130, top + 52, "ability", "start", 12.5, FG, 600)); b.append(T(x + 130, top + 66, "per model", "start", 11, FG2))
     b.append(T(x + 130, top + 118, "difficulty", "start", 12.5, FG, 600)); b.append(T(x + 130, top + 132, "per item", "start", 11, FG2))
     b.append(T(x + pw / 2, top + 158, "with an error bar on each", "middle", 11, FG3))
     # panel 5: mini Wright map
-    x = xs[4]
+    b = P[4]; x = xs[4]
     ax = x + 110
     b.append(L(ax, top + 26, ax, top + 140, LINE2, 1.4))
     for i, w in enumerate([10, 22, 40, 56, 46, 30, 14]):
-        b.append(R(ax - 6 - w, top + 32 + i * 15, w, 11, S1, "none", 2, extra=' opacity="0.75"'))
-    for (dy, col, se) in [(40, S2, 9), (58, "var(--s7)", 8), (76, S1, 9), (112, S0, 6)]:
+        b.append(R(ax - 6 - w, top + 32 + i * 15, w, 11, S1, "none", 2, extra=f' opacity="0.75" class="pp-bar" style="--j:{i}"'))
+    for j, (dy, col, se) in enumerate([(40, S2, 9), (58, "var(--s7)", 8), (76, S1, 9), (112, S0, 6)]):
         y = top + dy
-        b.append(L(ax + 18 - se, y, ax + 18 + se, y, col, 1.4)); b.append(C(ax + 18, y, 4, col))
+        b.append(f'<g class="pp-dot" style="--j:{j}">' + L(ax + 18 - se, y, ax + 18 + se, y, col, 1.4) + C(ax + 18, y, 4, col) + '</g>')
     b.append(T(ax - 6, top + 150, "items", "end", 10.5, FG3)); b.append(T(ax + 6, top + 150, "models", "start", 10.5, FG3))
-    b.append(T(x + pw / 2, top + 160, "", "middle", 11, FG3))
     # living loop: one return arrow
     ly = top + ph + 42
-    b.append(L(xs[4] + pw / 2, top + ph + 8, xs[4] + pw / 2, ly, FG3, 1.3, "4 4"))
-    b.append(L(xs[4] + pw / 2, ly, xs[0] + pw / 2, ly, FG3, 1.3, "4 4"))
-    b.append(L(xs[0] + pw / 2, ly, xs[0] + pw / 2, top + ph + 10, FG3, 1.3, "4 4", arrow='pp-a'))
-    b.append(R(W / 2 - 120, ly - 12, 240, 24, BG2, "none", 6))
-    b.append(T(W / 2, ly + 4, "new models and items join the scale", "middle", 12, FG2, 500))
-    return svg(W, H, b, "The pipeline: cells and perturbations are the items; every model takes the same test; the answers form a pass/fail matrix; an IRT model fits an ability per model and a difficulty per item; both sit on one scale; new models and new items join the same scale and every version is kept.", cls="scene-svg")
+    loop = [L(xs[4] + pw / 2, top + ph + 8, xs[4] + pw / 2, ly, FG3, 1.3, "4 4", extra=' class="pp-loop"'),
+            L(xs[4] + pw / 2, ly, xs[0] + pw / 2, ly, FG3, 1.3, "4 4", extra=' class="pp-loop"'),
+            L(xs[0] + pw / 2, ly, xs[0] + pw / 2, top + ph + 10, FG3, 1.3, "4 4", arrow='pp-a', extra=' class="pp-loop"'),
+            R(W / 2 - 120, ly - 12, 240, 24, BG2, "none", 6),
+            T(W / 2, ly + 4, "new models and items join the scale", "middle", 12, FG2, 500)]
+    body = [f"<defs>{marker('pp-a')}</defs>"]
+    for i in range(5):
+        body.append(f'<g class="pp-step" style="--i:{i}">' + "\n".join(P[i]) + '</g>')
+    body += arrows
+    body.append('<g class="pp-step" style="--i:5">' + "\n".join(loop) + '</g>')
+    return svg(W, H, body, "The pipeline: cells and perturbations are the items; every model takes the same test; the answers form a pass/fail matrix; an IRT model fits an ability per model and a difficulty per item; both sit on one scale; new models and new items join the same scale and every version is kept.", cls="scene-svg pipeline")
 
 if __name__ == "__main__":
     (OUT / "pipeline.svg").write_text(d_pipeline())

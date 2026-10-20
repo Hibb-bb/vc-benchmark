@@ -323,3 +323,19 @@ dl.kv dd { margin: 0.1rem 0 0; font-family: var(--mono); font-size: 0.88rem; }
 .scene .scene-svg { min-width: 960px; width: 100%; height: auto; display: block; font-family: var(--body); }
 @media (max-width: 1000px) { .scene { overflow-x: auto; padding-bottom: 0.5rem; } }
 .scene figcaption { font-size: 0.86rem; color: var(--fg-2); max-width: var(--read); }
+
+/* ---- home pipeline figure: staged reveal once it scrolls into view (class "anim" set by home.js) ---- */
+.pipeline .pp-step, .pipeline .pp-arrow, .pipeline .pp-cell.on, .pipeline .pp-mark, .pipeline .pp-bar, .pipeline .pp-dot { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .pipeline.anim .pp-step { opacity: 0; animation: pp-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i) * 0.45s); }
+  .pipeline.anim .pp-arrow { opacity: 0; animation: pp-in 0.35s ease-out forwards; animation-delay: calc(var(--i) * 0.45s + 0.4s); }
+  .pipeline.anim .pp-mark { opacity: 0; animation: pp-pop 0.25s ease-out forwards; animation-delay: calc(0.45s + 0.35s + var(--j) * 0.045s); }
+  .pipeline.anim .pp-cell.on { opacity: 0; animation: pp-pop 0.25s ease-out forwards; animation-delay: calc(0.9s + 0.35s + var(--j) * 0.012s); }
+  .pipeline.anim .pp-bar { transform: scaleX(0); transform-origin: right center; animation: pp-grow 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(1.8s + 0.35s + var(--j) * 0.06s); }
+  .pipeline.anim .pp-dot { opacity: 0; animation: pp-pop 0.3s ease-out forwards; animation-delay: calc(1.8s + 0.7s + var(--j) * 0.1s); }
+  .pipeline.anim .pp-loop { animation: pp-march 1.4s linear infinite; animation-delay: 2.7s; }
+}
+@keyframes pp-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pp-pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@keyframes pp-grow { to { transform: none; } }
+@keyframes pp-march { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
