@@ -1,4 +1,4 @@
-const pv = (p) => (p == null ? '–' : p < 1e-4 ? `< 1e-${Math.min(16, Math.ceil(-Math.log10(p)))}` : p.toFixed(2));
+const pv = (p) => (p == null ? '–' : p < 1e-4 ? `< 1e-${Math.min(16, Math.ceil(-Math.log10(p)))}` : p < 0.01 ? p.toExponential(1) : p.toFixed(2));
 import { $, bench, getJSON, scatter, legend, famColor, famOrder, int, sgn, fmt, pct, esc } from './app.js';
 
 export default async function link() {
@@ -29,4 +29,31 @@ export default async function link() {
     ${scatter(rows.map((r) => ({ x: r.a_ability, y: r.b_ability, xe: r.a_se, ye: r.b_se, label: r.name, color: famColor('repr', r.family), tip: `<b>${esc(r.name)}</b><br>representation ${sgn(r.a_ability)} ± ${fmt(r.a_se)}<br>perturbation ${sgn(r.b_ability)} ± ${fmt(r.b_se)} · passes ${pct(r.b_pass)} · outfit ${fmt(r.b_outfit)}` })), { w: 640, h: 440, xlabel: 'representation ability (logits)', ylabel: 'perturbation ability of the same encoder (logits)' })}
     ${legend('repr', fams)}</div>
     <div class="tbl-wrap" style="margin-top:1rem"><table><thead><tr><th>Encoder</th><th>Family</th><th class="num">A ability</th><th class="num">B ability</th><th class="num">B pass rate</th><th class="num">B outfit</th></tr></thead><tbody>${[...rows].sort((p, q) => q.a_ability - p.a_ability).map((r) => `<tr><td>${esc(r.name)}</td><td>${esc(r.family)}</td><td class="num">${sgn(r.a_ability)}</td><td class="num">${sgn(r.b_ability)}</td><td class="num">${pct(r.b_pass)}</td><td class="num">${fmt(r.b_outfit)}</td></tr>`).join('')}</tbody></table></div>`;
+
+  // type level: the type-specific part of each encoder's ability, both sides
+  const tb = $('#bytype-body');
+  let T = null;
+  try { T = await getJSON('data/link_by_type.json'); } catch (e) { T = null; }
+  if (!tb || !T) { if (tb) tb.innerHTML = '<p class="empty">The type-level analysis has not been exported yet.</p>'; return; }
+  const types = T.types, wt = T.within_type;
+  const raw = types.map((t) => wt[t].raw[0]), res = types.map((t) => wt[t].residual[0]);
+  const med = (a) => { const s = [...a].filter(Number.isFinite).sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : NaN; };
+  const pr = T.pooled_residual, prn = T.pooled_residual_no_null;
+  const order = types.map((t, i) => i).sort((i, j) => res[j] - res[i]);
+  const W = 560, rowH = 22, left = 170, H = rowH * types.length + 40, x0 = left + (W - left - 20) / 2, sc = (W - left - 20) / 2;
+  const bars = order.map((i, k) => { const y = 10 + k * rowH; return `<text x="${left - 8}" y="${y + 14}" text-anchor="end" class="lab" style="font-size:11px">${esc(types[i])}</text>
+    <rect x="${Math.min(x0, x0 + raw[i] * sc)}" y="${y + 2}" width="${Math.abs(raw[i] * sc)}" height="16" fill="var(--line-2)" rx="2"><title>${esc(types[i])}: raw ${sgn(raw[i])}</title></rect>
+    <rect x="${Math.min(x0, x0 + res[i] * sc)}" y="${y + 6}" width="${Math.abs(res[i] * sc)}" height="8" fill="var(--s2)" rx="2"><title>${esc(types[i])}: type-specific ${sgn(res[i])} (p ${wt[types[i]].residual[1] < 1e-4 ? '' : '='} ${pv(wt[types[i]].residual[1])})</title></rect>`; }).join('');
+  const ticks = [-1, -0.5, 0, 0.5, 1].map((v) => `<line x1="${x0 + v * sc}" x2="${x0 + v * sc}" y1="6" y2="${H - 26}" stroke="var(--line)" stroke-dasharray="${v === 0 ? '' : '2 3'}"/><text x="${x0 + v * sc}" y="${H - 10}" text-anchor="middle" class="mono" style="font-size:10px;fill:var(--fg-3)">${sgn(v, 1)}</text>`).join('');
+  tb.innerHTML = `<div class="grid cols-2">
+    <div class="fig"><h3>Within each type: do the encoders rank the same way on both tasks?</h3><p class="sub">Spearman across the ${T.encoders.length} encoders, within the type. Grey: raw abilities. Orange: after subtracting each encoder's overall ability on each side.</p>
+      <svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Within-type rank correlation, raw and type-specific">${ticks}${bars}</svg></div>
+    <div class="card"><h3>What transfers</h3>
+      <dl class="kv"><dt>Overall ability, Spearman across encoders</dt><dd>${sgn(T.overall.spearman_across_encoders[0])}</dd>
+      <dt>Share of per-type ability that is the encoder's overall ability</dt><dd>A ${pct(T.share_overall.A, 0)} · B ${pct(T.share_overall.B, 0)}</dd>
+      <dt>Within type, raw (median over types)</dt><dd>${sgn(med(raw))}</dd>
+      <dt>Within type, type-specific part (median)</dt><dd>${sgn(med(res))}</dd>
+      <dt>Type-specific part, pooled over all encoder × type cells</dt><dd>${sgn(pr[0])} (p ${pr[1] < 1e-4 ? '' : '='} ${pv(pr[1])}, n = ${pr[2]}); without the null encoders ${sgn(prn[0])}</dd></dl>
+      <p>The high raw agreement is the capacity ladder seen type by type: an encoder's overall ability explains three quarters of its per-type annotation abilities and nearly all of its per-type perturbation abilities. The part that is specific to a type transfers weakly at best, with significant correlations in both directions (CD4 naive positive, CD8 memory negative). Annotating a type well does not, by itself, make an encoder good at predicting perturbations in that type; what carries over is overall representation quality.</p></div>
+  </div>`;
 }

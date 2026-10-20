@@ -46,6 +46,11 @@
       <p>The mapping breaks inside the top cluster. Nyström kernel features are the best annotation encoder (+0.72) but a poor response basis (−0.57, against +0.87 for PCA-256D): the nonlinear features that separate cell types do not decode perturbation responses through a linear read-out. And the whole family sits two to five logits below the models that learn their basis from responses (PCA regression +5.8, MLP +4.9, low-rank +4.5 on the same scale). A subspace fitted to cells carries perturbation responses much worse than a subspace fitted to responses; representation quality orders the encoders within a family, it does not close that gap.</p>
       <p>Foundation-model encoders enter this table through the same recipe once their embeddings are on the representation scale; see the contribute page.</p>
     </div>
+  </section>
+
+  <section class="wrap section" id="bytype">
+    <div class="head"><h2>Type level: does it transfer within a cell type?</h2><p class="lead">The sharper question: if an encoder annotates cell type X well, does it predict perturbations in X well? On Parse PBMC every encoder gets one representation ability per type (the cells of X) and one perturbation ability per type (the conditions whose context is X), anchored to the panel-level and screen-level item difficulties. Subtracting the encoder's overall ability on each side leaves the type-specific part, which is what would have to transfer.</p></div>
+    <div id="bytype-body"></div>
     <p id="err" class="empty" hidden></p>
   </section>
 

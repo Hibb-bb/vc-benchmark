@@ -351,6 +351,9 @@ json.dump(adaptive, open(SITE / "adaptive.json", "w"), separators=(",", ":"))
 link = RUNS / "link_parse_v0" / "link.json"
 if link.exists():  # the link script writes NaN for undefined SEs; that is not JSON, so null them here
     json.dump(json.loads(link.read_text(), parse_constant=lambda c: None), open(SITE / "link.json", "w"), separators=(",", ":"))
+bt = RUNS / "link_parse_v0" / "by_type.json"
+if bt.exists():
+    json.dump(json.loads(bt.read_text(), parse_constant=lambda c: None), open(SITE / "link_by_type.json", "w"), separators=(",", ":"))
 if (ANAT / "anatomy.json").exists():
     json.dump(json.loads((ANAT / "anatomy.json").read_text(), parse_constant=lambda c: None), open(SITE / "anatomy.json", "w"), separators=(",", ":"))
     t = pd.read_csv(ANAT / "A_by_type.csv")

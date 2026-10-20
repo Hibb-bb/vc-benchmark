@@ -688,6 +688,17 @@ submitted as array 4624678 (3 to 80 min per task; Tahoe 80 min per scheme at 10 
   published `pert_pool_v0` scale stays the reference and `pert_joint_v0` is for this comparison only. The
   two-dimensional IRT (next step) is the right model for exactly this: two abilities, one per basis type.
 
+**Type level** (`scripts/link_by_type.py`, `runs/link_parse_v0/by_type.{md,json,png}`): on Parse PBMC the 27 encoders
+and 15 cell types (>= 30 items on both sides) give each encoder one A ability per type (cells of that type) and one
+B ability per type (conditions whose context is that type), anchored to the panel- and screen-level difficulties.
+Raw within-type correlations across encoders are high (median Spearman +0.79) but that is the capacity ladder: the
+encoder's overall ability explains 75 % of the per-type A abilities and 93 % of the per-type B abilities. After
+subtracting each encoder's overall ability on each side, the type-specific part transfers only weakly: pooled
+residual correlation +0.16 over 405 (encoder, type) cells (p = 0.001; +0.28 without the null encoders), median
+within-type residual +0.06 with significant correlations in both directions (CD4 naive +0.62, CD8 memory -0.62),
+and the per-encoder profile across types correlates at a median +0.23. So being good at annotating a type does
+not, by itself, make an encoder good at predicting perturbations in that type; what transfers is overall quality.
+
 Reading for the website: a good representation makes a better perturbation basis than a poor one, but
 representation quality explains the ordering within a family, not the gap between a cell basis and a
 response basis; foundation-model encoders enter this table through `scripts/extract_fm_embedding.py`
