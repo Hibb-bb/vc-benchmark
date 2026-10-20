@@ -117,15 +117,13 @@ appendix gives the Tabula Sapiens panel by tissue.
 
 \begin{table}[t]
 \centering
-\caption{Representation panels. Held out names the unit whose members are held out and N
-held out counts them: the donors, samples, studies or tissues whose cells form the test
-items. Cell types counts the distinct labels among the items; strata are context, cell type
-and donor combinations. Passed by none is the fraction of a panel's
-items that no model labels correctly; mean difficulty is on the pooled scale of
-\Cref{sec:fitting}, over informative items.}
+\caption{Representation panels. Cell types counts the distinct labels among a panel's items;
+none pass is the fraction of items that no model labels correctly; mean difficulty is on
+the pooled scale of \Cref{sec:fitting}, over informative items. Panels hold out whole donors
+unless marked otherwise; the held-out units, contexts and strata of every panel are listed in
+\Cref{tab:compA_full}.}
 \label{tab:compA}
-\scriptsize
-\setlength{\tabcolsep}{4pt}
+\footnotesize
 \input{bench/tab_compA.tex}
 \end{table}
 
@@ -672,6 +670,21 @@ Low-rank completion ran only on multi-context screens and, in the unseen-perturb
 setting, can only fall back to the context mean for a perturbation it has never seen.}
 \small
 \input{bench/tab_abilB.tex}
+\end{table}
+
+\section{Implementation details}
+\label{app:impl}
+
+\begin{table}[h]
+\centering
+\caption{Representation panels in full. Held out is the unit whose members form the test
+items and N held out counts them: donors, public samples, studies or tissues. Contexts are
+the tissues or studies represented among the items; strata are context, cell type and donor
+combinations.}
+\label{tab:compA_full}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\input{bench/tab_compA_full.tex}
 \end{table}
 
 \section{The Tabula Sapiens panel by tissue}

@@ -10,13 +10,16 @@ ap.add_argument("--dataset", required=True)
 ap.add_argument("--scheme", default="perturbation")
 ap.add_argument("--folds", type=int, default=5)
 ap.add_argument("--min-cells", type=int, default=50)
-ap.add_argument("--pool", default="default", choices=["default", "pca_ladder", "featured"], help="pca_ladder / featured: only that subset, merged into the existing scores table")
+ap.add_argument("--pool", default="default", choices=["default", "pca_ladder", "featured", "mlp"], help="pca_ladder / featured: only that subset, merged into the existing scores table")
 a = ap.parse_args()
 
 pool, merge = None, False
 if a.pool == "pca_ladder":
     from vcb.pert.baselines import pca_ladder
     pool, merge = pca_ladder(), True
+elif a.pool == "mlp":
+    from vcb.pert.baselines import mlp_pool
+    pool, merge = mlp_pool(), True
 elif a.pool == "featured":
     from vcb.pert.baselines import featured_pool
     pool, merge = featured_pool(), True

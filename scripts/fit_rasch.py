@@ -57,12 +57,15 @@ if a.component == "pert":
         abil, diff, info = fit_from_long(b)
         report(tag, abil, diff, info, [f"- rule: pass if {a.metric} > {a.reference} + {a.margin}"])
         allb.append(b)
-    # pooled scale: one response per item, so only the unseen-perturbation scheme enters
-    allb = [b for b, f in zip(allb, files) if f.name.endswith(".perturbation.scores.parquet")]
-    if len(allb) > 1:
-        b = pd.concat(allb)
-        abil, diff, info = fit_from_long(b)
-        report("pooled", abil, diff, info, [f"- {b['dataset_id'].nunique()} datasets pooled on one scale (respondent names shared across datasets)"])
+    # pooled scales, one per split so that every item has one response per model:
+    #   pooled          unseen perturbation (all screens)
+    #   pooled_context  unseen perturbation-context combination (multi-context screens; the standard setting)
+    for scheme, tag in [("perturbation", "pooled"), ("context", "pooled_context")]:
+        sel = [b for b, f in zip(allb, files) if f.name.endswith(f".{scheme}.scores.parquet")]
+        if len(sel) > 1:
+            b = pd.concat(sel)
+            abil, diff, info = fit_from_long(b)
+            report(tag, abil, diff, info, [f"- {b['dataset_id'].nunique()} datasets pooled on one scale, {scheme} scheme (respondent names shared across datasets)"])
 else:
     if a.pool_runs:
         runs = [RUNS / r for r in a.pool_runs.split(",")]

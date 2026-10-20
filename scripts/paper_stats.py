@@ -82,12 +82,16 @@ res["compA"] = dict(panels=len(compA), train_cells=int(compA["train_cells"].sum(
 print("\n## Component A panels\n", compA.round(2).to_string(index=False), "\n", res["compA"])
 def tex_int(x):
     return f"{int(x):,}"
-lines = []
-for r in compA.itertuples():
-    lines.append(f"{r.name} & {r.held_out} & {r.test_units} & {r.types} & {tex_int(r.train_cells)} & {tex_int(r.items)} & {r.strata} & {100*r.nobody:.0f}\\% & {r.mean_b:+.2f} \\\\")
-lines.append("\\midrule")
-lines.append(f"Total & & & {res['compA']['types']} & {tex_int(res['compA']['train_cells'])} & {tex_int(res['compA']['test_items'])} & {tex_int(res['compA']['strata'])} & {100*(dA_pooled['p_correct']==0).mean():.0f}\\% & \\\\")
-(out_dir / "tab_compA.tex").write_text("\\begin{tabular}{@{}llrrrrrrr@{}}\n\\toprule\nPanel & Held out & N held out & Cell types & Train cells & Items & Strata & None pass & Mean diff. \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n")
+def panel_table(fname, header, rowfn, totfn):
+    lines = [rowfn(r) for r in compA.itertuples()] + ["\\midrule", totfn()]
+    (out_dir / fname).write_text("\\begin{tabular}{@{}l" + "r" * (header.count("&")) + "@{}}\n\\toprule\n" + header + " \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n")
+nobody_all = 100 * (dA_pooled["p_correct"] == 0).mean()
+panel_table("tab_compA.tex", "Panel & Cell types & Train cells & Items & None pass & Mean diff.",
+            lambda r: f"{r.name}{' (' + r.held_out + ' held out)' if r.held_out in ('studies', 'tissues') else ''} & {r.types} & {tex_int(r.train_cells)} & {tex_int(r.items)} & {100*r.nobody:.0f}\\% & {r.mean_b:+.2f} \\\\",
+            lambda: f"Total & {res['compA']['types']} & {tex_int(res['compA']['train_cells'])} & {tex_int(res['compA']['test_items'])} & {nobody_all:.0f}\\% & \\\\")
+panel_table("tab_compA_full.tex", "Panel & Held out & N held out & Contexts & Cell types & Train cells & Items & Strata",
+            lambda r: f"{r.name} & {r.held_out} & {r.test_units} & {r.contexts} & {r.types} & {tex_int(r.train_cells)} & {tex_int(r.items)} & {r.strata} \\\\",
+            lambda: f"Total & & & & {res['compA']['types']} & {tex_int(res['compA']['train_cells'])} & {tex_int(res['compA']['test_items'])} & {tex_int(res['compA']['strata'])} \\\\")
 items = pd.read_parquet(RUNS / "repr_pool_v0" / "items.parquet")  # TS2 covariates (compartment) for the appendix
 
 # ---------- difficulty distributions ----------

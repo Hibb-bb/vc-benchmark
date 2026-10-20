@@ -150,6 +150,26 @@ class RidgePCA(_PCAOutput):
         return self._inverse(self.reg_.predict(self.scaler_.transform(F)))
 
 
+class MLPPCA(_PCAOutput):
+    """Two-layer MLP from item features to the top-d components of the responses: the same inputs and
+    outputs as RidgePCA, with a nonlinear map. Early stopping on 10 % of the training items."""
+
+    def __init__(self, d=50, hidden=256, seed=0):
+        super().__init__(d)
+        self.hidden, self.seed = hidden, seed
+        self.name = f"mlp_h{hidden}_d{d}"
+
+    def fit(self, F, D, meta):
+        from sklearn.neural_network import MLPRegressor
+        self.scaler_ = StandardScaler().fit(F)
+        Z = self._fit_output(D)
+        self.reg_ = MLPRegressor(hidden_layer_sizes=(self.hidden,), alpha=1e-3, early_stopping=True, validation_fraction=0.1, max_iter=300, random_state=self.seed).fit(self.scaler_.transform(F), Z)
+        return self
+
+    def predict(self, F, meta):
+        return self._inverse(self.reg_.predict(self.scaler_.transform(F)))
+
+
 class PCARegression(RidgePCA):
     """PCA-regression ladder: ridge from item features onto the top-k principal components
     of the training responses, decoded back to genes. Same model as RidgePCA with a fixed
@@ -245,6 +265,10 @@ class SubsampledTrain(Baseline):
 
     def predict(self, F, meta):
         return self.base.predict(F, meta)
+
+
+def mlp_pool() -> list[Baseline]:
+    return [MLPPCA(50, 256), MLPPCA(50, 1024)]
 
 
 def pca_ladder(ks=(2, 5, 10, 20, 50, 100, 200)) -> list[Baseline]:
