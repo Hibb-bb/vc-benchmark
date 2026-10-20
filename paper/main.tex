@@ -569,36 +569,35 @@ Frangieh 2021 & 3 & 0.18 & 0.32 & $-2.77$, 10 of 22 & low-rank, rank 5 \\
 \end{tabular}
 \end{table}
 
-\paragraph{How many items would today's best models retire?}
-A benchmark stays informative only while its items sit near the abilities being measured;
-an item that a model passes with high probability has little left to say about that
-model. We therefore ask how much of the bank a stronger model would retire, as a function
-of the pass-probability threshold that defines retirement; see \Cref{fig:retire}. At a
-threshold of 0.95, a model exactly as able as the best current one already retires 23\% of
-the informative cell items but only 3\% of the conditions. In a pilot of the same
-annotation protocol on three smaller atlases, the strongest pretrained foundation model sat
-about one unit above PCA. A model one unit above the best current one would retire 45\% of
-the cell items and 9\% of the conditions at the 0.95 threshold, and 73\% and 41\% at a
-looser threshold of 0.75; two units above retires 62\% and 26\% at 0.95. Perturbation items
-degrade far more slowly, because their difficulties are spread over a wider range relative
-to the pool and because the 21,677 conditions that no model passes only come into play as
-models improve. The practical content is a writing schedule. The maintenance analysis in
-our companion paper \citep{companion} shows that a benchmark keeps its resolution only when
-new hard items arrive at least as fast as the field moves; at the rates above, a bank that
-loses half its annotation items per unit of progress must add items above the current
-ceiling at the same pace. The yearly Virtual Cell Challenge releases \citep{vcc2026} of
-300 to 10,000 held-out perturbations per cell line, the announced Tahoe follow-on atlas and
-the continually growing scBaseCount repository are the supply we plan the next rounds
-around.
+\paragraph{Which items are already uninformative?}
+An item informs a ranking only while the models disagree on it. With the fitted abilities
+we can ask, for the models evaluated here, which items are already settled: an item is too
+easy at threshold $t$ when every model other than the floors passes it with probability at
+least $t$, and too hard when every one fails it with probability at least $t$; see
+\Cref{fig:retire}. Almost nothing is too easy: 0.3\% of cell items and 0.1\% of conditions
+at $t=0.75$, because the pool spans four logits and the weakest rungs of the ladders fail
+most of what the top passes. The settled items are the hard ones: at $t=0.95$ they are
+12.5\% of cell items and 25\% of conditions, which are exactly the items no model passes,
+and at $t=0.75$ they are 24\% and 47\%. These items can be set aside when today's models
+are ranked without changing the ranking, and they are the stock the benchmark draws on as
+models improve. The same calculation gives the maintenance rate: a model one logit above
+the best current one would move 45\% of the cell items and 9\% of the conditions into the
+too-easy class at $t=0.95$. The maintenance analysis in our companion paper
+\citep{companion} shows that a benchmark keeps its resolution only when new hard items
+arrive at least as fast as the field moves; at that rate, a bank that loses half its
+annotation items per logit of progress must add items above the current ceiling at the
+same pace. The yearly Virtual Cell Challenge releases \citep{vcc2026} of 300 to 10,000
+held-out perturbations per cell line, the announced Tahoe follow-on atlas and the
+continually growing scBaseCount repository are the supply we plan the next rounds around.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\textwidth]{fig_retire.pdf}
-\caption{Fraction of informative items that a hypothetical model retires, as a function of
-the pass-probability threshold that defines retirement, for a model as able as the best
-current one and for models one and two units above it. (a) Representation items.
-(b) Perturbation items. Items passed by none or all current models are excluded from the
-denominator.}
+\caption{Fraction of items that are uninformative for the evaluated models, as a function of
+the probability threshold $t$. An item is too easy when every model other than the floors
+passes it with probability at least $t$, and too hard when every one fails it with
+probability at least $t$; items passed by none or by all models count in the respective
+class. (a) Representation items. (b) Perturbation items.}
 \label{fig:retire}
 \end{figure}
 

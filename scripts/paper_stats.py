@@ -176,5 +176,22 @@ print("\n## retirement scenarios")
 for k, v in scen.items():
     print(k, {kk: (round(vv, 3) if isinstance(vv, float) else vv) for kk, vv in v.items()})
 
+# ---------- items already uninformative for the evaluated models (no hypothetical model) ----------
+from vcb.names import family
+now = {}
+for key, diff, ab in [("A_cell", diffs["A_cell"], abil["A_cell"]), ("B_pooled", diffs["B_pooled"], abil["B_pooled"])]:
+    th = ab.loc[ab["respondent_id"].map(family) != "Floor", "ability"].values
+    b = diff["difficulty"].values
+    P = sigmoid(th[None, :] - b[:, None])            # items x models
+    pmin, pmax = P.min(1), P.max(1)
+    deg_none, deg_all = (diff["p_correct"] == 0).values, (diff["p_correct"] == 1).values
+    o = {"n_all": len(diff), "n_models": int(len(th)), "nobody": int(deg_none.sum()), "everybody": int(deg_all.sum())}
+    for t in (0.75, 0.80, 0.85, 0.90, 0.95, 0.99):
+        easy = (pmin >= t) | deg_all
+        hard = (pmax <= 1 - t) | deg_none
+        o[f"easy_{t}"] = float(easy.mean()); o[f"hard_{t}"] = float(hard.mean()); o[f"retired_{t}"] = float((easy | hard).mean())
+    now[key] = o
+res["retire_now"] = now
+print("\n## uninformative now", {k: {kk: (round(vv, 3) if isinstance(vv, float) else vv) for kk, vv in v.items()} for k, v in now.items()})
 json.dump(res, open(out_dir / "stats.json", "w"), indent=1, default=float)
 print(f"\nwrote {out_dir / 'stats.json'}")

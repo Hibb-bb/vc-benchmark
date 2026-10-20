@@ -82,26 +82,31 @@ fig.savefig(out / "fig_difficulty.png", dpi=220)
 fig.savefig(out / "fig_difficulty.pdf")
 print("wrote", out / "fig_difficulty.png")
 
-# ---- retirement figure: fraction retired vs pass-probability threshold, for three model strengths ----
+# ---- retirement figure: items already uninformative for the evaluated (non-floor) models ----
+from vcb.names import family
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 thresholds = [0.75, 0.80, 0.85, 0.90, 0.95, 0.99]
-deltas = [(0, "as able as the best current model", "#9a9995"), (1, "one unit above", "#2a78d6"), (2, "two units above", "#eb6834")]
 fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.2), sharey=True)
 for ax, (diff, abil, title) in zip(axes, [(dA, aA, "a  Representation items"), (dB, aB, "b  Perturbation items")]):
-    d = diff[~diff["degenerate"]]["difficulty"].values
-    best = abil["ability"].max()
-    for delta, label, color in deltas:
-        p = sigmoid(best + delta - d)
-        frac = [(p >= t).mean() for t in thresholds]
-        ax.plot(thresholds, frac, color=color, lw=2, marker="o", ms=4.5, label=label)
+    th = abil.loc[abil["respondent_id"].map(family) != "Floor", "ability"].values
+    b = diff["difficulty"].values
+    P = sigmoid(th[None, :] - b[:, None])
+    pmin, pmax = P.min(1), P.max(1)
+    deg_none, deg_all = (diff["p_correct"] == 0).values, (diff["p_correct"] == 1).values
+    easy = [((pmin >= t) | deg_all).mean() for t in thresholds]
+    hard = [((pmax <= 1 - t) | deg_none).mean() for t in thresholds]
+    both = [e + h for e, h in zip(easy, hard)]
+    ax.plot(thresholds, both, color=INK, lw=2, marker="o", ms=4.5, label="uninformative: too easy or too hard")
+    ax.plot(thresholds, hard, color=ORANGE, lw=1.8, marker="o", ms=4, label="too hard: every model fails with probability $\\geq t$")
+    ax.plot(thresholds, easy, color=BLUE, lw=1.8, marker="o", ms=4, label="too easy: every model passes with probability $\\geq t$")
     ax.set_xticks(thresholds)
     ax.set_xticklabels([f"{t:.2f}" for t in thresholds])
-    ax.set_xlabel("pass-probability threshold for retiring an item")
+    ax.set_xlabel("probability threshold $t$")
     ax.set_ylim(0, 1)
     ax.set_title(title, loc="left", fontsize=9.5, color=INK)
-axes[0].set_ylabel("fraction of items retired")
-axes[0].legend(frameon=False, fontsize=7.5, loc="upper right", title="hypothetical model", title_fontsize=7.5)
+axes[0].set_ylabel("fraction of items")
+axes[0].legend(frameon=False, fontsize=7.2, loc="upper right")
 fig.tight_layout(w_pad=2)
 fig.savefig(out / "fig_retire.png", dpi=220)
 fig.savefig(out / "fig_retire.pdf")
