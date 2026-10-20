@@ -225,7 +225,7 @@ export function board(el, b, comp, scale, { limit = null, detail = null, perGrou
 export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, maxLabels = 14 } = {}) {
   const bins = rebin(scale.hist, b.edges, 2);
   const max = Math.max(1, ...bins.map((x) => x.n));
-  const m = { t: 20, b: 34 }, axisX = Math.round(w * 0.48), leftW = axisX - 24, rightW = w - axisX - 16;
+  const m = { t: 38, b: 48 }, axisX = Math.round(w * 0.48), leftW = axisX - 24, rightW = w - axisX - 16;
   const y = lin(-6, 6, h - m.b, m.t), bw = lin(0, max, 0, leftW);
   const ab = scale.abilities;
   // label every model if the pool is small, otherwise the top, the floors and the family leaders
@@ -256,7 +256,10 @@ export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, m
       <circle cx="${axisX + 46}" cy="${ly}" r="3.6" fill="${c}" stroke="var(--bg-2)" stroke-width="1.5"/>
       ${show ? `<text class="tlab" x="${axisX + 54}" y="${ly + 3.5}">${esc(nameOf(b, a.rid))}</text>` : ''}</g>`;
   });
-  s += `<text x="${axisX - 10}" y="${m.t - 6}" text-anchor="end" class="lab" style="font-size:10.5px">items by difficulty</text><text x="${axisX + 14}" y="${m.t - 6}" class="lab" style="font-size:10.5px">models by ability</text>`;
+  s += `<text x="${axisX - 10}" y="12" text-anchor="end" class="lab" style="font-size:10.5px">items by difficulty</text><text x="${axisX + 14}" y="12" class="lab" style="font-size:10.5px">models by ability</text>`;
+  // the two ends of the shared axis, so a cold reader knows which way is up
+  s += `<text x="${axisX}" y="${m.t - 10}" text-anchor="middle" class="mono" style="font-size:10px;fill:var(--fg-2)">▲ hard items · high ability</text>`;
+  s += `<text x="${axisX}" y="${h - m.b + 18}" text-anchor="middle" class="mono" style="font-size:10px;fill:var(--fg-2)">▼ easy items · low ability</text>`;
   s += `<text x="${axisX}" y="${h - 6}" text-anchor="middle" style="font-size:10.5px">logits · 0 = average item</text>`;
   el.innerHTML = s + '</svg>';
   // The finished map is the base state; the entrance animation is added a frame later so that a renderer
