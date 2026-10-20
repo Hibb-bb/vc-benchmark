@@ -1,24 +1,26 @@
 # McFarlandTsherniak2020.perturbation
 
-- items: 866, respondents: 14, loglik: -2440.4, iters: 198, converged: True
+- items: 866, respondents: 16, loglik: -2836.5, iters: 222, converged: True
 - rule: pass if pearson_delta@hvg > mean_shift + 0.0
 
-- difficulty percentiles (5/25/50/75/95): [-4.37, -3.24, -1.71, -1.17, -0.36]
-- non-degenerate items: 385; nothing passes: 481; everything passes: 0
+- difficulty percentiles (5/25/50/75/95): [-4.16, -3.2, -1.93, -1.0, -0.22]
+- non-degenerate items: 393; nothing passes: 473; everything passes: 0
 
 | respondent | ability | se | p_correct | outfit |
 |---|---|---|---|---|
-| pcareg_k200 | -1.55 | 0.11 | 0.285 | 0.43 |
-| pcareg_k100 | -2.16 | 0.11 | 0.226 | 0.33 |
-| pcareg_k50 | -2.53 | 0.11 | 0.193 | 0.26 |
-| pcareg_k2 | -2.70 | 0.12 | 0.178 | 0.39 |
-| pcareg_k10 | -2.83 | 0.12 | 0.167 | 0.24 |
-| pcareg_k20 | -2.97 | 0.12 | 0.156 | 0.23 |
-| pcareg_k5 | -2.98 | 0.12 | 0.155 | 0.27 |
-| random_shift_s0 | -3.17 | 0.12 | 0.140 | 0.83 |
-| random_shift_s1 | -3.31 | 0.13 | 0.129 | 0.82 |
-| control_mean | -3.68 | 0.13 | 0.104 | 0.64 |
-| lowrank_r2 | -4.28 | 0.15 | 0.069 | 0.56 |
-| lowrank_r5 | -4.28 | 0.15 | 0.069 | 0.56 |
-| lowrank_r10 | -4.28 | 0.15 | 0.069 | 0.56 |
-| target_kd | -8.80 | 0.96 | 0.000 | 0.00 |
+| pcareg_k200 | -1.57 | 0.11 | 0.285 | 0.41 |
+| pcareg_k100 | -2.20 | 0.11 | 0.226 | 0.31 |
+| mlp_h1024_d50 | -2.55 | 0.12 | 0.195 | 0.34 |
+| pcareg_k50 | -2.58 | 0.12 | 0.193 | 0.23 |
+| pcareg_k2 | -2.76 | 0.12 | 0.178 | 0.41 |
+| mlp_h256_d50 | -2.77 | 0.12 | 0.177 | 0.39 |
+| pcareg_k10 | -2.88 | 0.12 | 0.167 | 0.23 |
+| pcareg_k20 | -3.03 | 0.12 | 0.156 | 0.22 |
+| pcareg_k5 | -3.04 | 0.12 | 0.155 | 0.27 |
+| random_shift_s0 | -3.24 | 0.12 | 0.140 | 0.97 |
+| random_shift_s1 | -3.38 | 0.13 | 0.129 | 0.97 |
+| control_mean | -3.75 | 0.13 | 0.104 | 0.75 |
+| lowrank_r2 | -4.35 | 0.15 | 0.069 | 0.64 |
+| lowrank_r10 | -4.35 | 0.15 | 0.069 | 0.64 |
+| lowrank_r5 | -4.35 | 0.15 | 0.069 | 0.64 |
+| target_kd | -8.87 | 0.96 | 0.000 | 0.00 |

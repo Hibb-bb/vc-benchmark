@@ -619,9 +619,9 @@ Mean Pearson delta on HVGs by screen (context scheme, 5 folds; pass = exceeds th
 | MLP 256 | 0.257 | 0.456 | 0.244 | 0.502 | 0.767 |
 | MLP 1024 | 0.259 | 0.473 | 0.239 | 0.484 | 0.779 |
 | scGen | 0.180 | 0.527 | 0.129 | 0.294 | 0.443 |
-| scVI counterfactual | 0.025 | 0.401 | 0.098 | 0.259 | (rerun pending) |
+| scVI counterfactual | 0.025 | 0.401 | 0.098 | 0.259 | 0.488 |
 
-Pooled context-scheme abilities (before the Tahoe scVI rerun): pcareg_k200 5.44 (Parse-only), MLP 256 4.46,
+Pooled context-scheme abilities (first fit, before the Tahoe scVI rerun): pcareg_k200 5.44 (Parse-only), MLP 256 4.46,
 MLP 1024 4.31, low-rank r10 3.99, ridge d50 2.82, knn_k20 2.51, scVI counterfactual 0.48 (4 screens, 28 % pass),
 scGen -0.44 (48 % pass), random shift -3.5, control mean -5.1. Abilities are far above zero because, with the
 perturbation seen in other contexts, feature-based models beat the context mean shift on 80-99 % of Tahoe
@@ -631,3 +631,5 @@ The first Tahoe scVI array failed with `KeyError: 'dose'`: the Tahoe cell table 
 now keyed through their `item_id` into the item table (`run_scvi_pert.py`). Rerun as array 4579858 with the
 dependent `slurm/pert_ml_append_tahoe.slurm` (append + refit + summarize). None of this is in the paper yet
 (user's instruction: keep the new perturbation work out of the manuscript for now).
+
+Tahoe scVI rerun completed (1.34M training cells, 25 epochs, 12-20 min per fold): mean Pearson 0.488 on Tahoe, 60 % pass vs the mean shift. After the refit, scVI counterfactual sits at -0.08 on the pooled context scale (all five screens, 52 % pass), scGen at -0.42 (48 % pass); the top of the scale is unchanged (MLP 256 4.44, MLP 1024 4.29, low-rank r10 3.97).
