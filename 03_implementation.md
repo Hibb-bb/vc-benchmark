@@ -590,3 +590,44 @@ scBaseCount runs are kept but no longer pooled). 424,478 items, 370,341 informat
 nobody; fit 8.5 min. Top: Nystroem k256 0.72 ~ scVI-30D tissue 0.72 ~ scVI-30D none 0.71 ~ PCA-128D 0.69.
 Paper (`paper/main.tex`) and `paper/bench/*` regenerated from this scale (`scripts/paper_stats.py`
 PANELS list). `humanall` scBaseCount panels are still running on the Arc workstation.
+
+### 7.8 Component B, unseen perturbation–context combinations with learned respondents (runs of 2026-10-20)
+
+The primary perturbation split is now the `context` scheme: every test item is a (perturbation, context, dose)
+combination whose perturbation and whose context both occur in training, only never together. It exists for the
+five multi-context screens (Tahoe, Parse cytokines, sciPlex3, McFarland, Frangieh); the single-context screens
+only have the unseen-perturbation scheme. `fit_rasch.py pert` now writes two pooled scales,
+`rasch/pooled.*` (perturbation scheme, 15 screens, 88,164 items) and `rasch/pooled_context.*` (context scheme,
+5 screens, 71,897 items).
+
+New respondents, all in the context scheme only:
+
+- `scvi_cf` (`scripts/run_scvi_pert.py`, `.venv-scvi`, gengpu): scVI with `batch_key = perturbation|dose`
+  trained on <=30-100 cells per training item plus all controls (2,000 HVGs, nb likelihood, 30 latent, 25-150
+  epochs); the prediction for a test item is the log1p normalised expression of <=300 control cells of its
+  context decoded under the target perturbation minus the same cells decoded under control. 4-20 min per fold.
+- `scgen` (`src/vcb/pert/scgen.py`): latent arithmetic, same cell subsample.
+- `mlp_h256_d50`, `mlp_h1024_d50` (`src/vcb/pert/baselines.py::MLPPCA`): sklearn MLP from item features to a
+  50-d PCA of the deltas; run in both schemes on all 15 screens.
+
+Mean Pearson delta on HVGs by screen (context scheme, 5 folds; pass = exceeds the context mean shift):
+
+| model | Frangieh | McFarland | sciPlex3 | Parse | Tahoe |
+|---|---|---|---|---|---|
+| mean shift | 0.315 | 0.324 | 0.261 | 0.362 | 0.415 |
+| low-rank r10 | 0.298 | 0.270 | 0.212 | 0.446 | 0.754 |
+| MLP 256 | 0.257 | 0.456 | 0.244 | 0.502 | 0.767 |
+| MLP 1024 | 0.259 | 0.473 | 0.239 | 0.484 | 0.779 |
+| scGen | 0.180 | 0.527 | 0.129 | 0.294 | 0.443 |
+| scVI counterfactual | 0.025 | 0.401 | 0.098 | 0.259 | (rerun pending) |
+
+Pooled context-scheme abilities (before the Tahoe scVI rerun): pcareg_k200 5.44 (Parse-only), MLP 256 4.46,
+MLP 1024 4.31, low-rank r10 3.99, ridge d50 2.82, knn_k20 2.51, scVI counterfactual 0.48 (4 screens, 28 % pass),
+scGen -0.44 (48 % pass), random shift -3.5, control mean -5.1. Abilities are far above zero because, with the
+perturbation seen in other contexts, feature-based models beat the context mean shift on 80-99 % of Tahoe
+items; Frangieh is the only screen where nothing beats the mean shift on more than a third of items.
+
+The first Tahoe scVI array failed with `KeyError: 'dose'`: the Tahoe cell table has no dose column, so cells are
+now keyed through their `item_id` into the item table (`run_scvi_pert.py`). Rerun as array 4579858 with the
+dependent `slurm/pert_ml_append_tahoe.slurm` (append + refit + summarize). None of this is in the paper yet
+(user's instruction: keep the new perturbation work out of the manuscript for now).
