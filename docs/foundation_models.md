@@ -37,24 +37,19 @@ then `scfoundation`, `cellplm`, `transcriptformer`, and the two label-supervised
 
 ## 1. Set up on a new machine
 
-**Prerequisite (as of 2026-10-20): the embedder code in scfm-irt is not on GitHub yet.** The remote
-`https://github.com/Hibb-bb/scfm-irt` holds only the scaffold commit; every model module
-(`src/scfm_irt/embedders/*.py`), `_genes.py`, the `scripts/download_*_assets.py` downloaders and
-`scripts/setup_embedder_venv.sh` are uncommitted on Quest. Either commit and push them from Quest first
-(`cd /gpfs/projects/p32593/scfm-irt && git add src scripts envs docs slurm && git commit && git push`),
-or copy the working tree without its venvs, caches and logs:
+The embedder code, downloaders and venv builder were pushed to `https://github.com/Hibb-bb/scfm-irt`
+on 2026-10-20 (commit 44d75d3), so a clone works. The downloaded weights are not in git; copying
+`cache/*_workdir` from Quest saves the downloads in step 1b but is optional: scGPT, Geneformer, scPRINT,
+CellPLM, scFoundation and TranscriptFormer are under 3 GB each, UCE and STATE 12 GB each, SCimilarity
+70 GB (skip it unless needed). The venvs are 5 to 9 GB each and must be rebuilt, not copied.
 
 ```bash
-rsync -av --exclude '.venv*' --exclude 'cache/pip' --exclude 'logs' --exclude 'runs' \
-  quest:/gpfs/projects/p32593/scfm-irt/ ../scfm-irt/
+rsync -av quest:/gpfs/projects/p32593/scfm-irt/cache/scgpt_workdir ../scfm-irt/cache/   # optional, per model
 ```
-
-Copying `cache/*_workdir` along saves the downloads in the next step but is optional: scGPT, Geneformer,
-scPRINT, CellPLM, scFoundation and TranscriptFormer are under 3 GB each, UCE and STATE 12 GB each,
-SCimilarity 70 GB (skip it unless needed). The venvs are 5 to 9 GB each and must be rebuilt, not copied. Then:
 
 ```bash
 # next to this repo (or set SCFM_IRT=/path/to/scfm-irt)
+git clone https://github.com/Hibb-bb/scfm-irt ../scfm-irt
 cd ../scfm-irt
 ```
 
