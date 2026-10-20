@@ -27,17 +27,9 @@ labels and 88,164 perturbation items covering roughly 10,000 gene targets, 500 c
 models on it, from principal components and ridge regression to scVI and scGen.
 Difficulties are estimated with a one-parameter item response model from a pool of
 deliberately simple models, so the scale is anchored to methods that cannot have memorized
-the test data. The scale reproduces what the field has found with raw scores and adds what
-raw scores hide: a quarter of the perturbation items are passed by no model because the
-average response is unbeatable on them, and annotation panels assembled from heterogeneous
-public submissions are two thirds of a logit harder than curated atlases because their
-labels disagree between samples. We find no strong evidence that current virtual cell models
-outperform simple baselines: scVI ties the PCA ladder on the pooled annotation scale, an
-additive model of perturbation and context effects is the best predictor of cytokine
-responses in new donors and cell types, and scGen beats the average-response baseline only
-when a drug has been observed in many cell lines. Finally, we quantify maintenance: a model
-one unit above the best current one would retire half of the annotation items, which fixes
-the rate at which new hard items must be written.}
+the test data. We report the resulting difficulty distributions, the abilities of every
+model on each component, and the fraction of items that are already uninformative for the
+evaluated models, which fixes the rate at which new hard items must be written.}
 
 \begin{document}
 \maketitle
@@ -545,20 +537,12 @@ model has yet been placed on either scale.
 
 We have built a benchmark for virtual cell models in which every test case has a measured
 difficulty, assembled from about 110 million cells across fourteen annotation panels and
-fifteen perturbation screens, and calibrated it with a pool of simple models. The scale is
-wide, its ladders are ordered, and its difficulties track the covariates one would expect
-where the labels are clean and expose label disagreement where they are not. Placed on it,
-the learned models we tested give no strong evidence that current virtual cell models
-outperform traditional, simple baselines: an scVI embedding ties PCA on the pooled
-annotation scale and beats it only where the evaluation holds out its batch variable or
-the held-out libraries are many and heterogeneous, an
-additive model of cytokine and context effects is the best predictor of cytokine responses
-in new donors and cell types, scGen beats the mean shift only when a drug has been observed
-in many cell lines, and a quarter of all perturbation conditions are passed by no model at
-all. Because the scale is anchored to methods that cannot have memorized the test data, it
-is ready to receive pretrained foundation models next, and because it records which items
-each model passes, it tells us how fast new hard items must be written to keep the
-benchmark alive.
+fifteen perturbation screens, and calibrated it with a pool of simple models. The scale
+spans about six logits in each component, its capacity ladders are ordered, and the
+abilities of every evaluated model are reported on it alongside plain accuracy. Because the
+scale is anchored to methods that cannot have memorized the test data, it is ready to
+receive pretrained foundation models next, and because it records which items each model
+passes, it tells us how fast new hard items must be written to keep the benchmark alive.
 
 \bibliographystyle{acl_natbib}
 \bibliography{benchmark}
