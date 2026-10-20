@@ -633,3 +633,88 @@ dependent `slurm/pert_ml_append_tahoe.slurm` (append + refit + summarize). None 
 (user's instruction: keep the new perturbation work out of the manuscript for now).
 
 Tahoe scVI rerun completed (1.34M training cells, 25 epochs, 12-20 min per fold): mean Pearson 0.488 on Tahoe, 60 % pass vs the mean shift. After the refit, scVI counterfactual sits at -0.08 on the pooled context scale (all five screens, 52 % pass), scGen at -0.42 (48 % pass); the top of the scale is unchanged (MLP 256 4.44, MLP 1024 4.29, low-rank r10 3.97).
+
+### 7.9 Does a good representation make a good perturbation model? (started 2026-10-20)
+
+Three designs, in increasing cost; the first two are implemented.
+
+**Item-level link on Parse PBMC** (`scripts/link_repr_pert.py`, output `runs/link_parse_v0/`). Parse is in both
+components: cell type is the label of `repr_parse_pbmc_celltype` (donors held out) and half of the context
+(donor | cell type) of `parse_pbmc_cytokines`. A difficulty is averaged per cell type and per (donor, cell type)
+over informative cells; B difficulty per context over cytokines; only the five A test donors overlap (16 types,
+69 donor x type contexts in the context scheme). Result: no raw link (Spearman -0.16 at the type level, -0.03 at
+donor x type; both p > 0.5 on the panel scale and the same on the pooled scales). The partial correlation
+controlling for log cells per B item is +0.34 (type) and +0.23 (donor x type), still not significant at these n.
+The confound runs in opposite directions: abundant types (CD4 memory, CD4 naive, CD8 memory, 600 to 1,900 cells
+per condition) have precise pseudobulks and are easy perturbation items, but they are the sibling-confused types
+that are hardest to annotate; rare types (cDC, pDC, HSPC) are easy to annotate and hard to predict. So
+type-level annotation difficulty does not predict perturbation difficulty; cells per condition does. The
+analysis sits in `runs/link_parse_v0/link.md` and on the website's link page.
+
+**Shared-encoder family** (`src/vcb/pert/latent.py`, `run_pert_pool.py --pool latent --out-run pert_latent_v0`,
+`slurm/pert_latent_array.slurm`, joint fit `slurm/pert_latent_fit.slurm` into `runs/pert_joint_v0`). For every
+unsupervised embedder of the component-A pool a perturbation respondent `latent_<embedder>` is built with one
+fixed recipe: the cells of the training items (<= 30 per item, 10 for Tahoe) plus <= 2,000 control cells per
+context are preprocessed as in component A and the embedder is fitted on them; each training item gets a latent
+pseudobulk and a latent response (minus its context's control mean); a centred ridge decoder from the latent to
+log1p CP10k expression of the same cells maps latent responses back to genes; the latent response of a test
+item is the mean latent response of the same perturbation in its training contexts (context scheme) or a ridge
+from the item features (perturbation scheme). The only thing that varies is the encoder, so the A ability and
+the B ability of the same encoder can be compared, with random projections at equal dimension as the null.
+Scores are kept in a separate run and fitted jointly with the main pool (`fit_rasch.py pert --scores-from
+pert_pool_v0,pert_latent_v0`) so the published `pert_pool_v0` scale is untouched. Smoke test on Adamson and Tian
+iPSC: the ladder is ordered as in component A (random 0.02 Pearson, depth 0.16, random projection below PCA,
+Nystroem on top at 0.29; mean shift 0.45 in the unseen-perturbation scheme). Twenty (screen, scheme) tasks
+submitted as array 4624678; results to be added here and to `runs/link_parse_v0/link.md` (encoders section).
+
+**Joint two-dimensional IRT** (not started): pool A and B responses of the shared-encoder respondents and estimate
+the correlation between the two latent abilities.
+
+### 7.10 Anatomy of difficulty (started 2026-10-20)
+
+`scripts/item_anatomy.py` (`slurm/item_anatomy.slurm`, output `runs/anatomy_v0/`). Component A: the probe's
+predicted label gives every hard cell a confusion; labels are mapped to Cell Ontology terms
+(`data/raw/ontology/cl-basic.obo`, by id where the panel carries one, else by exact name or synonym) and the
+ontology distance between true and predicted label, the distance to the nearest other label in the panel and the
+term's depth are item covariates; difficulty variance is decomposed into cell-type and stratum parts per panel.
+Component B: from the pseudobulk means and control statistics of every item bank, each condition gets the number
+of genes outside the control noise band (|z| > 3), the cosine of its response to the leave-one-out context mean
+shift (generic share), the on-target change for genetic screens, the target's control expression,
+transcription-factor status (Lambert 2018, `data/raw/knowledge/`) and dose; items are binned into no reaction
+(< 10 responding genes, or a measured target that is not reduced), generic reaction (cosine >= 0.8) and specific
+reaction, and difficulty is summarised per bin. Results (job 4624802, 7 min):
+
+- Ontology mapping by name covers Tabula Sapiens and the six scBaseCount panels (99 to 100 %) but almost none of
+  the curated CELLxGENE and Parse labels (6 to 19 %; Hao level-2, HLCA and immune-atlas vocabularies are custom), so
+  the ontology covariates are computed on 258k of 370k informative cells. Deeper (more specific) terms are harder
+  (Spearman +0.16) and a closer nearest label makes a type harder (-0.08); training support has no effect (-0.005).
+  Only 22 % of wrong predictions land within ontology distance 2 of the truth: the dominant confusions are
+  lineage neighbours (pericyte -> endothelial cell, monocyte -> macrophage, mature NK T -> CD8 T, mural -> smooth
+  muscle, regulatory T -> CD4 T) but many hard scBaseCount labels are confused with a different *granularity* of
+  the same lineage (classical monocyte -> monocyte, T cell -> CD8 T cell, hematopoietic precursor -> CD4 T), which
+  is the label-vocabulary problem again, not biology.
+- Variance decomposition: cell type explains 8 to 50 % of cell difficulty per panel, the stratum (type x donor or
+  sample x context) 42 to 66 %. The gap is largest on scBaseCount bone marrow (type 8 %, stratum 51 %) and liver
+  (19 / 55 %): which *sample* a cell comes from matters more than which type it is, because the sample fixes the
+  label vocabulary.
+- Perturbation bins (pooled unseen-perturbation scale, 88,164 items): 3,371 no-reaction items (4 %), 1,331
+  generic (2 %), the rest specific. No-reaction items are concentrated in a few screens: Tian 2019 iPSC 79 of 81,
+  Tian 2019 neurons 34 of 35, Tian 2021 neurons 104 of 183, Frangieh 342 of 669, Replogle gwps 2,079 of 9,326.
+  The Tian screens' position as the hardest genetic sets (section 7.3) is therefore an artefact of conditions in
+  which nothing responded; these are retirement candidates, not evidence about models.
+- In the unseen-perturbation scheme the generic bin is the hardest (mean difficulty -0.44 against -0.87 specific
+  and -1.34 no-reaction): a response that is almost all the shared shift cannot be beaten by construction of the
+  pass rule. Within the genetic screens more responding genes make an item *harder* (gwps +0.27, RPE1 +0.22,
+  Jurkat +0.21) because strong genetic responses are the generic ones (cosine to the mean shift +0.22 to +0.54),
+  whereas in the cytokine and drug screens more responding genes make an item easier (Parse -0.53, sciPlex -0.27,
+  McFarland -0.35). Transcription-factor targets are easier than other targets (mean -2.15 vs -1.46, Mann-Whitney
+  p = 1e-44), consistent with TF knockdowns producing specific programmes; higher doses are easier (-0.16).
+- In the unseen-combination scheme (71,897 items, where feature models pass 60 to 90 % of items) the picture
+  flips to the expected one: the no-reaction bin is far hardest (mean +4.0, a third passed by nobody) because a
+  noise response is a coin flip against the mean shift; difficulty falls with responding genes (-0.42) and cells
+  per condition (-0.37) and rises with the generic share (+0.51; Tahoe +0.73). So on the standard setting, hard
+  items are weak reactions and generic reactions; the measurable biology is the specific bin (mean -0.20).
+
+Outputs: `runs/anatomy_v0/anatomy.{json,md}`, `A_by_type.csv` (per panel x cell type: difficulty, nobody share,
+dominant confusion, ontology distances), `B_covariates.parquet` (per condition: responding genes, generic share,
+on-target change, TF status, bin).

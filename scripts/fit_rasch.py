@@ -24,6 +24,7 @@ ap.add_argument("--metric", default="pearson_delta@hvg")
 ap.add_argument("--margin", type=float, default=0.0)
 ap.add_argument("--reference", default="mean_shift")
 ap.add_argument("--pool-runs", default=None, help="repr: comma-separated run names to pool on one scale (writes into --run)")
+ap.add_argument("--scores-from", default=None, help="pert: comma-separated run names whose scores tables are concatenated per (dataset, scheme); default: --run itself")
 a = ap.parse_args()
 
 run = RUNS / a.run
@@ -48,10 +49,14 @@ def report(tag, abil, diff, info, extra=None):
 
 
 if a.component == "pert":
-    files = sorted(run.glob("*.scores.parquet"))
+    src = [RUNS / r for r in (a.scores_from.split(",") if a.scores_from else [a.run])]
+    names = sorted({f.name for r in src for f in r.glob("*.scores.parquet")})
+    files = [Path(n) for n in names]
     allb = []
     for f in files:
-        long = pd.read_parquet(f)
+        # first run listed wins when a respondent appears in several tables
+        long = pd.concat([pd.read_parquet(r / f.name) for r in src if (r / f.name).exists()], ignore_index=True)
+        long = long.drop_duplicates(["item_id", "respondent_id", "metric"], keep="first")
         b = binarize(long, metric=a.metric, reference=a.reference, margin=a.margin)
         tag = f.name.replace(".scores.parquet", "")
         abil, diff, info = fit_from_long(b)

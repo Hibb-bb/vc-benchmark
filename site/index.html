@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Virtual Bench</title>
+<meta name="description" content="A living item-response benchmark for virtual cell models: every cell and every perturbation condition carries a difficulty, every model an ability, on one logit scale.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314181f'/%3E%3Crect x='14.5' y='5' width='3' height='22' rx='1.5' fill='%23fff'/%3E%3Crect x='6' y='20' width='7' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='8' y='14' width='5' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='10' y='8' width='3' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Ccircle cx='22' cy='9' r='2.8' fill='%236ea8f0'/%3E%3Ccircle cx='22' cy='16' r='2.8' fill='%236ea8f0' opacity='.7'/%3E%3Ccircle cx='22' cy='23' r='2.8' fill='%236ea8f0' opacity='.4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('vcb-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script type="module" src="assets/app.js"></script>
+</head>
+<body data-page="home" data-base="./">
+<div id="nav"></div>
+<main>
+
+  <section class="wrap hero" id="top">
+    <div class="hero-copy">
+      <p class="kicker">Virtual Bench 0.1 · a living item-response benchmark</p>
+      <h1><span>Every cell is a question.</span><span>Every model gets <em>a score on one scale.</em></span></h1>
+      <p class="lead" id="hero-lead">Hundreds of thousands of single cells and perturbation conditions, each with an estimated difficulty. Models earn an ability in logits, with a standard error, on the same axis as the items they answered.</p>
+      <div class="cta">
+        <a class="btn primary" href="leaderboard/">See the leaderboard <span class="arr">→</span></a>
+        <a class="btn" href="items/">Browse the items</a>
+        <a class="btn" href="how/">How it is scored</a>
+      </div>
+    </div>
+    <figure class="hero-fig">
+      <div id="wright-hero" aria-label="Wright map: items by difficulty and models by ability on one logit axis"></div>
+      <figcaption id="wright-cap">Pooled representation scale: 424,478 cells from 14 panels on the left, 30 embedding models on the right.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap section tight" id="numbers">
+    <dl class="bignums" id="bignums"></dl>
+  </section>
+
+  <section class="wrap section" id="leaderboard">
+    <div class="head">
+      <p class="kicker">Leaderboard</p>
+      <h2>Ability, not accuracy</h2>
+      <p class="lead">An ability of 0 means a coin flip on the average item. Bars run from the average item to the model's ability; whiskers are one standard error. Random floors pin the bottom of each scale.</p>
+    </div>
+    <div class="bar"><div class="seg" id="home-comp"><button type="button" data-comp="repr" class="on" aria-pressed="true">Representation</button><button type="button" data-comp="pert" aria-pressed="false">Perturbation</button></div><span class="note" id="home-scale-note"></span></div>
+    <div id="home-board"></div>
+    <div id="home-legend"></div>
+    <p class="note" style="margin-top:1rem"><a href="leaderboard/">Full board, every panel and screen, and how it is counted →</a></p>
+  </section>
+
+  <section class="wrap section" id="hard">
+    <div class="teaser">
+      <div class="txt">
+        <p class="kicker">What makes an item hard</p>
+        <h2>Difficulty is a property of the item</h2>
+        <p>A cell is hard when it is shallow, when its type is rare in training, or when its label is a sibling of another type: activated against naive T cells, mural against smooth muscle. A perturbation condition is hard when the shared response already explains it, so beating the mean shift leaves nothing to win.</p>
+        <p><a href="analysis/">Difficulty against depth, support and effect size →</a></p>
+      </div>
+      <div class="fig"><h3>Hardest cell types on the pooled scale</h3><div id="hard-list"></div><p class="foot">Mean difficulty over the cells of each type, types with at least 20 items.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="link">
+    <div class="teaser">
+      <div class="txt">
+        <p class="kicker">Representation → perturbation</p>
+        <h2>Does a good embedding make a good perturbation model?</h2>
+        <p>Both components share sources and, soon, encoders. Parse PBMC appears in both: cell type is the label in one and half of the context in the other, so every perturbation item has a context whose representation difficulty is already estimated.</p>
+        <p><a href="link/">The link analysis, with its confound →</a></p>
+      </div>
+      <div class="fig"><h3>Parse PBMC, cell type level</h3><div id="link-teaser"></div><p class="foot" id="link-foot"></p></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="loop">
+    <div class="head">
+      <p class="kicker">The maintenance loop</p>
+      <h2>A benchmark that stays informative</h2>
+      <p class="lead">Items that every model passes or fails carry no information. The bank is refit, pruned and extended on a schedule, and every scale version stays citable.</p>
+    </div>
+    <div class="loop">
+      <div class="step"><h4>Anchor</h4><p>A new model is placed on the current scale with item difficulties held fixed, so its ability is comparable to everything already on the board.</p></div>
+      <div class="step"><h4>Recalibrate</h4><p>When enough new models have answered, all abilities and difficulties are refit together and the version number advances.</p></div>
+      <div class="step"><h4>Retire</h4><p>Items that no model passes, or that every model passes with high probability, leave the active bank but stay in the archive.</p></div>
+      <div class="step"><h4>Acquire</h4><p>New panels and screens are added where the scale is thin: harder items near the top, new sources, new perturbation types.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="trust">
+    <div class="head">
+      <p class="kicker">What keeps the scale honest</p>
+      <h2>The same test for everyone</h2>
+    </div>
+    <div class="trust"><ul>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/></svg><div><b>One frozen probe</b><span>Every embedding is read by the same multinomial logistic regression with the same settings. A difference in responses is a difference in embeddings.</span></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg><div><b>Whole donors, studies or tissues held out</b><span>Nothing is shared between training and test cells, so a probe cannot learn donor identity as a stand-in for cell type.</span></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16M4 12h10M4 6h6"/></svg><div><b>Passing means beating the mean shift</b><span>A perturbation prediction passes an item only when it beats the average response of that context, so credit goes to the perturbation-specific part.</span></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Floors on every scale</b><span>Random embeddings, random shifts and predicting no change are scored like any model. They must land at the bottom, and every capacity ladder must come out in order.</span></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><div><b>Misfit is reported</b><span>Each model's outfit says whether it passes and fails items its ability predicts. A model that only ties the baseline is flagged, not ranked.</span></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><div><b>Versioned scales</b><span>Every release of the scale is kept and cited by version. A model placed on v3 is never silently compared to one placed on v1.</span></div></li>
+    </ul></div>
+    <p class="note" style="margin-top:1.4rem"><a href="how/">Every rule, step by step →</a></p>
+  </section>
+
+  <section class="wrap section" id="cite">
+    <div class="grid cols-2">
+      <div class="prose">
+        <p class="kicker">Contribute</p>
+        <h2>Put a model on the scale</h2>
+        <p>Send embeddings for the representation panels or pseudobulk predictions for the perturbation screens. We run the frozen probe and the fixed pass rule, place the model with item difficulties anchored, and publish its ability with a standard error.</p>
+        <div class="cta"><a class="btn primary" href="contribute/">How to contribute <span class="arr">→</span></a></div>
+      </div>
+      <div class="prose">
+        <p class="kicker">Cite</p>
+        <h2>Citation</h2>
+        <div class="cite"><pre id="bib">@misc{vcbench2026,
+  title  = {Virtual Bench: a living item-response benchmark for virtual cell models},
+  author = {Wu, Yu-Hsuan and others},
+  year   = {2026},
+  note   = {Version 0.1, scale v3. Preprint in preparation.}
+}</pre><button type="button" id="copy-bib">Copy</button></div>
+        <p class="note">Author list and preprint link are placeholders until the manuscript is posted.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div id="footer"></div>
+</body>
+</html>

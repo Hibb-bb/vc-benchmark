@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contribute · Virtual Bench</title>
+<meta name="description" content="How to put a model on the Virtual Bench scale.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314181f'/%3E%3Crect x='14.5' y='5' width='3' height='22' rx='1.5' fill='%23fff'/%3E%3Crect x='6' y='20' width='7' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='8' y='14' width='5' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='10' y='8' width='3' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Ccircle cx='22' cy='9' r='2.8' fill='%236ea8f0'/%3E%3Ccircle cx='22' cy='16' r='2.8' fill='%236ea8f0' opacity='.7'/%3E%3Ccircle cx='22' cy='23' r='2.8' fill='%236ea8f0' opacity='.4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('vcb-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script type="module" src="../assets/app.js"></script>
+</head>
+<body data-page="contribute" data-base="../">
+<div id="nav"></div>
+<main>
+  <header class="wrap page-head">
+    <p class="kicker">Contribute</p>
+    <h1>Put a model on the scale</h1>
+    <p>Two routes, one response format. For version 0.1 the pipeline is run by the maintainers: send a pull request or an email with the files described here, and the model is placed with item difficulties anchored, then published with its ability and standard error.</p>
+  </header>
+
+  <section class="wrap section tight">
+    <div class="prose">
+      <div class="callout">Version 0.1 has no automated submission service. Open a pull request against the <a href="https://github.com/Hibb-bb/vc-benchmark">repository</a> or write to the maintainers; turnaround is a few days for the representation panels and depends on screen size for perturbation.</div>
+
+      <h2>Route 1: embeddings</h2>
+      <p>For the representation component you ship embeddings and we run the frozen probe. For each panel you want to be scored on, provide one matrix per panel of shape (cells × dimensions) for every cell in the panel, training and test, in the panel's cell order, as <code>.npy</code> or an <code>.h5ad</code> with the embedding in <code>obsm</code>. Panels are distributed as <code>.h5ad</code> files with raw counts, the <code>split</code> column and the stratum labels; the test labels are included, because the probe is ours and the split is by whole donors, studies or tissues. State which cells your model saw during pretraining.</p>
+      <p>This is the same route the scVI respondents took: <code>scripts/extract_scvi_embedding.py</code> writes the matrix, <code>scripts/append_repr_responses.py</code> runs the probe and appends the responses, and a refit places the model.</p>
+
+      <h2>Route 2: predictions</h2>
+      <p>For the perturbation component you ship predicted pseudobulk deltas. For each screen and split, provide one matrix of shape (test items × genes) in the screen's gene order, one row per held-out condition of each fold, using the published fold assignment in the items table (<code>fold_group</code>). Your model may train on the training folds' cells and conditions and on all control cells; it must not see the held-out conditions. Scoring applies the fixed metric and pass rule. The scGen and scVI counterfactual respondents took this route through <code>scripts/append_pert_scores.py</code>.</p>
+
+      <h2>Route 3: a response table</h2>
+      <p>If you reproduce the probe or the pass rule yourself, the minimal submission is the response table both components share, one row per item and model:</p>
+      <pre><code>item_id            respondent_id     k   n
+repr_pool_v0::cell_0001   my_model_v1   1   1
+tahoe100m::drugX::ctx=A549::dose=0.05   my_model_v1   0   1</code></pre>
+      <p><code>k</code> is the number of passes out of <code>n</code> trials, so cell-level items have <code>n = 1</code> and stratum-level items the stratum size. Item identifiers must match the published items tables exactly. Response tables are checked against the items we hold out: a table that passes items the published pool shows as unreachable triggers a manual look before placement.</p>
+
+      <h2>Anchored placement</h2>
+      <p>A new model is first placed with every item difficulty fixed at its current value, which takes seconds and leaves every published ability unchanged. Its ability, standard error, pass rate and outfit go on the board with the scale version it was placed on. At the next recalibration every model is refit together.</p>
+
+      <h2>The contamination register</h2>
+      <p>For every learned model, declare for each source whether it was in the pretraining corpus, in any fine-tuning data, or clean. Sources are listed on the <a href="../datasets/">datasets</a> page; CELLxGENE atlases and scBaseCount overlap heavily with the pretraining data of current single-cell foundation models, so most entries will not be clean, and that is fine. The register is published alongside the ability and is what makes it interpretable.</p>
+
+      <h2>House rules</h2>
+      <ul>
+        <li>Respondent names are stable strings reused across every run and version; a model is never renamed in one run only.</li>
+        <li>Published items are never modified. A fix to a panel or screen produces a new panel or screen and a new scale version.</li>
+        <li>Classical respondents and floors are always refit alongside submissions, so the bottom of the scale is checked every time.</li>
+        <li>Abilities from different scale versions are never compared without saying so.</li>
+        <li>Submissions that only tie the baseline on most items are kept as diagnostics and flagged as misfit, not ranked.</li>
+      </ul>
+
+      <h2>Where a new source helps most</h2>
+      <ul>
+        <li>Representation items above +2 logits that are not label noise: state-level annotations such as treatment or disease state, at pseudobulk resolution.</li>
+        <li>Perturbation screens with chemical descriptors, so that unseen-compound prediction becomes a learnable split.</li>
+        <li>A cytokine to gene mapping for the Parse screen, so that unseen-cytokine items can use the control-coexpression gene embedding.</li>
+        <li>Foundation-model embeddings and perturbation predictions with a complete contamination declaration.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+<div id="footer"></div>
+</body>
+</html>

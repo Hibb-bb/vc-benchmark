@@ -3,7 +3,8 @@
 Living Item Response Theory (IRT) benchmark for virtual cell models. Read `README.md` for the
 layout and `03_implementation.md` for what each stage does and the results so far. Task-specific
 runbooks live in `docs/` (for example `docs/remote_scbasecount.md` for evaluating scBaseCount on
-another cluster).
+another cluster, and `docs/foundation_models.md` for placing scGPT, Geneformer, UCE, STATE and the other
+scfm-irt foundation models on the representation panels).
 
 ## Setup on a new machine
 
@@ -67,3 +68,15 @@ Component B (perturbation) follows the same pattern with `scripts/build_pert_ite
   On a dedicated workstation without Slurm (e.g. the Arc workspace) run it directly with `nohup`.
 - The `.gitignore` rule for data is anchored (`/data/`); `src/vcb/data/` is source and must be
   committed (the unanchored rule had silently dropped it from the first commit).
+
+## Website (`site/`)
+
+Static site, no build step: hand-written HTML pages, one stylesheet and ES modules under `site/assets/`,
+every number and chart rendered from JSON under `site/data/`. Regenerate the data after any refit with
+`.venv/bin/python scripts/export_site_data.py` (reads `runs/repr_pooled_v3`, the panel runs listed in
+`scripts/paper_stats.py`, `runs/pert_pool_v0`, `paper/bench/stats.json`, `runs/link_parse_v0/link.json`,
+`runs/anatomy_v0/`), then commit `site/`. `.github/workflows/site.yml` deploys `site/` to GitHub Pages on
+push to main (enable Pages with source "GitHub Actions" once). Preview locally with
+`cd site && python3 -m http.server 8765`. Panel and screen display names live in `PANELS`/`SCREENS` at the
+top of the export script; respondent names come from `src/vcb/names.py`. Headless Firefox on the login node
+can screenshot pages but freezes CSS animations; see `cache/shots/server.py` for the delaying wrapper.
