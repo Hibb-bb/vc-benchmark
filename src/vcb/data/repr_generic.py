@@ -96,17 +96,25 @@ def build_generic_panel(h5ad: Path, name: str, label_key: str, donor_key: str, c
                         test_groups: list[str] | None = None, seed: int = 0) -> ad.AnnData:
     t0 = time.time()
     rng = np.random.default_rng(seed)
-    a = ad.read_h5ad(h5ad)
-    print(f"read {h5ad}: {a.shape} in {time.time()-t0:.0f}s", flush=True)
-    X, var = _counts(a, counts)
+    # Select cells on obs first and read only the kept rows of X: a 2.6 M-cell concat file does not
+    # fit through the old load-everything path. With counts == "X" the file is opened backed; other
+    # counts specs (raw, layers/<name>) are loaded in memory as before.
+    backed = counts == "X"
+    a = ad.read_h5ad(h5ad, backed="r") if backed else ad.read_h5ad(h5ad)
+    print(f"read {h5ad}: {a.shape}{' (backed)' if backed else ''} in {time.time()-t0:.0f}s", flush=True)
+    if backed:
+        X_full, var = a.X, a.var
+    else:
+        X_full, var = _counts(a, counts)
     obs = a.obs.copy()
+    pos = np.arange(len(obs))  # positions into X_full of the rows still in obs
     for c in obs.columns:
         if obs[c].dtype == object or str(obs[c].dtype) == "category":
             obs[c] = obs[c].astype(str)
     if filter_query:
         m = obs.eval(filter_query).values.astype(bool)
         print(f"filter {filter_query!r}: {m.sum()} / {len(m)} cells", flush=True)
-        obs, X = obs[m], X[np.where(m)[0]]
+        obs, pos = obs[m], pos[m]
     for k in (label_key, donor_key) + ((context_key,) if context_key else ()):
         if k not in obs:
             raise KeyError(f"obs column {k!r} missing; available: {list(obs.columns)[:40]}")
@@ -116,14 +124,14 @@ def build_generic_panel(h5ad: Path, name: str, label_key: str, donor_key: str, c
     bad = obs["cell_type"].isin(["nan", "None", "", "NaN", "<NA>", "unknown", "Unknown"]) | obs["donor"].isin(["nan", "None", ""])
     if bad.any():
         print(f"dropping {bad.sum()} cells without label or donor", flush=True)
-        obs, X = obs[~bad.values], X[np.where(~bad.values)[0]]
+        obs, pos = obs[~bad.values], pos[~bad.values]
     obs["stratum"] = obs["tissue"] + "|" + obs["cell_type"] + "|" + obs["donor"]
 
     # drop strata below min_stratum before choosing the split, so small strata do not drive it
     n_str = obs["stratum"].map(obs["stratum"].value_counts())
     keep = (n_str >= min_stratum).values
     print(f"strata >= {min_stratum} cells: {keep.sum()} / {len(keep)} cells kept, {obs.loc[keep, 'stratum'].nunique()} strata", flush=True)
-    obs, X = obs[keep], X[np.where(keep)[0]]
+    obs, pos = obs[keep], pos[keep]
 
     unit = "donor" if split_by == "donor" else "tissue"
     if test_groups:
@@ -141,7 +149,14 @@ def build_generic_panel(h5ad: Path, name: str, label_key: str, donor_key: str, c
     tr_idx = _cap(obs[obs["split"] == "train"], train_cap, rng)
     te_idx = _cap(obs[obs["split"] == "test"], test_cap, rng)
     kept = obs.index.isin(tr_idx.append(te_idx))
-    obs, X = obs[kept], X[np.where(kept)[0]]
+    obs, pos = obs[kept], pos[kept]
+    order = np.argsort(pos, kind="stable")  # read rows in file order, then restore obs order
+    X = X_full[pos[order]]
+    if backed:
+        X = X.to_memory() if hasattr(X, "to_memory") else X
+    inv = np.empty_like(order); inv[order] = np.arange(len(order))
+    X = sp.csr_matrix(X)[inv]
+    print(f"loaded {X.shape[0]} kept rows ({X.nnz:,} nonzeros) in {time.time()-t0:.0f}s", flush=True)
     train_types = set(obs.loc[obs["split"] == "train", "cell_type"])
     obs["type_in_train"] = obs["cell_type"].isin(train_types)
     obs["dataset_id"] = name

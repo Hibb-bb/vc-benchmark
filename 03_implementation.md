@@ -534,3 +534,23 @@ Pooled human200 ladder: **scVI-30D tissue (0.10)** ~ Nystroem k256 (0.08) ~ scVI
   were dropped before scoring.
 - Kept for the item bank: both the 60-sample and the 200-sample families; the 200-sample pooled
   scale is the current reference for scBaseCount human.
+
+#### 7.6.3 All usable human samples, `humanall` (2026-10-19 to 2026-10-20)
+
+Every filter-passing human sample with a single UBERON tissue id: blood with all 713 samples, eight
+tissues that had not been built (cornea 84, pancreatic islets 38, lymph node 36, brain 33, breast 33,
+prostate 28, pancreas 27, thymus 26; donor held out) and a tissue-held-out panel over the 31 tissues
+with >= 10 samples (1,813 samples, 2.64 M cells read at 1,500 per sample, 814 k train / 393 k test
+cells, 10 of 31 tissues held out). The multitissue panel build was killed on the first attempt because
+`build_generic_panel` loaded the whole matrix; it now selects cells on `obs` first and reads only the
+kept rows from the backed file (`src/vcb/data/repr_generic.py`; verified to reproduce an existing
+panel cell for cell). Results per panel and the pooled ladder are in `docs/scbasecount_human_results.md`
+(section 2.3). Headlines: scVI-30D leads the pooled humanall scale (581,976 items) by 0.15 logits over
+Nystroem k256 and is the top respondent on blood (0.564), cornea (0.756) and the 31-tissue panel
+(0.397, where 31 % of items are passed by nobody); the small single-study tissues (islets 0.82, breast
+0.82, brain 0.70) are the easiest scBaseCount panels and there PCA/Nystroem stay ahead. Thymus (26
+samples, 26 % unreachable, top accuracy 0.35) is the hardest single-tissue panel.
+
+Storage cleanup (`scripts/scbasecount_cleanup.py`: delete non-human h5ad directories, then rewrite
+human files without `layers/`) was prepared and tested on copies but could not run: `/datasets/arc` is
+a read-only bind mount in the workspace. It needs a read-write mount or a host with write access.
