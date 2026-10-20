@@ -311,3 +311,9 @@ svg .mark { cursor: pointer; }
 .card dl.kv, dl.kv { display: block; margin: 0 0 1rem; font-size: 0.9rem; }
 dl.kv dt { color: var(--fg-2); margin-top: 0.5rem; }
 dl.kv dd { margin: 0.1rem 0 0; font-family: var(--mono); font-size: 0.88rem; }
+
+/* pipeline scene: a wide drawn figure that scrolls sideways on small screens */
+.scene { margin: 0; display: grid; gap: 0.8rem; }
+.scene .scene-svg { min-width: 960px; width: 100%; height: auto; display: block; font-family: var(--body); }
+@media (max-width: 1000px) { .scene { overflow-x: auto; padding-bottom: 0.5rem; } }
+.scene figcaption { font-size: 0.86rem; color: var(--fg-2); max-width: var(--read); }

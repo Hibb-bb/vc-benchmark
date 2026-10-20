@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>How it works · Virtual Bench</title>
+<title>Why a scale · Virtual Bench</title>
 <meta name="description" content="Items, responses, the frozen probe, the mean-shift pass rule and the Rasch model behind the scale.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314181f'/%3E%3Crect x='14.5' y='5' width='3' height='22' rx='1.5' fill='%23fff'/%3E%3Crect x='6' y='20' width='7' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='8' y='14' width='5' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Crect x='10' y='8' width='3' height='2.4' rx='1.2' fill='%23fff' opacity='.6'/%3E%3Ccircle cx='22' cy='9' r='2.8' fill='%236ea8f0'/%3E%3Ccircle cx='22' cy='16' r='2.8' fill='%236ea8f0' opacity='.7'/%3E%3Ccircle cx='22' cy='23' r='2.8' fill='%236ea8f0' opacity='.4'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,11 +18,64 @@
 <main>
   <header class="wrap page-head">
     <p class="kicker">How it works</p>
-    <h1>From raw data to a difficulty scale</h1>
-    <p>The same pipeline serves both components: fixed items, one pass/fail response per item and model, and one joint fit that gives every item a difficulty and every model an ability with a standard error.</p>
+    <h1>Why a scale, not a leaderboard</h1>
+    <p>A benchmark score is usually an average over whatever test items happened to be collected. That number is a property of the test as much as of the model, and it stops meaning anything the moment the test changes. Virtual Bench uses item response theory instead: every item gets a difficulty, every model an ability, both on one scale, both with an error bar.</p>
   </header>
 
   <section class="wrap section tight">
+    <div class="prose">
+      <h2>What an accuracy leaderboard cannot do</h2>
+      <p><b>It cannot separate the model from the test.</b> Accuracy averages over items as if they were interchangeable. They are not: a cell with a coarse label that no method can resolve counts as much as a cell every method labels correctly, so the score depends on the mix of items in the set. The same model scores 0.89 on one annotation panel and 0.39 on another in this bank, not because it changed but because the panels did.</p>
+      <p><b>It cannot survive change.</b> Add a dataset, drop a noisy one, or add a model that reveals new hard items, and every score moves; a living benchmark on accuracy has to throw its history away at each update. A scale with anchored difficulties keeps old abilities valid while new items and new models join.</p>
+      <p><b>It cannot say how sure it is.</b> A standard error on accuracy treats every item as a coin with the same bias. Two models at 0.81 and 0.80 may be indistinguishable or clearly ordered depending on which items they disagree on, and the average cannot tell.</p>
+      <p><b>It cannot diagnose.</b> When a score is low, accuracy does not say whether the items were unanswerable, the labels inconsistent, or the model weak. Saturated benchmarks have the mirror problem: when everyone scores 0.95 the remaining 0.05 is where the information is, and the average hides it.</p>
+    </div>
+    <div class="grid cols-2" style="margin-top:1.4rem">
+      <div class="fig"><h3>The same model, fourteen tests</h3><p class="sub" id="how-acc-sub"></p><div id="how-acc"></div></div>
+      <div class="fig"><h3>What the fit estimates</h3><p class="sub">The chance that a model passes an item is a logistic function of ability minus difficulty. At equal values it is a coin flip; one logit above, 73%; two logits, 88%. Every item and every model is placed by the same curve.</p>
+        <svg viewBox="0 0 520 300" role="img" aria-label="Item characteristic curves: probability of a pass against a model's ability, for an easy and a hard item; the curves have the same shape and differ only in position, which is the item's difficulty." style="width:100%;height:auto;display:block">
+          <defs><marker id="icc-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 L9 5 L1 9 z" fill="var(--fg-3)"/></marker></defs>
+          <line x1="60" y1="240" x2="500" y2="240" stroke="var(--line-2)" marker-end="url(#icc-arrow)"/><line x1="60" y1="240" x2="60" y2="30" stroke="var(--line-2)" marker-end="url(#icc-arrow)"/>
+          <text x="500" y="262" text-anchor="end" font-size="12" fill="var(--fg-3)">model ability (logits)</text>
+          <text x="52" y="44" text-anchor="end" font-size="12" fill="var(--fg-3)">1</text><text x="52" y="139" text-anchor="end" font-size="12" fill="var(--fg-3)">½</text><text x="52" y="244" text-anchor="end" font-size="12" fill="var(--fg-3)">0</text>
+          <text x="20" y="150" text-anchor="middle" font-size="12" fill="var(--fg-3)" transform="rotate(-90 20 150)">P(pass)</text>
+          <line x1="60" y1="135" x2="480" y2="135" stroke="var(--line)" stroke-dasharray="3 4"/>
+          <path d="M60 236 C150 236 170 200 210 135 S270 44 360 40 L480 40" fill="none" stroke="var(--s1)" stroke-width="2.4"/>
+          <path d="M60 239 C230 239 250 222 300 135 S360 44 440 40 L480 40" fill="none" stroke="var(--s2)" stroke-width="2.4"/>
+          <line x1="210" y1="135" x2="210" y2="240" stroke="var(--s1)" stroke-dasharray="3 3"/><line x1="300" y1="135" x2="300" y2="240" stroke="var(--s2)" stroke-dasharray="3 3"/>
+          <circle cx="210" cy="135" r="4" fill="var(--bg-2)" stroke="var(--s1)" stroke-width="2"/><circle cx="300" cy="135" r="4" fill="var(--bg-2)" stroke="var(--s2)" stroke-width="2"/>
+          <text x="210" y="258" text-anchor="middle" font-size="12" fill="var(--s1)">easy item</text><text x="300" y="258" text-anchor="middle" font-size="12" fill="var(--s2)">hard item</text>
+          <text x="478" y="124" text-anchor="end" font-size="11.5" fill="var(--fg-2)">difficulty = where the curve crosses ½</text>
+          <line x1="255" y1="200" x2="255" y2="240" stroke="var(--fg)" stroke-width="2"/><circle cx="255" cy="200" r="4.5" fill="var(--fg)"/>
+          <text x="255" y="190" text-anchor="middle" font-size="12" fill="var(--fg)">a model</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="prose">
+      <h2>What the scale gives instead</h2>
+      <p><b>One number per model that does not depend on the test.</b> Ability is estimated jointly with every item's difficulty, so an item that nobody passes raises no model and lowers none; it is simply a hard item. Models that answered different mixes of panels are still placed on the same axis, because the fit knows how hard each panel was.</p>
+      <p><b>One number per item, with a reason.</b> Difficulty is a property of the cell or the condition. It can be correlated with sequencing depth, training support, effect size, ontology distance to the nearest sibling type, or the share of a response that is the generic shift, which is how the bank reports <a href="../anatomy/">why items are hard</a> rather than only that they are.</p>
+      <p><b>Error bars that mean something.</b> Standard errors come from the information each item carries at the model's ability. Items far above or below a model tell nothing about it; items near it tell the most. The same quantity says how many items an adaptive exam needs to place a new model to a given precision, which is a few hundred rather than hundreds of thousands.</p>
+      <p><b>A benchmark that can change without losing its history.</b> New models are placed with difficulties held fixed, so their abilities are comparable to the board as it stands. Items that every model passes or fails are retired because they carry no information; new panels are acquired where the scale is thin. Every version is refit and kept, and the classical pool of linear and kernel methods anchors each version to methods that cannot have memorised the test data.</p>
+      <p><b>Misfit, not just rank.</b> Each model's outfit statistic says whether its passes follow the scale's order. Random embeddings misfit by construction; a model that passes hard items while failing easy ones is flagged on the board rather than silently averaged.</p>
+      <p><b>Floors and ladders as evidence.</b> Random features, depth-only features and capacity ladders within a family are fit as respondents. They must come out at the bottom and in order before any other reading of the scale is made; a floor that climbs means labels are leaking.</p>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="head"><h2>The rules in brief</h2></div>
+    <div class="rules6">
+      <div class="card"><h3>One item, one response</h3><p>Representation: the frozen probe names the cell's annotated type from the model's embedding. Perturbation: the model's predicted response correlates with the measured one better than the context's mean shift.</p></div>
+      <div class="card"><h3>Held-out units</h3><p>Whole donors, studies or tissues are held out for cells; unseen perturbations or unseen perturbation and context pairs for conditions. Nothing is shared between training and test.</p></div>
+      <div class="card"><h3>The same test for everyone</h3><p>One probe with one setting, one pass rule, the same folds, for every model on every item of a scale.</p></div>
+      <div class="card"><h3>One joint fit</h3><p>The Rasch model by joint maximum likelihood with weak priors, standard errors from the Fisher information, outfit per item and model; validated on synthetic data and on the floors.</p></div>
+      <div class="card"><h3>Pooled scales</h3><p>All panels on one representation scale, all screens on one perturbation scale per split, linked through the models. Items nobody passes are reported, not counted.</p></div>
+      <div class="card"><h3>Versions</h3><p>New models anchor to the current scale; refits advance the version; every version stays available. A contamination register qualifies every learned model.</p></div>
+    </div>
+    <details style="margin-top:1.4rem"><summary>The rules in full</summary>
     <div class="prose">
       <h2>Items</h2>
       <p>Every test case is an item. An item carries a difficulty, a model carries an ability, and both are estimated from which items the model passes. The bank has two components with different items but the same response format.</p>
@@ -56,6 +109,8 @@
       <p>A new model is placed on the current scale with item difficulties held fixed, so its ability is comparable to everything already on the board. When enough new models have answered, abilities and difficulties are refit together and the scale version advances; every version stays available and citable. The classical pool anchors every version to methods that cannot have memorised the test data. A contamination register, which records for each learned model whether a source was in its pretraining corpus, qualifies the ability of any foundation model placed on the scale.</p>
       <p class="note"><a href="../versions/">Scale versions →</a> · <a href="../contribute/">Submit a model →</a></p>
     </div>
+    </details>
+    <p class="note" style="margin-top:1rem"><a href="../versions/">Scale versions →</a> · <a href="../contribute/">Submit a model →</a></p>
   </section>
 
 </main>

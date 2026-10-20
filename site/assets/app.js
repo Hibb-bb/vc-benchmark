@@ -268,5 +268,5 @@ export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, m
 try { const t = localStorage.getItem('vcb-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (e) { /* no storage */ }
 chrome();
 const page = document.body.dataset.page;
-const modules = { home: './home.js', leaderboard: './leaderboard.js', datasets: './datasets.js', items: './items.js', analysis: './analysis.js', anatomy: './anatomy.js', link: './link.js' };
+const modules = { home: './home.js', leaderboard: './leaderboard.js', datasets: './datasets.js', items: './items.js', analysis: './analysis.js', anatomy: './anatomy.js', link: './link.js', how: './how.js' };
 if (modules[page]) import(modules[page]).then((m) => m.default()).catch((e) => { console.error(e); const el = $('#err'); if (el) { el.hidden = false; el.textContent = 'Could not load the data for this page: ' + e.message; } });
