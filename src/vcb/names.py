@@ -56,6 +56,11 @@ def display_name(rid: str) -> str:
         return f"PCA regression-{m[1]}D"
     if r == "scgen":
         return "scGen"
+    if r == "scvi_cf":
+        return "scVI counterfactual"
+    m = re.fullmatch(r"mlp_h(\d+)_d(\d+)", r)
+    if m:
+        return f"MLP ({m[1]} hidden, d={m[2]})"
     return r
 
 
@@ -67,7 +72,7 @@ def plain_name(rid: str) -> str:
 
 def family(rid: str) -> str:
     for key, fam in [("pca_k", "PCA"), ("rproj", "Random projection"), ("nystroem", "Kernel features"), ("nmf", "NMF"), ("ica", "ICA"), ("gmm", "GMM"), ("depth", "Floor"), ("random_k", "Floor"), ("scvi", "scVI"),
-                     ("control_mean", "Floor"), ("random_shift", "Floor"), ("mean_shift", "Mean shift"), ("target_kd", "Mean shift"), ("knn", "KNN"), ("ridge", "Ridge"), ("pcareg", "PCA regression"), ("gp_", "Gaussian process"), ("lowrank", "Low-rank"), ("scgen", "scGen")]:
+                     ("control_mean", "Floor"), ("random_shift", "Floor"), ("mean_shift", "Mean shift"), ("target_kd", "Mean shift"), ("knn", "KNN"), ("ridge", "Ridge"), ("pcareg", "PCA regression"), ("gp_", "Gaussian process"), ("lowrank", "Low-rank"), ("scgen", "scGen"), ("scvi_cf", "scVI"), ("mlp", "MLP")]:
         if rid.startswith(key):
             return fam
     return "Other"

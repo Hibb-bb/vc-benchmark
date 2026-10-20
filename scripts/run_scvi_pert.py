@@ -24,6 +24,15 @@ from vcb.pert.folds import fold_splits, item_table
 from vcb.pert.run import hvg_mask
 
 warnings.filterwarnings("ignore")
+
+
+def pert_dose_key(df: pd.DataFrame) -> np.ndarray:
+    """'perturbation|dose' as plain Python strings; missing doses become 'nan' under every pandas version."""
+    pert = [str(x) for x in df["perturbation"].tolist()]
+    dose = ["nan" if pd.isna(x) else str(x) for x in df["dose"].tolist()]
+    return np.array([f"{p}|{d}" for p, d in zip(pert, dose)], dtype=object)
+
+
 ap = argparse.ArgumentParser()
 ap.add_argument("--dataset", required=True)
 ap.add_argument("--fold", type=int, required=True)
@@ -69,9 +78,10 @@ for i in range(0, len(sel), 200_000):  # chunked read, HVG columns only
     blocks.append(sp.csr_matrix(cells_b[sel[i:i + 200_000]].to_memory().X)[:, hv_idx])
 X = sp.vstack(blocks).tocsr().astype(np.float32)
 obs = cobs.iloc[sel].copy()
-pert_key = np.where(obs["is_control"].values.astype(bool), "control", obs["perturbation"].astype(str) + "|" + obs["dose"].astype(str))
-obs["pert_key"] = pd.Categorical(pert_key)
-obs["ctx"] = obs["context"].astype(str).values
+pert_key = pert_dose_key(obs)
+pert_key[obs["is_control"].values.astype(bool)] = "control"
+obs["pert_key"] = pert_key  # plain object strings; scvi makes the categorical itself
+obs["ctx"] = np.array([str(x) for x in obs["context"].tolist()], dtype=object)
 train = ad.AnnData(X=X, obs=obs[["pert_key", "ctx", "is_control"]].reset_index(drop=True))
 log(f"training cells {train.shape}, {train.obs['pert_key'].nunique()} perturbation categories")
 
@@ -83,11 +93,11 @@ model.train(max_epochs=max_epochs, early_stopping=True, batch_size=512 if n > 20
 log(f"trained {len(model.history['elbo_train'])} epochs")
 
 # prediction: control cells of the target context decoded under the target perturbation vs under control
-item_key = dict(zip(meta.index, np.where(meta["is_control"].values.astype(bool), "control", meta["perturbation"].astype(str) + "|" + meta["dose"].astype(str)))) if "is_control" in meta else dict(zip(meta.index, meta["perturbation"].astype(str) + "|" + meta["dose"].astype(str)))
-item_ctx = dict(zip(meta.index, meta["context"].astype(str)))
+item_key = dict(zip(meta.index, pert_dose_key(meta)))
+item_ctx = dict(zip(meta.index, [str(x) for x in meta["context"].tolist()]))
 X_items = np.asarray(items.X)
 ms = D[tr].mean(0)
-cats = set(train.obs["pert_key"].cat.categories)
+cats = set(train.obs["pert_key"].astype(str).unique())
 ctrl_idx_by_ctx = {c: np.where((train.obs["ctx"].values == c) & train.obs["is_control"].values.astype(bool))[0] for c in np.unique(train.obs["ctx"].values)}
 base_cache = {}
 def decode_mean(idx, batch):
