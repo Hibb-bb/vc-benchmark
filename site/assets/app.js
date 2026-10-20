@@ -237,16 +237,24 @@ export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, m
   s += bins.map((bin, i) => `<rect class="hbar mark" style="--i:${i}" data-tip="<b>${sgn(bin.x0)} to ${sgn(bin.x1)} logits</b><br>${int(bin.n)} items" x="${axisX - 10 - bw(bin.n)}" width="${bw(bin.n)}" y="${y(bin.x1) + 1}" height="${Math.max(0, y(bin.x0) - y(bin.x1) - 2)}" rx="2"/>`).join('');
   s += `<line class="axis-main" x1="${axisX}" x2="${axisX}" y1="${y(6)}" y2="${y(-6)}"/>`;
   s += niceTicks(-6, 6, 6).map((t) => `<text class="mono" x="${axisX}" y="${y(t) + 4}" text-anchor="middle" style="font-size:10px;fill:var(--fg-3)"><tspan stroke="var(--bg)" stroke-width="4" paint-order="stroke">${sgn(t, 0).replace('+0', '0').replace('−0', '0')}</tspan></text>`).join('');
-  // model ticks on the right, labels nudged apart so they never overlap
+  // model stems on the right: each starts at the true ability on the axis and fans out to a dot at a
+  // position nudged apart from its neighbours, so dots and labels never overlap
   const sorted = [...ab].sort((p, q) => q.ability - p.ability);
-  let lastY = -Infinity;
-  const rows = sorted.map((a) => { let ly = y(a.ability); if (ly - lastY < 11) ly = lastY + 11; lastY = ly; return { a, ly }; });
+  // spread the dot positions apart symmetrically (a 1-D relaxation), so a cluster of near-equal
+  // abilities opens up around its true centre instead of sliding down the figure
+  const gap = 11, top = m.t + 6, bottom = h - m.b - 6;
+  const ys = sorted.map((a) => y(a.ability));
+  for (let it = 0; it < 300; it++) {
+    for (let i = 0; i + 1 < ys.length; i++) { const d = ys[i + 1] - ys[i]; if (d < gap) { ys[i] -= (gap - d) / 2; ys[i + 1] += (gap - d) / 2; } }
+    for (let i = 0; i < ys.length; i++) ys[i] = Math.min(bottom, Math.max(top, ys[i]));
+  }
+  const rows = sorted.map((a, i) => ({ a, ly: ys[i] }));
   rows.forEach(({ a, ly }, i) => {
     const fam = familyOf(b, a.rid), c = famColor(comp, fam), show = labelled.has(a.rid);
     s += `<g class="model mark" style="--i:${i}" data-tip="<b>${esc(nameOf(b, a.rid))}</b><br>ability ${sgn(a.ability)} ± ${fmt(a.se)}<br>${fam}">
-      <line class="tick" x1="${axisX + 2}" x2="${axisX + 14}" y1="${y(a.ability)}" y2="${y(a.ability)}" stroke="${c}"/>
-      <circle cx="${axisX + 14}" cy="${y(a.ability)}" r="3.2" fill="${c}" stroke="var(--bg-2)" stroke-width="1.5"/>
-      ${show ? `<line x1="${axisX + 17}" x2="${axisX + 26}" y1="${y(a.ability)}" y2="${ly}" stroke="var(--line-2)"/><text class="tlab" x="${axisX + 29}" y="${ly + 3.5}">${esc(nameOf(b, a.rid))}</text>` : ''}</g>`;
+      <line class="tick" x1="${axisX + 2}" x2="${axisX + 46}" y1="${y(a.ability)}" y2="${ly}" stroke="${c}" stroke-width="1.1" stroke-opacity="0.6"/>
+      <circle cx="${axisX + 46}" cy="${ly}" r="3.6" fill="${c}" stroke="var(--bg-2)" stroke-width="1.5"/>
+      ${show ? `<text class="tlab" x="${axisX + 54}" y="${ly + 3.5}">${esc(nameOf(b, a.rid))}</text>` : ''}</g>`;
   });
   s += `<text x="${axisX - 10}" y="${m.t - 6}" text-anchor="end" class="lab" style="font-size:10.5px">items by difficulty</text><text x="${axisX + 14}" y="${m.t - 6}" class="lab" style="font-size:10.5px">models by ability</text>`;
   s += `<text x="${axisX}" y="${h - 6}" text-anchor="middle" style="font-size:10.5px">logits · 0 = average item</text>`;
