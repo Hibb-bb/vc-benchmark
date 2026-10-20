@@ -268,9 +268,9 @@ def d_pipeline():
     b = [f"<defs>{marker('pp-a')}</defs>"]
     pw, ph, gap, top = 214, 170, 52, 70
     xs = [40 + i * (pw + gap) for i in range(5)]
-    titles = [("Items", "every cell and every perturbation is a question"),
+    titles = [("Items", "cells and perturbations"),
               ("The test", "the same read-out for every model"),
-              ("Answers", "pass or fail, every model on every item"),
+              ("Answers", "every model on every item"),
               ("IRT fit", "one model of all the answers"),
               ("One scale", "models and items on the same axis")]
     for (x, (t, sub)) in zip(xs, titles):
@@ -301,15 +301,17 @@ def d_pipeline():
     x = xs[2]
     cols_, rws = 12, 7
     cw = 13
-    mx0, my0 = x + 32, top + 34
+    mx0, my0 = x + 34, top + 30
     for r in range(rws):
         for c in range(cols_):
             p = 0.9 - r * 0.11 - c * 0.045
             on = random.random() < p
             b.append(R(mx0 + c * cw, my0 + r * cw, cw - 3, cw - 3, S1 if on else BG3, "none" if on else LINE, 2, 0.8))
-    b.append(T(mx0 - 6, my0 + rws * cw / 2, "models", "end", 10.5, FG3, None, f' transform="rotate(-90 {mx0 - 6} {my0 + rws * cw / 2})"'))
-    b.append(T(mx0 + cols_ * cw / 2, my0 + rws * cw + 16, "items", "middle", 10.5, FG3))
-    b.append(T(x + pw / 2, top + 158, "nothing is averaged", "middle", 11, FG3))
+    b.append(T(mx0 - 8, my0 + rws * cw / 2, "one row per model", "middle", 10.5, FG2, None, f' transform="rotate(-90 {mx0 - 8} {my0 + rws * cw / 2})"'))
+    b.append(T(mx0 + cols_ * cw / 2, my0 + rws * cw + 14, "one column per item", "middle", 10.5, FG2))
+    lx = mx0 + 40
+    b.append(R(lx, top + 150, 9, 9, S1, "none", 2)); b.append(T(lx + 13, top + 158, "pass", "start", 10.5, FG3))
+    b.append(R(lx + 46, top + 150, 9, 9, BG3, LINE, 2, 0.8)); b.append(T(lx + 59, top + 158, "fail", "start", 10.5, FG3))
     # panel 4: IRT fit -> two outputs
     x = xs[3]
     b.append(R(x + 22, top + 60, 80, 50, ACCS, ACC, 10, 1.4)); b.append(T(x + 62, top + 81, "IRT", "middle", 15, FG, 700)); b.append(T(x + 62, top + 98, "model", "middle", 11, FG2))
@@ -333,8 +335,8 @@ def d_pipeline():
     b.append(L(xs[4] + pw / 2, top + ph + 8, xs[4] + pw / 2, ly, FG3, 1.3, "4 4"))
     b.append(L(xs[4] + pw / 2, ly, xs[0] + pw / 2, ly, FG3, 1.3, "4 4"))
     b.append(L(xs[0] + pw / 2, ly, xs[0] + pw / 2, top + ph + 10, FG3, 1.3, "4 4", arrow='pp-a'))
-    b.append(R(W / 2 - 200, ly - 12, 400, 24, BG2, "none", 6))
-    b.append(T(W / 2, ly + 4, "new models and new items join the same scale; every version is kept", "middle", 12, FG2, 500))
+    b.append(R(W / 2 - 120, ly - 12, 240, 24, BG2, "none", 6))
+    b.append(T(W / 2, ly + 4, "new models and items join the scale", "middle", 12, FG2, 500))
     return svg(W, H, b, "The pipeline: cells and perturbations are the items; every model takes the same test; the answers form a pass/fail matrix; an IRT model fits an ability per model and a difficulty per item; both sit on one scale; new models and new items join the same scale and every version is kept.", cls="scene-svg")
 
 if __name__ == "__main__":
