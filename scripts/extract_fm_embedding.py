@@ -64,7 +64,15 @@ def harmonise_var(adata):
         if ens_col is not None:
             adata.var["ensembl_id"] = adata.var[ens_col].astype(str).str.split(".").str[0].values
         else:
-            print("warning: no Ensembl id column in var; Ensembl-tokenised models will resolve symbols themselves (mygene / Geneformer dictionary)", flush=True)
+            # offline fallback: the symbol -> Ensembl map built from the other panels (scripts/build_symbol_map.py)
+            mp = ROOT / "src" / "vcb" / "data" / "symbol_to_ensembl.tsv.gz"
+            if mp.exists():
+                m = pd.read_csv(mp, sep="\t").set_index("symbol")["ensembl_id"]
+                hit = names.map(m)
+                adata.var["ensembl_id"] = hit.fillna("").values
+                print(f"note: no Ensembl id column in var; mapped {hit.notna().sum()}/{len(names)} symbols with the local symbol map", flush=True)
+            else:
+                print("warning: no Ensembl id column in var; Ensembl-tokenised models will resolve symbols themselves (mygene / Geneformer dictionary)", flush=True)
     adata.var["gene_name"] = adata.var_names.astype(str)
     adata.var_names_make_unique()
     return adata
