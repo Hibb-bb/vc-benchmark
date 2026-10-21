@@ -21,9 +21,9 @@ export async function getJSON(path) {
 export const bench = () => getJSON('data/bench.json');
 
 /* ---------- families and colours: a fixed order per component, never cycled ---------- */
-const FAM_REPR = ['PCA', 'Kernel features', 'ICA', 'NMF', 'GMM', 'Random projection', 'scVI', 'Floor'];
+const FAM_REPR = ['PCA', 'Kernel features', 'ICA', 'NMF', 'GMM', 'Random projection', 'scVI', 'Foundation model', 'Floor'];
 const FAM_PERT = ['Ridge', 'PCA regression', 'KNN', 'Gaussian process', 'Low-rank', 'MLP', 'scVI', 'scGen', 'Mean shift', 'Floor'];
-const SLOT = { repr: { PCA: 1, 'Kernel features': 2, ICA: 3, NMF: 4, GMM: 5, 'Random projection': 6, scVI: 7, Floor: 0 },
+const SLOT = { repr: { PCA: 1, 'Kernel features': 2, ICA: 3, NMF: 4, GMM: 5, 'Random projection': 6, scVI: 7, 'Foundation model': 8, Floor: 0 },
                pert: { Ridge: 1, 'PCA regression': 2, KNN: 3, 'Gaussian process': 4, 'Low-rank': 5, MLP: 6, scVI: 7, scGen: 8, 'Mean shift': 0, Floor: 0 } };
 export const famColor = (comp, fam) => `var(--s${SLOT[comp]?.[fam] ?? 0})`;
 export const famOrder = (comp) => (comp === 'repr' ? FAM_REPR : FAM_PERT);
@@ -44,16 +44,7 @@ function chrome() {
     nav.innerHTML = `<div class="nav-inner">
       <a class="brand" href="${BASE}">${MARK}<span>Virtual Bench</span><span class="ver">0.1</span></a>
       <nav class="nav-links" aria-label="Site">${PAGES.map(([h, l]) => `<a href="${BASE}${h}"${page === h.replace('/', '') ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
-      <button class="theme-btn" id="theme" type="button" aria-label="Toggle colour theme"></button></div>`;
-    const btn = $('#theme');
-    const paint = () => { btn.innerHTML = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches) ? SUN : MOON; };
-    btn.addEventListener('click', () => {
-      const dark = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
-      document.documentElement.dataset.theme = dark ? 'light' : 'dark';
-      try { localStorage.setItem('vcb-theme', document.documentElement.dataset.theme); } catch (e) { /* storage may be unavailable */ }
-      paint();
-    });
-    paint();
+</div>`;
   }
   const foot = $('#footer');
   if (foot) {
@@ -210,7 +201,7 @@ export function board(el, b, comp, scale, { limit = null, detail = null, perGrou
     const l = neg ? x(a.ability) : x(0), wdt = Math.abs(x(a.ability) - x(0));
     const misfit = a.outfit != null && a.outfit > 2;
     return `<button type="button" class="brow${detail ? '' : ' still'}${open === a.rid ? ' on' : ''}" data-rid="${esc(a.rid)}" aria-expanded="${open === a.rid}">
-      <span class="bname"><span class="rank">${i + 1}</span><i class="sw" style="--c:${c}"></i><b title="${esc(nameOf(b, a.rid))}">${esc(nameOf(b, a.rid))}</b>${misfit ? '<span class="chip warn" title="outfit above 2: this model passes and fails items its ability does not predict">misfit</span>' : ''}</span>
+      <span class="bname"><span class="rank">${i + 1}</span><i class="sw" style="--c:${c}"></i><b title="${esc(nameOf(b, a.rid))}">${esc(nameOf(b, a.rid))}</b>${misfit ? '<span class="chip warn" title="outfit above 2: this model passes and fails items its ability does not predict">misfit</span>' : ''}${a.placement === 'anchored' ? '<span class="chip" title="placed with item difficulties held fixed; the scale did not move">anchored</span>' : ''}</span>
       <span class="track" data-tip="<b>${esc(nameOf(b, a.rid))}</b><br>ability ${sgn(a.ability)} ± ${fmt(a.se)} logits<br>passes ${pct(a.p, 1)} of its ${int(a.n_items)} items<br>outfit ${fmt(a.outfit)}"><span class="zero" style="--z:${x(0)}%"></span><span class="bar-fill${neg ? ' neg' : ''}" style="--l:${l}%;--w:${wdt}%;--c:${c}"></span><span class="whisker" style="--l:${x(a.ability - a.se)}%;--w:${x(a.ability + a.se) - x(a.ability - a.se)}%"></span><span class="dot" style="--x:${x(a.ability)}%;--c:${c}"></span></span>
       <span class="bval">${sgn(a.ability)}<small>${pct(a.p, 0)} pass</small></span></button>${open === a.rid && detail ? detail(a) : ''}`;
   };
@@ -268,7 +259,6 @@ export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, m
 }
 
 /* ---------- boot ---------- */
-try { const t = localStorage.getItem('vcb-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (e) { /* no storage */ }
 chrome();
 const page = document.body.dataset.page;
 const modules = { home: './home.js', leaderboard: './leaderboard.js', datasets: './datasets.js', items: './items.js', analysis: './analysis.js', anatomy: './anatomy.js', link: './link.js', how: './how.js' };

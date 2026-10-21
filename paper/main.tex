@@ -51,6 +51,21 @@ training sets, and a high score may reflect memory rather than skill. Third, an 
 cannot say why a score is low: whether the cases were impossible, the labels were wrong,
 or the model was weak.
 
+\Cref{fig:why} draws the three problems and what a shared scale changes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_why.pdf}
+\caption{What an average score cannot do, and what a scale does instead. Top left: the same
+model scores 0.89 and 0.39 on two panels; on the scale the items spread out by difficulty and
+the model keeps one ability. Top right: an average moves every time a panel or a model is
+added, while an ability on an anchored scale keeps its value and its error bar across
+versions. Bottom left: only items near a model's ability carry information about it, so a few
+hundred well-placed items can place a model. Bottom right: a low average cannot say why; a
+difficulty per item can be related to a reason, such as a shallow cell or a noisy label.}
+\label{fig:why}
+\end{figure}
+
 Standardized exams solved the same problems long ago. An exam such as the SAT does not
 report the fraction of questions answered correctly. It measures the difficulty of every
 question, measures the ability of every test taker on the same scale, retires questions
@@ -220,10 +235,11 @@ fit turns that table into an ability for every model and a difficulty for every 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_pipeline.pdf}
-\caption{From raw data to a difficulty scale. The same pipeline serves both parts of the
-benchmark: items are built from public data, every model answers every item, the answers
-form a pass/fail table, and one fit turns the table into an ability for every model and a
-difficulty for every item.}
+\caption{The pipeline. Cells and perturbations are the items. Every model takes the same
+test. The answers form a pass/fail table with one row per model and one column per item. One
+fit of the item response model gives every model an ability and every item a difficulty, each
+with an error bar, on one shared scale. New models and new items join that scale, which is
+what keeps the benchmark alive.}
 \label{fig:pipeline}
 \end{figure}
 
@@ -624,7 +640,20 @@ Parse, as a floor in the unseen-perturbation split.
 \label{sec:living}
 
 A benchmark built this way does not have to be thrown away when it gets stale. It is
-maintained in a loop with four steps.
+maintained in a loop with four steps. \Cref{fig:scale} shows what the scale holds and where
+each step acts.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_scale.pdf}
+\caption{What the scale holds. Items from every panel and screen sit above one axis by
+difficulty, and models sit below it by ability, each with an error bar. Floors must come out
+last and capacity ladders in order before anything else is read. Items passed by nobody or by
+everybody carry no information and are retired. A model whose passes do not follow the order
+of the scale is flagged as misfit. A new model is anchored with difficulties held fixed, and
+every version of the scale is kept.}
+\label{fig:scale}
+\end{figure}
 
 \paragraph{Anchor.}
 A new model is placed on the current scale with item difficulties held fixed, as in
