@@ -755,3 +755,48 @@ reaction, and difficulty is summarised per bin. Results (job 4624802, 7 min):
 Outputs: `runs/anatomy_v0/anatomy.{json,md}`, `A_by_type.csv` (per panel x cell type: difficulty, nobody share,
 dominant confusion, ontology distances), `B_covariates.parquet` (per condition: responding genes, generic share,
 on-target change, TF status, bin).
+
+### 7.11 Foundation models on the representation panels (started 2026-10-20)
+
+Seven zero-shot single-cell foundation models from the sibling `scfm-irt` repository were embedded with
+`scripts/extract_fm_embedding.py` (each inside its own venv) and scored by the frozen probe exactly like the
+classical pool and scVI (`slurm/fm_embed.sh`; runbook `docs/foundation_models.md`). First panel: Hao 2021 PBMC
+level-2, 7,999 test cells, donors held out. New respondents are placed with every item difficulty held fixed
+(`scripts/place_anchored.py`, `placement = anchored` in the abilities tables); the two earliest (scGPT,
+Geneformer) had been added by a full refit, which shifted the panel's scale by about one logit and is why
+anchored placement is now the default. Full refits are reserved for scale version bumps.
+
+| respondent | dim | probe accuracy | ability (cell level) | outfit | time on one A100 |
+|---|---|---|---|---|---|
+| scVI-30D (tissue-corrected) | 30 | 0.887 | +3.51 ± 0.05 | 0.64 | |
+| TranscriptFormer sapiens | 2048 | 0.885 | +3.44 ± 0.05 | 2.84 | 10 min |
+| Geneformer V2 316M | 1152 | 0.862 | +3.09 ± 0.04 | 1.21 | |
+| Nyström-256D | 256 | 0.855 | +2.97 ± 0.04 | 0.28 | |
+| PCA-128D | 128 | 0.848 | +2.88 ± 0.04 | 0.33 | |
+| STATE SE-600M | 2058 | 0.827 | +2.56 ± 0.04 | 1.72 | 34 min |
+| scGPT whole-human | 512 | 0.815 | +2.43 ± 0.04 | 1.01 | |
+| UCE 4-layer | 1280 | 0.806 | +2.32 ± 0.04 | 1.90 | 21 min |
+| CellPLM 85M | 512 | 0.682 | +1.12 ± 0.03 | 1.07 | 1 min |
+| scPRINT large v1 | 512 | 0.667 | +0.99 ± 0.03 | 1.99 | 13 min |
+
+Reading. On this panel only TranscriptFormer reaches the scVI ladder; Geneformer sits just above the classical
+ladder, STATE, scGPT and UCE just below PCA-128D, CellPLM and scPRINT two logits below it. The foundation models
+misfit more than any classical respondent (outfit 1.0 to 2.8 against 0.2 to 0.8): their passes follow the scale's
+item order less closely, i.e. they fail some easy cells and pass some hard ones, which is the pattern a model
+with knowledge beyond the training panel would show and also the pattern of a noisy embedding. The scPRINT
+ranking agrees with scfm-irt's earlier pools (scPRINT below PCA and scGPT there too). Contamination: scGPT,
+Geneformer, UCE, STATE and TranscriptFormer were pretrained on CELLxGENE-derived corpora that include PBMC
+atlases; the register entry for each is "pretraining: likely" until checked against their published source
+lists.
+
+Fixes needed before any of the five later models produced an embedding (all committed, so the Arc workstation
+inherits them): the UCE venv lacked `accelerate` (builder target added); under anndata 0.13 the extractor's
+"drop all layers" loop deleted X itself because the layers mapping lists X under the key `None` (STATE,
+TranscriptFormer venvs); CellPLM's symbol-to-Ensembl auto-conversion matched 23 genes, so its embedder now
+indexes by the panel's Ensembl column (15,151 genes match); TranscriptFormer's embedder shells out to a CLI
+that needs the venv's `bin` on `PATH`. scFoundation is wired but its checkpoint is SharePoint-only and must be
+downloaded by hand. SCimilarity and LangCell are label-supervised and will be reported apart.
+
+Next: the same seven models on the other seven curated panels on Quest (`slurm/fm_quest_chains.sh`, one
+sequential chain per panel, per-panel anchored placement, then placement on `repr_pooled_v3` from the eight
+curated panels), and the scBaseCount panels on the Arc workstation.
