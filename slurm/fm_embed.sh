@@ -6,7 +6,8 @@
 #         bash slurm/fm_embed.sh geneformer_v2_316m hao_pbmc_l2 --debug
 #
 # Environment: SCFM_IRT (path to the scfm-irt checkout, default ../scfm-irt), CUDA_VISIBLE_DEVICES,
-# VCB_PY (this repo's interpreter, default .venv/bin/python), SKIP_REFIT=1 to only embed and append.
+# VCB_PY (this repo's interpreter, default .venv/bin/python), SKIP_REFIT=1 to only embed and append,
+# PLACE=refit for a full refit instead of the default anchored placement (scripts/place_anchored.py).
 # Works with or without Slurm; slurm/fm_embed.slurm wraps it for Quest's gengpu partition.
 set -euo pipefail
 EMBEDDER="${1:?embedder registry name}"; PANEL="${2:?panel name (data/panels/<name>.h5ad)}"; shift 2
@@ -60,7 +61,11 @@ if [ "${NAME}" != "fm_${EMBEDDER}" ]; then
   # a debug respondent must not stay in the run's response table
   "$VCB_PY" -c "import pandas as pd; p='runs/$RUN/responses.parquet'; d=pd.read_parquet(p); d[d.respondent_id!='$NAME'].to_parquet(p, index=False); print('[fm] debug rows removed from', p)"
 elif [ "${SKIP_REFIT:-0}" != "1" ]; then
-  "$VCB_PY" scripts/fit_rasch.py repr --run "$RUN" > /dev/null
+  if [ "${PLACE:-anchored}" = "refit" ]; then
+    "$VCB_PY" scripts/fit_rasch.py repr --run "$RUN" > /dev/null      # full refit: moves the scale, reserved for version bumps
+  else
+    "$VCB_PY" scripts/place_anchored.py repr --run "$RUN" --respondents "$NAME"   # difficulties held fixed, published abilities unchanged
+  fi
   "$VCB_PY" scripts/summarize.py repr --run "$RUN" > /dev/null || true
   grep -E "^\| (fm_|pca_k128|nystroem_k256_g0.5|scvi_k30|random_k32_s0)" "runs/$RUN/summary.md" | head -12
 fi

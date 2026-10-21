@@ -128,6 +128,14 @@ one to three hours per large panel per model on a 2080 Ti (scGPT and UCE are the
 Respondent ids are `fm_<registry name>` (`fm_scgpt`, `fm_geneformer_v2_316m`, ...); display names and
 the family "Foundation model" are in `src/vcb/names.py`. Never rename a respondent in one run only.
 
+Placement. By default `fm_embed.sh` places the new respondent with every item difficulty held at its
+current value (`scripts/place_anchored.py`, `placement = anchored` in the abilities table), so nothing
+already published moves. `PLACE=refit` runs the full refit instead; that is reserved for scale version
+bumps, because a refit shifts every ability by a common offset (about one logit on Hao PBMC when the
+first two foundation models joined). To place several models appended with `SKIP_REFIT=1` in one go:
+`python scripts/place_anchored.py repr --run repr_<panel> --respondents auto`. On a pooled scale use
+`--run repr_pooled_v3 --pool-runs repr_a,repr_b` to gather the rows from the panel runs.
+
 ## 4. Check each run
 
 `runs/repr_<panel>/summary.md` after the refit:

@@ -82,7 +82,7 @@ def scale_block(abil: pd.DataFrame, diff: pd.DataFrame, **extra) -> dict:
     inf = diff[~diff["degenerate"]]
     return dict(items=int(len(diff)), informative=int(len(inf)), nobody=int((diff["p_correct"] == 0).sum()), everybody=int((diff["p_correct"] == 1).sum()),
                 median_se=r3(inf["se"].median()) if len(inf) else None, quantiles=quantiles(diff), hist=hist(diff),
-                abilities=[dict(rid=r.respondent_id, ability=r3(r.ability), se=r3(r.se), p=r3(r.p_correct), outfit=r3(r.outfit), n_items=int(r.n_items)) for r in abil.itertuples()], **extra)
+                abilities=[dict(rid=r.respondent_id, ability=r3(r.ability), se=r3(r.se), p=r3(r.p_correct), outfit=r3(r.outfit), n_items=int(r.n_items), placement=getattr(r, "placement", "refit")) for r in abil.itertuples()], **extra)
 
 
 def read_fit(folder: Path, tag: str):
