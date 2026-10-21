@@ -14,7 +14,7 @@ from vcb.names import display_name, family, plain_name
 
 out = ROOT / "paper" / "bench"
 INK, MUTED = "#0b0b0b", "#52514e"
-FAM_COLORS = {"PCA": "#2a78d6", "Random projection": "#eb6834", "Kernel features": "#1baf7a", "NMF": "#eda100", "ICA": "#e87ba4", "GMM": "#008300", "scVI": "#4a3aa7", "Floor": "#9a9995",
+FAM_COLORS = {"PCA": "#2a78d6", "Random projection": "#eb6834", "Kernel features": "#1baf7a", "NMF": "#eda100", "ICA": "#e87ba4", "GMM": "#008300", "scVI": "#4a3aa7", "Foundation model": "#111111", "Floor": "#9a9995",
               "Ridge": "#2a78d6", "PCA regression": "#1baf7a", "Gaussian process": "#eb6834", "KNN": "#eda100", "Mean shift": "#e87ba4", "Low-rank": "#4a3aa7", "scGen": "#e34948"}
 plt.rcParams.update({"font.size": 8.5, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED, "ytick.color": INK, "axes.grid": True, "grid.color": "#e6e5e1", "grid.linewidth": 0.6, "axes.axisbelow": True})
 
