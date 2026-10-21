@@ -47,6 +47,7 @@ if command -v module >/dev/null 2>&1; then
   case "$PYMOD" in python/3.10.1) export LD_LIBRARY_PATH="/software/python/3.10.1/lib:${LD_LIBRARY_PATH:-}";; python/3.12.10) export LD_LIBRARY_PATH="/software/python/3.12.10/lib:${LD_LIBRARY_PATH:-}";; esac
 fi
 export PYTHONPATH="$SCFM_IRT/src:${PYTHONPATH:-}"
+export PATH="$SCFM_IRT/$VENV/bin:$PATH"   # embedders that shell out to a CLI (transcriptformer) find it here
 export PIP_CACHE_DIR="${PIP_CACHE_DIR:-$SCFM_IRT/cache/pip}"
 mkdir -p logs cache/embeddings
 
