@@ -109,7 +109,8 @@ def main() -> int:
     for k in list(cells.obsm.keys()):
         del cells.obsm[k]
     for k in list(cells.layers.keys()):
-        del cells.layers[k]
+        if k is not None:   # anndata >= 0.13 lists X itself under the key None; deleting it empties X
+            del cells.layers[k]
     print(f"[{name}] {cells.n_obs} cells ({tr.sum()} train, {te.sum()} test), {cells.n_vars} genes, "
           f"ensembl ids: {'yes' if 'ensembl_id' in cells.var else 'no'}; read in {time.time()-t0:.0f}s", flush=True)
 
