@@ -91,7 +91,9 @@ def main() -> int:
     name = a.out_name or f"fm_{a.embedder}"
     if a.debug:
         name += "_debug"
-    cache = Path(a.cache_dir)
+    # one directory per panel: chunk caches and outputs must never be shared between panels
+    # (a shared layout once reused one panel's chunks for another and corrupted parallel runs)
+    cache = Path(a.cache_dir) / Path(a.panel).stem
     parts = cache / "_parts" / name
     parts.mkdir(parents=True, exist_ok=True)
 
@@ -130,7 +132,7 @@ def main() -> int:
     for c0 in range(0, n, a.chunk):
         c1 = min(c0 + a.chunk, n)
         part = parts / f"{c0:09d}_{c1:09d}.npy"
-        if part.exists() and not a.force:
+        if part.exists() and not a.force and np.load(part, mmap_mode="r").shape[0] == c1 - c0:
             z = np.load(part)
         else:
             tc = time.time()

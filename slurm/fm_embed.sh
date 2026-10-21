@@ -53,11 +53,11 @@ mkdir -p logs cache/embeddings
 
 NAME="fm_${EMBEDDER}"
 case " $* " in *" --debug "*) NAME="${NAME}_debug";; esac
-echo "[fm] $EMBEDDER on $PANEL -> cache/embeddings/$NAME.npz  (python $PY, gpu ${CUDA_VISIBLE_DEVICES:-all}) $(date)"
+echo "[fm] $EMBEDDER on $PANEL -> cache/embeddings/$PANEL/$NAME.npz  (python $PY, gpu ${CUDA_VISIBLE_DEVICES:-all}) $(date)"
 "$PY" scripts/extract_fm_embedding.py --panel "$PANEL_FILE" --embedder "$EMBEDDER" "$@"
 
 # ---- frozen probe + Rasch, in this repo's own env ----
-"$VCB_PY" scripts/append_repr_responses.py --panel "$PANEL_FILE" --run "$RUN" --embedding "$NAME"
+"$VCB_PY" scripts/append_repr_responses.py --panel "$PANEL_FILE" --run "$RUN" --embedding "$PANEL/$NAME" --respondent "$NAME"
 if [ "${NAME}" != "fm_${EMBEDDER}" ]; then
   # a debug respondent must not stay in the run's response table
   "$VCB_PY" -c "import pandas as pd; p='runs/$RUN/responses.parquet'; d=pd.read_parquet(p); d[d.respondent_id!='$NAME'].to_parquet(p, index=False); print('[fm] debug rows removed from', p)"

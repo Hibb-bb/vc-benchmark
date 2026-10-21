@@ -19,7 +19,7 @@ from vcb.repr.probe import probe_responses
 ap = argparse.ArgumentParser()
 ap.add_argument("--panel", required=True)
 ap.add_argument("--run", required=True)
-ap.add_argument("--embedding", required=True, help="name of cache/embeddings/<name>.npz")
+ap.add_argument("--embedding", required=True, help="name of cache/embeddings/<name>.npz (may include a panel subdirectory, e.g. hao_pbmc_l2/fm_scgpt)")
 ap.add_argument("--respondent", default=None, help="respondent_id to record (default: the embedding name)")
 a = ap.parse_args()
 
@@ -35,7 +35,7 @@ if len(tr_ids) < tr.sum():
 Zte_df = pd.DataFrame(z["Z_test"], index=z["test_ids"])
 te_ids = obs.index[te]
 missing = te_ids.difference(Zte_df.index)
-if len(missing) and "debug" in a.embedding:
+if len(missing) and "debug" in (a.respondent or a.embedding):
     te_ids = te_ids.intersection(Zte_df.index)
 assert te_ids.isin(Zte_df.index).all(), f"{len(missing)} test items lack an embedding"
 Ztr, Zte = Ztr_df.loc[tr_ids].values, Zte_df.loc[te_ids].values

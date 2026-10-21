@@ -8,7 +8,7 @@ panels. The output to ship back is, per panel, `runs/repr_<panel>/responses.parq
 Read `CLAUDE.md` first. The models and their isolated environments come from the sibling repository
 `scfm-irt` (https://github.com/Hibb-bb/scfm-irt; on Quest `/gpfs/projects/p32593/scfm-irt`). Nothing
 in this repo imports a model: `scripts/extract_fm_embedding.py` runs *inside* a scfm-irt venv and writes
-`cache/embeddings/fm_<model>.npz`; `scripts/append_repr_responses.py` runs the frozen probe in this
+`cache/embeddings/<panel>/fm_<model>.npz`; `scripts/append_repr_responses.py` runs the frozen probe in this
 repo's `.venv`; `fit_rasch.py` refits. `slurm/fm_embed.sh` chains the three.
 
 ## 0. What exists in scfm-irt (do not rebuild)
@@ -119,7 +119,7 @@ nohup bash slurm/fm_local_driver.sh \
 ```
 
 Memory. The extractor embeds in chunks of 20,000 cells (`--chunk`) and writes each chunk to
-`cache/embeddings/_parts/<name>/`, so a crash resumes. On 11 GB GPUs (RTX 2080 Ti) pass
+`cache/embeddings/<panel>/_parts/<name>/`, so a crash resumes. On 11 GB GPUs (RTX 2080 Ti) pass
 `EXTRA="--batch-size 16"` for `scprint_large_v1`, `transcriptformer` and `scfoundation`, and
 `--batch-size 8` if they still fail; scGPT, Geneformer, UCE, STATE and CellPLM run at their defaults.
 Host memory: a 260k-cell panel is a few GB sparse, the embedders copy a chunk at a time. Expect roughly
@@ -146,7 +146,7 @@ first two foundation models joined). To place several models appended with `SKIP
   `pca_k128` on the same panel (`summary.md`), both are on identical items.
 - outfit of the new respondent: 0.5 to 1.5 is normal; above 2 means its passes do not follow the
   scale's order (report it, do not drop it).
-- `cache/embeddings/fm_<model>.json` records model version, dimension and runtime; keep it.
+- `cache/embeddings/<panel>/fm_<model>.json` records model version, dimension and runtime; keep it.
 
 ## 5. Ship back
 
@@ -154,7 +154,7 @@ first two foundation models joined). To place several models appended with `SKIP
 git checkout -b fm-runs
 git add -f runs/repr_scbasecount_human200_*/responses.parquet
 git add runs/repr_scbasecount_human200_*/rasch runs/repr_scbasecount_human200_*/summary.md runs/repr_pooled_fm_v0/rasch runs/repr_pooled_fm_v0/summary.md
-git add cache/embeddings/*.json      # sidecars only; the .npz embeddings stay out of git
+git add cache/embeddings/*/*.json      # sidecars only; the .npz embeddings stay out of git
 git commit -m "Foundation-model respondents on scBaseCount human200 panels"
 git push -u origin fm-runs
 ```
