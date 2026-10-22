@@ -50,7 +50,7 @@ function chrome() {
   if (foot) {
     foot.className = 'footer';
     foot.innerHTML = `<div class="footer-inner"><span>Virtual Bench 0.1 · a living item-response benchmark for virtual cell models.</span>
-      <span><a href="https://github.com/Hibb-bb/vc-benchmark">Code and item bank on GitHub</a> · <a href="${BASE}versions/">scale versions</a> · <a href="${BASE}contribute/">contribute</a></span></div>`;
+      <span><a href="${BASE}virtual-bench-0.1.pdf">paper (PDF)</a> · <a href="https://github.com/Hibb-bb/vc-benchmark">Code and item bank on GitHub</a> · <a href="${BASE}versions/">scale versions</a> · <a href="${BASE}contribute/">contribute</a></span></div>`;
   }
   // one floating tooltip for every chart; marks carry data-tip (HTML allowed, we build it ourselves)
   const tip = document.createElement('div'); tip.id = 'tip'; tip.hidden = true; document.body.appendChild(tip);

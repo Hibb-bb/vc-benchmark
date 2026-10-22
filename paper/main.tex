@@ -13,21 +13,17 @@
 \author[1]{Author Two}
 \affiliation[1]{Northwestern University}
 
-\abstract{A virtual cell model is a computer program that reads the gene activity of a
-cell and answers questions about it. Two questions matter most today: what kind of cell is
-this, and how will this cell change after a treatment. Benchmarks score such models with
-one average number, but the test cases behind that number are not equal. Some are easy for
-every method and some are hard for all of them. The average hides this, and it changes
-every time the test set changes. We built a benchmark that works like a standardized exam
-instead. Every test case gets a measured difficulty, and every model gets a measured
-ability, both on one shared scale with error bars. The current release holds 424,478
-cell-type questions drawn from fourteen annotation panels and 88,164 perturbation
-questions drawn from fifteen screens, about 110 million cells in all. The scale is
-calibrated with a pool of simple methods that cannot have seen the test data during
-training, and pretrained foundation models are then placed on it without moving it. This
-paper describes the system: where the data comes from, how a model is tested, how the
-scale is fitted and checked, which models have been placed on it, and how the benchmark is
-kept useful as models improve.}
+\abstract{
+We present Virtual Bench, a self-updating benchmark for virtual cell models that works like a standardized exam.
+Most benchmarks score models with one average number, such as mean squared error or accuracy.
+However, we argue that some test items (samples) are easy for every model and some are hard for all of them, so the average hides this information from readers.
+Using item response theory, Virtual Bench gives each item a difficulty and each model an ability, both on one shared scale with error bars.
+Models earn more ability for solving hard items than easy ones, so true breakthroughs stand out.
+The current release covers two aspects, representation quality and perturbation response, with 424,478 cell-type items from fourteen annotation panels and 88,164 perturbation items from fifteen screens, about 110 million cells in all.
+In Virtual Bench, we estimate the difficulty of each test item, which tells us how difficult a test item is for the current research field.
+To keep Virtual Bench informative over time, we use a pipeline that automatically downweights items that have become easy or stopped discriminating models.
+Overall, we evaluate [N] virtual cell models and present their ranking based on abilities instead of raw averaged metrics.
+}
 
 \begin{document}
 \maketitle
@@ -37,19 +33,29 @@ kept useful as models improve.}
 \label{sec:intro}
 
 Single-cell sequencing measures the activity of thousands of genes in one cell at a time.
-A virtual cell model is a program that learns from millions of such measurements and then
-answers questions about new cells. The field is moving fast. New models appear every few
-months, and most are trained on the same public data that the benchmarks are built from.
+A virtual cell model learns to represent gene expressions as latent representations and predict the response after intervention. 
+\Cref{fig:pipeline} shows the whole system on one page; the rest of this paper explains
+each of its parts.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_pipeline.pdf}
+\caption{The pipeline. Cells and perturbations are the items. Every model takes the same
+test. The answers form a pass/fail table with one row per model and one column per item. One
+fit of the item response model gives every model an ability and every item a difficulty, each
+with an error bar, on one shared scale. New models and new items join that scale, which is
+what keeps the benchmark alive.}
+\label{fig:pipeline}
+\end{figure}
 
 Scoring these models is harder than it looks. The usual score is an average over a fixed
 set of test cases. This has three problems. First, test cases differ in difficulty, so the
-average depends on which cases happen to be in the set as much as on the model. The same
-model scores 0.89 on one of our panels and 0.39 on another, not because it changed but
-because the panels did. Second, a fixed test set gets stale. As models improve, the easy
-cases stop telling models apart. Once the test data is public, it also finds its way into
-training sets, and a high score may reflect memory rather than skill. Third, an average
-cannot say why a score is low: whether the cases were impossible, the labels were wrong,
-or the model was weak.
+average depends on which cases happen to be in the set as much as on the model. 
+The same model scores 0.89 on one of our panels and 0.39 on another, not because it changed but because the test suite did. 
+Second, a fixed test set gets stale. 
+As models improve, the easy samples stop telling models apart. 
+Once the test data is public, it also finds its way into training sets, and a high score may reflect memory rather than skill. 
+Third, an average cannot say why a score is low: whether the cases were impossible, the labels were wrong, or the model was weak.
 
 \Cref{fig:why} draws the three problems and what a shared scale changes.
 
@@ -231,17 +237,6 @@ the drug's chemical structure, and the dose.
 \Cref{fig:pipeline} shows the pipeline. Both parts of the benchmark end in the same
 object: a table of passes and fails with one row per model and one column per item. One
 fit turns that table into an ability for every model and a difficulty for every item.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{fig_pipeline.pdf}
-\caption{The pipeline. Cells and perturbations are the items. Every model takes the same
-test. The answers form a pass/fail table with one row per model and one column per item. One
-fit of the item response model gives every model an ability and every item a difficulty, each
-with an error bar, on one shared scale. New models and new items join that scale, which is
-what keeps the benchmark alive.}
-\label{fig:pipeline}
-\end{figure}
 
 \subsection{From data to a pass/fail table}
 \label{sec:responses}
