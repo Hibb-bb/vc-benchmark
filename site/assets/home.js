@@ -1,4 +1,4 @@
-import { $, $$, bench, getJSON, board, wright, legend, famOrder, familyOf, nameOf, int, sgn, fmt, pct, compact, esc, scatter } from './app.js';
+import { $, $$, bench, getJSON, board, wright, legend, famOrder, familyOf, nameOf, int, sgn, fmt, pct, compact, esc, scatter, view } from './app.js';
 
 export default async function home() {
   // pipeline figure: play the staged reveal once it scrolls into view
@@ -12,8 +12,8 @@ export default async function home() {
 
   const b = await bench();
   // hero Wright map
-  wright($('#wright-hero'), b, 'repr', b.scales.repr.pooled, { animate: true });
-  $('#wright-cap').textContent = `Pooled representation scale: ${int(b.totals.repr_items)} cells from ${b.totals.repr_panels} panels on the left, ${b.totals.respondents_repr} embedding models on the right. Hover any bar or tick.`;
+  wright($('#wright-hero'), b, 'repr', view(b, b.scales.repr.pooled), { animate: true });
+  $('#wright-cap').textContent = `Pooled representation scale: ${int(b.totals.repr_items)} cells from ${b.totals.repr_panels} panels on the left, ${view(b, b.scales.repr.pooled).abilities.length} featured models of ${b.totals.respondents_repr} on the right; every model is on the leaderboard.`;
 
   // big numbers
   const t = b.totals;
@@ -29,11 +29,11 @@ export default async function home() {
   // leaderboard preview
   let comp = 'repr';
   const drawBoard = () => {
-    const scale = comp === 'repr' ? b.scales.repr.pooled : b.scales.pert.pooled_context;
+    const scale = view(b, comp === 'repr' ? b.scales.repr.pooled : b.scales.pert.pooled_context);
     board($('#home-board'), b, comp, scale, { limit: 12 });
     const fams = famOrder(comp).filter((f) => scale.abilities.slice(0, 12).some((a) => familyOf(b, a.rid) === f));
     $('#home-legend').innerHTML = legend(comp, fams);
-    $('#home-scale-note').textContent = comp === 'repr' ? `Top 12 of ${scale.abilities.length} on the pooled scale of all 14 panels (${int(scale.items)} items).` : `Top 12 of ${scale.abilities.length} on the pooled unseen-combination scale (${int(scale.items)} conditions, 5 multi-context screens).`;
+    $('#home-scale-note').textContent = comp === 'repr' ? `Top 12 of the ${scale.abilities.length} featured models on the pooled scale of all 14 panels (${int(scale.items)} items).` : `Top 12 of the ${scale.abilities.length} featured models on the pooled unseen-combination scale (${int(scale.items)} conditions, 5 multi-context screens).`;
   };
   $$('#home-comp button').forEach((btn) => btn.addEventListener('click', () => { comp = btn.dataset.comp; $$('#home-comp button').forEach((x) => { x.classList.toggle('on', x === btn); x.setAttribute('aria-pressed', x === btn); }); drawBoard(); }));
   drawBoard();

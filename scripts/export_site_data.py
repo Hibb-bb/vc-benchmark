@@ -91,11 +91,23 @@ def read_fit(folder: Path, tag: str):
 
 stats = json.load(open(ROOT / "paper" / "bench" / "stats.json"))
 out = {"meta": {"name": "Virtual Bench", "version": VERSION, "generated": pd.Timestamp.today().strftime("%Y-%m-%d"), "repr_scale": A_RUN.name, "pert_run": B_RUN.name}}
+# Shown by default on the site boards: one or two settings per simple family plus every learned model, so that
+# readers focus on the foundation models. Every respondent still defines the scale; "show all" reveals the rest.
+FEATURED = {"pca_k32", "pca_k128", "nystroem_k256_g0.5", "ica_k64", "nmf_k64", "gmm_k100", "rproj_k128_s0", "depth2", "random_k32_s0",
+            "scvi_k30_bnone", "scvi_k30_btissue",
+            "knn_k5", "knn_k20", "pcareg_k50", "pcareg_k200", "ridge_d50_lam1", "gp_d50_ls0.5", "lowrank_r10", "mlp_h256_d50", "mlp_h1024_d50",
+            "scvi_cf", "scgen", "target_kd", "random_shift_s0", "control_mean"}
+
+
+def is_featured(rid: str) -> bool:
+    return rid in FEATURED or rid.startswith("fm_")
+
+
 respondents: dict[str, dict] = {}
 
 
 def reg(rid: str, comp: str):
-    r = respondents.setdefault(rid, {"name": plain_name(rid), "family": family(rid), "components": []})
+    r = respondents.setdefault(rid, {"name": plain_name(rid), "family": family(rid), "components": [], "featured": is_featured(rid)})
     if comp not in r["components"]:
         r["components"].append(comp)
 

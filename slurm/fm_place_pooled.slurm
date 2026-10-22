@@ -8,5 +8,8 @@
 # Place the foundation-model respondents on the pooled representation scale from the curated panel runs on Quest.
 set -uo pipefail
 cd "${SLURM_SUBMIT_DIR}"
-POOL="${POOL_RUNS:-repr_pool_v0,repr_hao_pbmc_l2,repr_heart_states,repr_hlca_core_donor,repr_hlca_core_study,repr_immune_atlas_donor,repr_immune_atlas_tissue,repr_parse_pbmc_celltype}"
-.venv/bin/python scripts/place_anchored.py repr --run "${POOLED_RUN:-repr_pooled_v3}" --respondents auto --pool-runs "$POOL"
+# POOL_RUNS may be space-separated: sbatch --export splits on commas, so a comma list would be cut to its first entry
+POOL="${POOL_RUNS:-repr_pool_v0 repr_hao_pbmc_l2 repr_heart_states repr_hlca_core_donor repr_hlca_core_study repr_immune_atlas_donor repr_immune_atlas_tissue repr_parse_pbmc_celltype}"
+POOL="${POOL// /,}"
+RESPONDENTS="${RESPONDENTS:-auto}"; RESPONDENTS="${RESPONDENTS// /,}"   # space-separated for the same reason
+.venv/bin/python scripts/place_anchored.py repr --run "${POOLED_RUN:-repr_pooled_v3}" --respondents "${RESPONDENTS:-auto}" --pool-runs "$POOL"

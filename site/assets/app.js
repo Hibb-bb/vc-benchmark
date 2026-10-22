@@ -28,9 +28,17 @@ const SLOT = { repr: { PCA: 1, 'Kernel features': 2, ICA: 3, NMF: 4, GMM: 5, 'Ra
 export const famColor = (comp, fam) => `var(--s${SLOT[comp]?.[fam] ?? 0})`;
 export const famOrder = (comp) => (comp === 'repr' ? FAM_REPR : FAM_PERT);
 export const familyOf = (b, rid) => b.respondents[rid]?.family || 'Other';
+/* Boards show the featured models by default (one or two per simple family, every learned model); "show all" reveals the full pool. */
+let showAll = false;
+try { showAll = localStorage.getItem('vcb-showall') === '1'; } catch (e) { /* no storage */ }
+export const allModels = () => showAll;
+export const setAllModels = (v) => { showAll = !!v; try { localStorage.setItem('vcb-showall', v ? '1' : '0'); } catch (e) { /* no storage */ } };
+export const view = (b, scale) => (showAll ? scale : { ...scale, abilities: scale.abilities.filter((a) => b.respondents[a.rid]?.featured) });
+export const allToggle = (id, n, shown) => `<label class="toggle"><input type="checkbox" id="${id}"${showAll ? ' checked' : ''}> show all ${n} models <span class="faint">(${shown} featured)</span></label>`;
 export const nameOf = (b, rid) => b.respondents[rid]?.name || rid;
 
 /* ---------- chrome ---------- */
+const PAPER = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>';
 const PAGES = [['leaderboard/', 'Leaderboard'], ['datasets/', 'Datasets'], ['items/', 'Items'], ['analysis/', 'Analysis'], ['anatomy/', 'Hard items'], ['link/', 'Repr → pert'], ['how/', 'How it works'], ['contribute/', 'Contribute'], ['versions/', 'Versions']];
 const MARK = `<svg class="mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="10" y="1" width="2" height="20" rx="1" fill="currentColor"/><rect x="2" y="14" width="7" height="2" rx="1" fill="currentColor" opacity=".55"/><rect x="4" y="9" width="5" height="2" rx="1" fill="currentColor" opacity=".55"/><rect x="6" y="4" width="3" height="2" rx="1" fill="currentColor" opacity=".55"/><circle cx="16" cy="6" r="2.4" fill="var(--accent)"/><circle cx="16" cy="12.5" r="2.4" fill="var(--accent)" opacity=".7"/><circle cx="16" cy="18" r="2.4" fill="var(--accent)" opacity=".4"/></svg>`;
 const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
@@ -44,7 +52,7 @@ function chrome() {
     nav.innerHTML = `<div class="nav-inner">
       <a class="brand" href="${BASE}">${MARK}<span>Virtual Bench</span><span class="ver">0.1</span></a>
       <nav class="nav-links" aria-label="Site">${PAGES.map(([h, l]) => `<a href="${BASE}${h}"${page === h.replace('/', '') ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
-</div>`;
+      <a class="theme-btn" href="${BASE}virtual-bench-0.1.pdf" title="Read the paper (PDF)" aria-label="Read the paper (PDF)">${PAPER}</a></div>`;
   }
   const foot = $('#footer');
   if (foot) {

@@ -1,4 +1,4 @@
-import { $, $$, bench, board, legend, famOrder, familyOf, nameOf, int, sgn, fmt, pct, esc } from './app.js';
+import { $, $$, bench, board, legend, famOrder, familyOf, nameOf, int, sgn, fmt, pct, esc, view, allToggle, setAllModels } from './app.js';
 
 export default async function leaderboard() {
   const b = await bench();
@@ -25,12 +25,15 @@ export default async function leaderboard() {
   };
 
   const draw = () => {
-    const scale = comp === 'repr' ? b.scales.repr[scaleId] : b.scales.pert[scaleId];
+    const full = comp === 'repr' ? b.scales.repr[scaleId] : b.scales.pert[scaleId];
+    const scale = view(b, full);
+    $('#lb-all').innerHTML = allToggle('lb-all-cb', full.abilities.length, view(b, full).abilities.length);
+    $('#lb-all-cb').addEventListener('change', (e) => { setAllModels(e.target.checked); draw(); });
     board($('#lb-board'), b, comp, scale, { detail });
     const fams = famOrder(comp).filter((f) => scale.abilities.some((a) => familyOf(b, a.rid) === f));
     $('#lb-legend').innerHTML = legend(comp, fams);
     const sch = scale.scheme ? ` · ${b.scheme_label[scale.scheme]} split` : '';
-    $('#lb-desc').textContent = `${scale.abilities.length} models · ${int(scale.items)} items, ${int(scale.informative)} informative, ${int(scale.nobody)} passed by nobody${sch} · median item SE ${fmt(scale.median_se)}`;
+    $('#lb-desc').textContent = `${full.abilities.length} models · ${int(scale.items)} items, ${int(scale.informative)} informative, ${int(scale.nobody)} passed by nobody${sch} · median item SE ${fmt(scale.median_se)}`;
   };
   $$('#lb-comp button').forEach((btn) => btn.addEventListener('click', () => { comp = btn.dataset.comp; scaleId = comp === 'repr' ? 'pooled' : 'pooled_context'; $$('#lb-comp button').forEach((x) => { x.classList.toggle('on', x === btn); x.setAttribute('aria-pressed', x === btn); }); fillSel(); draw(); }));
   sel.addEventListener('change', () => { scaleId = sel.value; draw(); });
