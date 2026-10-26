@@ -10,7 +10,7 @@ comes from the JSON under `data/`, which `scripts/export_site_data.py` regenerat
 Deploy: `scripts/publish_site.sh` re-exports the data, mirrors `site/` into a clone of the public repository
 `Hibb-bb/virtual-cell-bench` (kept under `cache/site_repo`), commits and pushes; GitHub Pages serves that
 repository's `main` branch at the root. This code repository is private, so Pages cannot serve it directly.
-The custom domain is virtual-cell-bench.com (the script writes the `CNAME` file).
+Pass `DOMAIN=<host>` once to write the `CNAME` file for the custom domain.
 
 Adding a panel or screen: extend `PANELS` / `SCREENS` in the export script, re-run it, and the cards,
 boards and item browser pick it up. Adding a respondent: nothing to do beyond a refit; names and
