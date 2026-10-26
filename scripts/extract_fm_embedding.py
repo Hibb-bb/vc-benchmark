@@ -68,8 +68,13 @@ def harmonise_var(adata):
             mp = ROOT / "src" / "vcb" / "data" / "symbol_to_ensembl.tsv.gz"
             if mp.exists():
                 m = pd.read_csv(mp, sep="\t").set_index("symbol")["ensembl_id"]
-                hit = names.map(m)
-                adata.var["ensembl_id"] = hit.fillna("").values
+                hit = pd.Series(names.map(m), index=names)
+                # unmapped symbols get a unique placeholder and duplicate hits a suffix: embedders that index by
+                # Ensembl id (TranscriptFormer) refuse duplicate ids, and a placeholder simply matches no gene
+                hit = hit.fillna("NA_" + pd.Series(names, index=names))
+                dup = hit.duplicated(keep="first")
+                hit[dup] = hit[dup] + "_dup" + pd.Series(range(int(dup.sum())), index=hit.index[dup]).astype(str)
+                adata.var["ensembl_id"] = hit.values
                 print(f"note: no Ensembl id column in var; mapped {hit.notna().sum()}/{len(names)} symbols with the local symbol map", flush=True)
             else:
                 print("warning: no Ensembl id column in var; Ensembl-tokenised models will resolve symbols themselves (mygene / Geneformer dictionary)", flush=True)
