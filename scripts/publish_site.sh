@@ -11,7 +11,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 SITE_REPO=${SITE_REPO:-Hibb-bb/virtual-cell-bench}
 CLONE=${CLONE:-$ROOT/cache/site_repo}
-DOMAIN=${DOMAIN:-}
+DOMAIN=${DOMAIN:-virtual-cell-bench.com}
 EXPORT=${EXPORT:-1}
 
 if [ "$EXPORT" = 1 ]; then
