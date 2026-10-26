@@ -75,8 +75,9 @@ Static site, no build step: hand-written HTML pages, one stylesheet and ES modul
 every number and chart rendered from JSON under `site/data/`. Regenerate the data after any refit with
 `.venv/bin/python scripts/export_site_data.py` (reads `runs/repr_pooled_v3`, the panel runs listed in
 `scripts/paper_stats.py`, `runs/pert_pool_v0`, `paper/bench/stats.json`, `runs/link_parse_v0/link.json`,
-`runs/anatomy_v0/`), then commit `site/`. `.github/workflows/site.yml` deploys `site/` to GitHub Pages on
-push to main (enable Pages with source "GitHub Actions" once). Preview locally with
+`runs/anatomy_v0/`), then commit `site/`. Deploy with `scripts/publish_site.sh`, which mirrors `site/` into the
+public repository `Hibb-bb/virtual-bench-site` (clone under `cache/site_repo`) and pushes; GitHub Pages serves
+that repository from the root of `main` (this repository is private, so Pages cannot serve it). Preview locally with
 `cd site && python3 -m http.server 8765`. Panel and screen display names live in `PANELS`/`SCREENS` at the
 top of the export script; respondent names come from `src/vcb/names.py`. Headless Firefox on the login node
 can screenshot pages but freezes CSS animations; see `cache/shots/server.py` for the delaying wrapper.
