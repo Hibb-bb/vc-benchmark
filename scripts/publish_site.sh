@@ -3,7 +3,7 @@
 #
 #   scripts/publish_site.sh            # re-export data, sync site/, commit, push
 #   EXPORT=0 scripts/publish_site.sh   # skip the data export
-#   DOMAIN=bench.example.org scripts/publish_site.sh   # also write the CNAME file
+#   The CNAME file is written for DOMAIN (default virtual-cell-bench.com).
 #
 # The public repo holds only the static site (HTML, CSS, JS, JSON, the paper PDF); the code and the
 # item bank stay in this private repository. A local clone lives under cache/site_repo (git-ignored).
@@ -11,7 +11,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 SITE_REPO=${SITE_REPO:-Hibb-bb/virtual-cell-bench}
 CLONE=${CLONE:-$ROOT/cache/site_repo}
-DOMAIN=${DOMAIN:-}
+DOMAIN=${DOMAIN:-virtual-cell-bench.com}
 EXPORT=${EXPORT:-1}
 
 if [ "$EXPORT" = 1 ]; then
