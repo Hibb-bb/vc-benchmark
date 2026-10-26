@@ -14,14 +14,14 @@
 \affiliation[1]{Northwestern University}
 
 \abstract{
-We present Virtual Bench, a self-updating benchmark for virtual cell models that works like a standardized exam.
+We present Virtual Cell Bench, a self-updating benchmark for virtual cell models that works like a standardized exam.
 Most benchmarks score models with one average number, such as mean squared error or accuracy.
 However, we argue that some test items (samples) are easy for every model and some are hard for all of them, so the average hides this information from readers.
-Using item response theory, Virtual Bench gives each item a difficulty and each model an ability, both on one shared scale with error bars.
+Using item response theory, Virtual Cell Bench gives each item a difficulty and each model an ability, both on one shared scale with error bars.
 Models earn more ability for solving hard items than easy ones, so true breakthroughs stand out.
 The current release covers two aspects, representation quality and perturbation response, with 424,478 cell-type items from fourteen annotation panels and 88,164 perturbation items from fifteen screens, about 110 million cells in all.
-In Virtual Bench, we estimate the difficulty of each test item, which tells us how difficult a test item is for the current research field.
-To keep Virtual Bench informative over time, we use a pipeline that automatically downweights items that have become easy or stopped discriminating models.
+In Virtual Cell Bench, we estimate the difficulty of each test item, which tells us how difficult a test item is for the current research field.
+To keep Virtual Cell Bench informative over time, we use a pipeline that automatically downweights items that have become easy or stopped discriminating models.
 Overall, we evaluate [N] virtual cell models and present their ranking based on abilities instead of raw averaged metrics.
 }
 

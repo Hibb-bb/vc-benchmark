@@ -1,4 +1,4 @@
-# Virtual Bench website
+# Virtual Cell Bench website
 
 Static site, no build step: hand-written HTML pages, one stylesheet (`assets/site.css`), one ES module
 (`assets/app.js`, chrome and chart toolkit) plus one small module per data page. Every number and chart
@@ -8,7 +8,7 @@ comes from the JSON under `data/`, which `scripts/export_site_data.py` regenerat
     cd site && python3 -m http.server 8765           # preview at http://localhost:8765/
 
 Deploy: `scripts/publish_site.sh` re-exports the data, mirrors `site/` into a clone of the public repository
-`Hibb-bb/virtual-bench-site` (kept under `cache/site_repo`), commits and pushes; GitHub Pages serves that
+`Hibb-bb/virtual-cell-bench` (kept under `cache/site_repo`), commits and pushes; GitHub Pages serves that
 repository's `main` branch at the root. This code repository is private, so Pages cannot serve it directly.
 Pass `DOMAIN=<host>` once to write the `CNAME` file for the custom domain.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publish site/ to the public GitHub Pages repository (Hibb-bb/virtual-bench-site).
+# Publish site/ to the public GitHub Pages repository (Hibb-bb/virtual-cell-bench).
 #
 #   scripts/publish_site.sh            # re-export data, sync site/, commit, push
 #   EXPORT=0 scripts/publish_site.sh   # skip the data export
@@ -9,7 +9,7 @@
 # item bank stay in this private repository. A local clone lives under cache/site_repo (git-ignored).
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-SITE_REPO=${SITE_REPO:-Hibb-bb/virtual-bench-site}
+SITE_REPO=${SITE_REPO:-Hibb-bb/virtual-cell-bench}
 CLONE=${CLONE:-$ROOT/cache/site_repo}
 DOMAIN=${DOMAIN:-}
 EXPORT=${EXPORT:-1}
@@ -32,9 +32,9 @@ rsync -a --delete --exclude .git --exclude README.md --exclude CNAME "$ROOT/site
 touch "$CLONE/.nojekyll"                      # serve folders starting with _ and skip Jekyll
 [ -n "$DOMAIN" ] && printf '%s\n' "$DOMAIN" > "$CLONE/CNAME"
 cat > "$CLONE/README.md" <<'README'
-# Virtual Bench website
+# Virtual Cell Bench website
 
-Static files for the Virtual Bench site, published with GitHub Pages. Generated from the private
+Static files for the Virtual Cell Bench site, published with GitHub Pages. Generated from the private
 `vc-benchmark` repository by `scripts/publish_site.sh`; do not edit here, edits are overwritten on the
 next publish.
 README

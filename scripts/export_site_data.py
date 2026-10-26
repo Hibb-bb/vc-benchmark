@@ -90,7 +90,7 @@ def read_fit(folder: Path, tag: str):
 
 
 stats = json.load(open(ROOT / "paper" / "bench" / "stats.json"))
-out = {"meta": {"name": "Virtual Bench", "version": VERSION, "generated": pd.Timestamp.today().strftime("%Y-%m-%d"), "repr_scale": A_RUN.name, "pert_run": B_RUN.name}}
+out = {"meta": {"name": "Virtual Cell Bench", "version": VERSION, "generated": pd.Timestamp.today().strftime("%Y-%m-%d"), "repr_scale": A_RUN.name, "pert_run": B_RUN.name}}
 # Shown by default on the site boards: one or two settings per simple family plus every learned model, so that
 # readers focus on the foundation models. Every respondent still defines the scale; "show all" reveals the rest.
 FEATURED = {"pca_k32", "pca_k128", "nystroem_k256_g0.5", "ica_k64", "nmf_k64", "gmm_k100", "rproj_k128_s0", "depth2", "random_k32_s0",
