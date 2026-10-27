@@ -19,5 +19,7 @@ for p in $PANELS; do
   pid=$(sbatch --parsable --dependency=afterany:$prev --export=ALL,PANEL=$p --job-name="fm-place-$p" slurm/fm_place.slurm)
   echo "$p placement -> $pid"; place_ids="${place_ids:+$place_ids:}$pid"
 done
-pool=$(sbatch --parsable --dependency=afterany:$place_ids slurm/fm_place_pooled.slurm)
+# name the respondents explicitly ("auto" once found nothing to place); space-separated for --export
+resp=$(for m in $MODELS; do printf 'fm_%s ' "$m"; done)
+pool=$(sbatch --parsable --dependency=afterany:$place_ids --export=ALL,RESPONDENTS="${resp% }" slurm/fm_place_pooled.slurm)
 echo "pooled placement -> $pool"
