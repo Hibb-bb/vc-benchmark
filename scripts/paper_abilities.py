@@ -19,7 +19,7 @@ FAM_COLORS = {"PCA": "#2a78d6", "Random projection": "#eb6834", "Kernel features
 plt.rcParams.update({"font.size": 8.5, "axes.spines.top": False, "axes.spines.right": False, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED, "ytick.color": INK, "axes.grid": True, "grid.color": "#e6e5e1", "grid.linewidth": 0.6, "axes.axisbelow": True})
 
 aA = pd.read_csv(RUNS / "repr_pooled_v3" / "rasch" / "cell_level.abilities.csv").sort_values("ability")
-aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv").sort_values("ability")
+aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch_paper" / "pooled.abilities.csv").sort_values("ability")
 # collapse seeds: average the two seeds of a stochastic respondent for the figure
 def collapse(a):
     a = a.copy()
@@ -49,7 +49,9 @@ fig.savefig(out / "fig_abilities.pdf")
 print("wrote fig_abilities")
 
 # appendix tables
-rowsA = "\n".join(f"{display_name(r.respondent_id)} & {r.ability:.2f} & {r.p_correct:.3f} \\\\" for r in aA.sort_values('ability', ascending=False).itertuples())
+anch = set(aA.loc[aA["placement"] == "anchored", "respondent_id"]) if "placement" in aA.columns else set()
+mark = lambda r: "$^\\dagger$" if r in anch else ""
+rowsA = "\n".join(f"{display_name(r.respondent_id)}{mark(r.respondent_id)} & {r.ability:.2f} & {r.p_correct:.3f} \\\\" for r in aA.sort_values('ability', ascending=False).itertuples())
 (out / "tab_abilA.tex").write_text("\\begin{tabular}{@{}lrr@{}}\n\\toprule\nModel & Ability & Accuracy \\\\\n\\midrule\n" + rowsA + "\n\\bottomrule\n\\end{tabular}\n")
 rowsB = "\n".join(f"{display_name(r.respondent_id)} & {r.ability:.2f} \\\\" for r in aB.sort_values('ability', ascending=False).itertuples())
 (out / "tab_abilB.tex").write_text("\\begin{tabular}{@{}lr@{}}\n\\toprule\nModel & Ability \\\\\n\\midrule\n" + rowsB + "\n\\bottomrule\n\\end{tabular}\n")

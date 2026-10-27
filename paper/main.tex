@@ -22,7 +22,7 @@ Models earn more ability for solving hard items than easy ones, so true breakthr
 The current release covers two aspects, representation quality and perturbation response, with 424,478 cell-type items from fourteen annotation panels and 88,164 perturbation items from fifteen screens, about 110 million cells in all.
 In Virtual Cell Bench, we estimate the difficulty of each test item, which tells us how difficult a test item is for the current research field.
 To keep Virtual Cell Bench informative over time, we use a pipeline that automatically downweights items that have become easy or stopped discriminating models.
-Overall, we evaluate [N] virtual cell models and present their ranking based on abilities instead of raw averaged metrics.
+Overall, we evaluate 64 models, 37 on representation, seven of them pretrained foundation models, and 27 on perturbation. We rank them by ability instead of raw averaged metrics.
 }
 
 \begin{document}
@@ -487,8 +487,10 @@ pass/fail one.
 \caption{Abilities of the model pool. (a) Part A models on the pooled cell-level scale of
 all fourteen panels, 424,478 items. (b) Part B models on the pooled scale of all fifteen
 screens, 88,164 conditions. Colour marks the family; the two seeds of a random model are
-averaged. The mean shift defines the pass rule and so has no ability of its own. The full
-tables, with plain accuracy next to ability for Part A, are in \Cref{app:tables}.}
+averaged. The mean shift defines the pass rule and so has no ability of its own. The
+foundation models, in black, were placed afterwards with difficulties held fixed, from the
+curated panels only (\Cref{sec:fm}). The full tables, with plain accuracy next to ability
+for Part A, are in \Cref{app:tables}.}
 \label{fig:abilities}
 \end{figure}
 
@@ -560,38 +562,62 @@ Seven pretrained single-cell foundation models were placed on the Part A scale: 
 scPRINT \citep{scprint}, CellPLM \citep{cellplm} and TranscriptFormer
 \citep{transcriptformer}. Each is used as a fixed encoder: the published weights turn a
 cell into a representation, and the frozen classifier of \Cref{sec:items} does the rest,
-exactly as for PCA. Nothing is fine-tuned. The models were placed with item difficulties
-held fixed, so no simple model's ability moved. \Cref{tab:fm} gives their abilities on
-every curated panel next to the three best simple models; \Cref{tab:fm_acc} in the
-appendix gives plain accuracy.
+exactly as for PCA. Nothing is fine-tuned. On every panel the models were placed with item
+difficulties held fixed, so no simple model's ability moved. \Cref{tab:fm} gives their
+abilities on every curated panel next to the three best simple models; \Cref{tab:fm_acc}
+in the appendix gives plain accuracy.
 
 \begin{table}[t]
 \centering
 \caption{Pretrained foundation models on the curated Part A panels, next to the best
 simple models. Each column is one panel's own fit; abilities are comparable within a
 column. HLCA d.\ and s.\ are the lung atlas with donors and with studies held out; Immune
-d.\ and t.\ the immune atlas with donors and with tissues held out. A dash marks a run
-still in progress.}
+d.\ and t.\ the immune atlas with donors and with tissues held out. The dash marks the one
+run still in progress, TranscriptFormer on Parse PBMC.}
 \label{tab:fm}
 \footnotesize
 \input{bench/tab_fm.tex}
 \end{table}
 
-On every panel the foundation models land inside the range of the simple pool, between
-the random floor and the top of the ladder. On Hao PBMC, TranscriptFormer ($3.44$) sits
-level with scVI-30D ($3.46$) and Geneformer ($3.09$) just above the simple ladder, while
-STATE, scGPT and UCE ($2.32$ to $2.56$) sit just below PCA-128D ($2.88$) and CellPLM and
-scPRINT ($1.12$, $0.99$) two units below it. On the immune atlas, Geneformer, scGPT,
-TranscriptFormer and UCE ($2.11$ to $2.55$) are above every simple model ($2.00$ to
-$2.17$) under both splits. On the adult heart panel, where every method is near $0.6$,
-the foundation models are level with PCA. On the lung atlas and on Parse PBMC, the
-strongest foundation models match the simple ladder and the rest fall below it. In plain
-accuracy, the best foundation model is within two points of the best simple model on
-every panel except the heart and lung-study panels, where it trails by one to four points.
+The strongest foundation models come close to the top of the simple ladder on most
+panels, and on the immune atlas they pass it.
+The weakest, CellPLM and scPRINT, sit well below the best simple models everywhere.
+
+On Hao PBMC, TranscriptFormer ($3.46$) is close to scVI-30D ($3.52$, and $3.57$ when
+tissue-corrected), and Geneformer
+($3.07$) is just above Nystr\"om-256D ($3.01$) and PCA-128D ($2.91$). STATE, scGPT and UCE
+($2.31$ to $2.56$) are below PCA-128D, and CellPLM and scPRINT ($1.10$, $0.96$) are about
+two units below it. On the immune atlas, Geneformer, scGPT and TranscriptFormer ($2.20$ to
+$2.55$) are above every simple model under both splits; UCE is above them with donors held
+out and just below them with tissues held out. On the lung atlas with donors held out,
+scGPT and Geneformer ($2.67$, $2.65$) are level with PCA-128D ($2.69$). With studies held
+out, the best foundation model, scGPT at $2.47$, is $0.35$ below tissue-corrected
+scVI-30D. On Parse PBMC, Geneformer ($3.28$) is $0.13$ below Nystr\"om-256D, and CellPLM is
+at $2.27$. On the adult heart panel, the top is flat: TranscriptFormer and scGPT ($0.64$),
+Nystr\"om-256D ($0.63$) and Geneformer ($0.58$) are within $0.06$ of one another, while
+STATE, CellPLM and scPRINT fall to between $-0.49$ and $0.02$. On Tabula Sapiens,
+Geneformer ($0.99$) is level with PCA-128D ($0.98$) and TranscriptFormer ($0.94$) is just
+below. UCE, scGPT and STATE ($0.69$ to $0.81$) are in the same band as scVI-30D ($0.74$)
+and Nystr\"om-256D ($0.85$), and CellPLM and scPRINT ($0.48$, $0.17$) are lower.
+
+In plain accuracy, the best foundation model is ahead of the best simple model by four to
+five points on the immune atlas and by about one point on the heart and Tabula Sapiens
+panels. It is within half a point on Hao PBMC, Parse PBMC and the donor-held-out lung
+atlas, and 2.6 points behind on the study-held-out lung atlas.
+
+The foundation models were also placed on the pooled scale of \Cref{fig:abilities}a, again
+with difficulties held fixed, from the cells of the curated panels they answered: 126,402
+cells, or 109,591 for TranscriptFormer and CellPLM, whose Parse runs came later. Tabula
+Sapiens and the six scBaseCount panels are not yet included. Placed this way, scGPT
+($1.07$), Geneformer ($1.06$) and TranscriptFormer ($1.02$) are above the best simple model
+($0.72$), UCE ($0.88$) and STATE ($0.76$) are just above it, CellPLM is at $0.37$ and
+scPRINT at $-0.20$. Because these values rest on the curated panels only, the per-panel
+fits in \Cref{tab:fm} are the fairer comparison for now.
 
 The foundation models also behave differently from the simple pool in one way that the
-scale makes visible. Their outfit values are 1.0 to 3.8, against 0.2 to 0.8 for every
-simple model. A foundation model therefore passes some cells that its ability says it
+scale makes visible. Their outfit values are 1.1 to 3.8, with a median of 1.7. Simple
+models of the same ability on the same panel have 0.2 to 1.5, with a median of 0.6, and
+nine in ten of them are below 1. A foundation model therefore passes some cells that its ability says it
 should fail and fails some that it should pass; its answers follow the difficulty order of
 the scale less closely. This can mean knowledge beyond the training panel, or noise in the
 representation, and the pooled scale and the per-item records allow the two to be told
@@ -711,9 +737,9 @@ measured difficulty and every model a measured ability, both on one scale with e
 The bank holds about 110 million cells across fourteen annotation panels and fifteen
 perturbation screens. The scale is calibrated with a pool of simple methods that cannot
 have memorized the test data, and its floors and ladders come out in order. Seven
-pretrained foundation models have been placed on it without moving it; on the curated
-panels they fall inside the range of the simple pool, above it on some panels and below on
-others. Because the benchmark records which items each model passes, it can say which
+pretrained foundation models have been placed on it without moving it. The strongest
+of them come close to the top of the simple ladder on most curated panels and pass it on
+the immune atlas; the weakest stay well below it. Because the benchmark records which items each model passes, it can say which
 items have stopped being useful, how fast new ones must be written, and what makes an
 item hard. Those records are what let the benchmark change with the field instead of
 being replaced by it.
@@ -729,7 +755,10 @@ being replaced by it.
 \centering
 \caption{Part A models on the pooled cell-level scale of all fourteen panels, 424,478
 items: ability and plain accuracy, which is the fraction of test cells labelled
-correctly.}
+correctly. $^\dagger$Pretrained foundation models, placed afterwards with difficulties held
+fixed, from the cells of the curated panels other than Tabula Sapiens. Their accuracy is
+over those cells only, which are easier than the scBaseCount cells, so it cannot be
+compared with the other rows.}
 \label{tab:abilA}
 \small
 \input{bench/tab_abilA.tex}

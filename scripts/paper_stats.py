@@ -57,6 +57,13 @@ print("## Component B composition\n", compB.to_string(index=False))
 # ---------- component A composition: one row per panel ----------
 import h5py
 from anndata.io import read_elem
+
+def pool_only(df):
+    """Respondents that define the scale. Models placed afterwards with difficulties held fixed
+    (placement == 'anchored', the foundation models) are reported in their own tables, not in the
+    scale's summaries or the retirement analysis."""
+    return df[df["placement"] != "anchored"] if "placement" in df.columns else df
+
 dA_pooled = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
 itemsA = pd.read_parquet(A_RUN / "items.parquet")
 dA_pooled = dA_pooled.merge(itemsA[["source_run"]], left_on="item_id", right_index=True)
@@ -70,7 +77,7 @@ for run, name, unit, tr_override in PANELS:
             obs = read_elem(f["obs"])
         tr = int((obs["split"] == "train").sum())
     dd = dA_pooled[dA_pooled["source_run"] == run]
-    ab = pd.read_csv(RUNS / run / "rasch" / "cell_level.abilities.csv").set_index("respondent_id")["ability"]
+    ab = pool_only(pd.read_csv(RUNS / run / "rasch" / "cell_level.abilities.csv")).set_index("respondent_id")["ability"]
     rowsA.append(dict(run=run, name=name, held_out=unit, train_cells=tr, items=len(it), strata=int(it["stratum"].nunique()), types=int(it["cell_type"].nunique()),
                       test_units=int(it["donor"].nunique() if unit in ("donors", "samples") else it["tissue"].nunique()), contexts=int(it["tissue"].nunique()),
                       nobody=float((dd["p_correct"] == 0).mean()), mean_b=float(dd.loc[~dd["degenerate"], "difficulty"].mean()), top=ab.idxmax(), top_ability=float(ab.max()),
@@ -107,7 +114,7 @@ diffs = {}
 diffs["A_cell"] = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
 diffs["A_stratum"] = pd.read_csv(A_RUN / "rasch" / "stratum_binomial.difficulties.csv")
 diffs["A_ts2"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.difficulties.csv")
-diffs["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.difficulties.csv")
+diffs["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch_paper" / "pooled.difficulties.csv")
 res["dist"] = {k: dist(v) for k, v in diffs.items()}
 for k, v in res["dist"].items():
     print(f"\n## {k}: n={v['n']} informative={v['informative']} nobody={v['nobody']} everybody={v['everybody']} q5/50/95={v['q05']:.2f}/{v['q50']:.2f}/{v['q95']:.2f} sd={v['sd']:.2f} medSE={v['median_se']:.2f}")
@@ -123,17 +130,17 @@ print("\n## per-dataset difficulty (pooled B scale)\n", per_ds.round(2).to_strin
 
 # ---------- abilities ----------
 abil = {}
-abil["A_cell"] = pd.read_csv(A_RUN / "rasch" / "cell_level.abilities.csv")
-abil["A_ts2"] = pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv")
+abil["A_cell"] = pool_only(pd.read_csv(A_RUN / "rasch" / "cell_level.abilities.csv"))
+abil["A_ts2"] = pool_only(pd.read_csv(RUNS / "repr_pool_v0" / "rasch" / "cell_level.abilities.csv"))
 for run, *_ in PANELS:
     res[f"abil_panel_{run}"] = pd.read_csv(RUNS / run / "rasch" / "cell_level.abilities.csv").round(3).to_dict(orient="records")
-abil["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv")
+abil["B_pooled"] = pd.read_csv(RUNS / "pert_pool_v0" / "rasch_paper" / "pooled.abilities.csv")
 for k, v in abil.items():
     res[f"abil_{k}"] = v.round(3).to_dict(orient="records")
     print(f"\n## abilities {k}\n", v[["respondent_id", "ability", "se", "p_correct", "outfit"]].round(2).to_string(index=False))
 sg = {}
 for ds in ["FrangiehIzar2021_RNA", "McFarlandTsherniak2020", "SrivatsanTrapnell2020_sciplex3", "tahoe100m", "parse_pbmc_cytokines"]:
-    f = RUNS / "pert_pool_v0" / "rasch" / f"{ds}.context.abilities.csv"
+    f = RUNS / "pert_pool_v0" / "rasch_paper" / f"{ds}.context.abilities.csv"
     if f.exists():
         a_ = pd.read_csv(f); a_["rank"] = np.arange(1, len(a_) + 1)
         sg[ds] = a_[["respondent_id", "ability", "se", "p_correct", "outfit", "rank"]].round(2).to_dict(orient="records")

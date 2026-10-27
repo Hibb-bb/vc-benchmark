@@ -20,9 +20,11 @@ A_RUN = RUNS / "repr_pooled_v3"
 dA = pd.read_csv(A_RUN / "rasch" / "cell_level.difficulties.csv")
 itemsA = pd.read_parquet(A_RUN / "items.parquet")
 PANEL_NAMES = {r["run"]: (r["name"] + (", " + r["held_out"] + " held out" if r["held_out"] in ("studies", "tissues") else "")) for r in stats["compA_panels"]}
-dB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.difficulties.csv")
+dB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch_paper" / "pooled.difficulties.csv")
 aA = pd.read_csv(A_RUN / "rasch" / "cell_level.abilities.csv")
-aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / "pooled.abilities.csv")
+if "placement" in aA.columns:
+    aA = aA[aA["placement"] != "anchored"]  # the pool that defines the scale; anchored placements are reported apart
+aB = pd.read_csv(RUNS / "pert_pool_v0" / "rasch_paper" / "pooled.abilities.csv")
 cov = pd.concat([pd.read_parquet(p) for p in (RUNS / "pert_pool_v0").glob("*.perturbation.items.parquet")])
 cov = cov[~cov.index.duplicated()]
 

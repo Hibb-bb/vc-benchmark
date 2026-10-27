@@ -2,6 +2,11 @@
 \toprule
 Model & Ability & Accuracy \\
 \midrule
+scGPT (whole-human)$^\dagger$ & 1.07 & 0.794 \\
+Geneformer V2-316M$^\dagger$ & 1.06 & 0.794 \\
+TranscriptFormer (sapiens)$^\dagger$ & 1.02 & 0.774 \\
+UCE (4 layer)$^\dagger$ & 0.88 & 0.776 \\
+STATE SE-600M$^\dagger$ & 0.76 & 0.763 \\
 Nyström-256D (kernel width = 0.5) & 0.72 & 0.618 \\
 scVI-30D (tissue-corrected) & 0.72 & 0.618 \\
 scVI-30D & 0.71 & 0.617 \\
@@ -15,11 +20,13 @@ PCA-32D & 0.53 & 0.597 \\
 Nyström-64D (kernel width = 2) & 0.42 & 0.585 \\
 NMF-64D & 0.41 & 0.584 \\
 scVI-10D (tissue-corrected) & 0.37 & 0.579 \\
+CellPLM 85M$^\dagger$ & 0.37 & 0.700 \\
 PCA-16D & 0.11 & 0.550 \\
 ICA-16D & 0.11 & 0.550 \\
 Random projection-128D (seed 0) & -0.07 & 0.529 \\
 Random projection-128D (seed 1) & -0.09 & 0.527 \\
 GMM-100 memberships & -0.18 & 0.516 \\
+scPRINT large v1$^\dagger$ & -0.20 & 0.647 \\
 NMF-16D & -0.37 & 0.492 \\
 PCA-8D & -0.67 & 0.453 \\
 GMM-30 memberships & -0.68 & 0.453 \\

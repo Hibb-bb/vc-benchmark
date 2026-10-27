@@ -819,12 +819,22 @@
  ],
  "abil_panel_repr_pool_v0": [
   {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 0.992,
+   "se": 0.022,
+   "outfit": 1.421,
+   "n_items": 20026,
+   "p_correct": 0.664,
+   "placement": "anchored"
+  },
+  {
    "respondent_id": "pca_k128",
    "ability": 0.979,
    "se": 0.022,
    "outfit": 0.545,
    "n_items": 20026,
-   "p_correct": 0.654
+   "p_correct": 0.654,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -832,7 +842,17 @@
    "se": 0.022,
    "outfit": 0.683,
    "n_items": 20026,
-   "p_correct": 0.65
+   "p_correct": 0.65,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 0.938,
+   "se": 0.022,
+   "outfit": 1.485,
+   "n_items": 20026,
+   "p_correct": 0.662,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -840,7 +860,8 @@
    "se": 0.021,
    "outfit": 0.533,
    "n_items": 20026,
-   "p_correct": 0.64
+   "p_correct": 0.64,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -848,7 +869,8 @@
    "se": 0.021,
    "outfit": 0.394,
    "n_items": 20026,
-   "p_correct": 0.636
+   "p_correct": 0.636,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -856,7 +878,17 @@
    "se": 0.021,
    "outfit": 0.397,
    "n_items": 20026,
-   "p_correct": 0.635
+   "p_correct": 0.635,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 0.808,
+   "se": 0.021,
+   "outfit": 1.531,
+   "n_items": 20026,
+   "p_correct": 0.647,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -864,7 +896,17 @@
    "se": 0.021,
    "outfit": 0.582,
    "n_items": 20026,
-   "p_correct": 0.634
+   "p_correct": 0.634,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 0.764,
+   "se": 0.021,
+   "outfit": 1.301,
+   "n_items": 20026,
+   "p_correct": 0.638,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -872,7 +914,8 @@
    "se": 0.021,
    "outfit": 0.428,
    "n_items": 20026,
-   "p_correct": 0.63
+   "p_correct": 0.63,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -880,7 +923,17 @@
    "se": 0.021,
    "outfit": 0.729,
    "n_items": 20026,
-   "p_correct": 0.627
+   "p_correct": 0.627,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 0.686,
+   "se": 0.021,
+   "outfit": 1.326,
+   "n_items": 20026,
+   "p_correct": 0.629,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k32",
@@ -888,7 +941,8 @@
    "se": 0.021,
    "outfit": 0.46,
    "n_items": 20026,
-   "p_correct": 0.606
+   "p_correct": 0.606,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -896,7 +950,17 @@
    "se": 0.021,
    "outfit": 0.682,
    "n_items": 20026,
-   "p_correct": 0.599
+   "p_correct": 0.599,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 0.48,
+   "se": 0.021,
+   "outfit": 1.068,
+   "n_items": 20026,
+   "p_correct": 0.602,
+   "placement": "anchored"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -904,7 +968,8 @@
    "se": 0.021,
    "outfit": 0.786,
    "n_items": 20026,
-   "p_correct": 0.596
+   "p_correct": 0.596,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -912,7 +977,8 @@
    "se": 0.02,
    "outfit": 0.846,
    "n_items": 20026,
-   "p_correct": 0.582
+   "p_correct": 0.582,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -920,7 +986,8 @@
    "se": 0.02,
    "outfit": 0.86,
    "n_items": 20026,
-   "p_correct": 0.581
+   "p_correct": 0.581,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -928,7 +995,17 @@
    "se": 0.02,
    "outfit": 0.834,
    "n_items": 20026,
-   "p_correct": 0.574
+   "p_correct": 0.574,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 0.173,
+   "se": 0.02,
+   "outfit": 1.306,
+   "n_items": 20026,
+   "p_correct": 0.567,
+   "placement": "anchored"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -936,7 +1013,8 @@
    "se": 0.02,
    "outfit": 0.731,
    "n_items": 20026,
-   "p_correct": 0.552
+   "p_correct": 0.552,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -944,7 +1022,8 @@
    "se": 0.02,
    "outfit": 0.633,
    "n_items": 20026,
-   "p_correct": 0.526
+   "p_correct": 0.526,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -952,7 +1031,8 @@
    "se": 0.02,
    "outfit": 0.632,
    "n_items": 20026,
-   "p_correct": 0.526
+   "p_correct": 0.526,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k100",
@@ -960,7 +1040,8 @@
    "se": 0.019,
    "outfit": 0.725,
    "n_items": 20026,
-   "p_correct": 0.464
+   "p_correct": 0.464,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -968,7 +1049,8 @@
    "se": 0.019,
    "outfit": 0.906,
    "n_items": 20026,
-   "p_correct": 0.461
+   "p_correct": 0.461,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -976,7 +1058,8 @@
    "se": 0.019,
    "outfit": 1.11,
    "n_items": 20026,
-   "p_correct": 0.44
+   "p_correct": 0.44,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -984,7 +1067,8 @@
    "se": 0.019,
    "outfit": 1.086,
    "n_items": 20026,
-   "p_correct": 0.426
+   "p_correct": 0.426,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -992,7 +1076,8 @@
    "se": 0.019,
    "outfit": 1.209,
    "n_items": 20026,
-   "p_correct": 0.394
+   "p_correct": 0.394,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -1000,7 +1085,8 @@
    "se": 0.019,
    "outfit": 1.035,
    "n_items": 20026,
-   "p_correct": 0.359
+   "p_correct": 0.359,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -1008,7 +1094,8 @@
    "se": 0.02,
    "outfit": 1.65,
    "n_items": 20026,
-   "p_correct": 0.251
+   "p_correct": 0.251,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -1016,7 +1103,8 @@
    "se": 0.02,
    "outfit": 1.796,
    "n_items": 20026,
-   "p_correct": 0.228
+   "p_correct": 0.228,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -1024,7 +1112,8 @@
    "se": 0.021,
    "outfit": 1.494,
    "n_items": 20026,
-   "p_correct": 0.211
+   "p_correct": 0.211,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -1032,7 +1121,8 @@
    "se": 0.021,
    "outfit": 1.721,
    "n_items": 20026,
-   "p_correct": 0.199
+   "p_correct": 0.199,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -1040,7 +1130,8 @@
    "se": 0.022,
    "outfit": 1.995,
    "n_items": 20026,
-   "p_correct": 0.156
+   "p_correct": 0.156,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -1048,7 +1139,8 @@
    "se": 0.03,
    "outfit": 4.253,
    "n_items": 20026,
-   "p_correct": 0.066
+   "p_correct": 0.066,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -1056,7 +1148,8 @@
    "se": 0.03,
    "outfit": 4.255,
    "n_items": 20026,
-   "p_correct": 0.066
+   "p_correct": 0.066,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_hao_pbmc_l2": [
@@ -1066,7 +1159,8 @@
    "se": 0.049,
    "outfit": 0.73,
    "n_items": 7999,
-   "p_correct": 0.887
+   "p_correct": 0.887,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -1074,7 +1168,17 @@
    "se": 0.049,
    "outfit": 0.778,
    "n_items": 7999,
-   "p_correct": 0.884
+   "p_correct": 0.884,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 3.463,
+   "se": 0.049,
+   "outfit": 3.163,
+   "n_items": 7999,
+   "p_correct": 0.885,
+   "placement": "anchored"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -1082,7 +1186,17 @@
    "se": 0.046,
    "outfit": 0.92,
    "n_items": 7999,
-   "p_correct": 0.87
+   "p_correct": 0.87,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 3.069,
+   "se": 0.045,
+   "outfit": 1.734,
+   "n_items": 7999,
+   "p_correct": 0.862,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -1090,7 +1204,8 @@
    "se": 0.044,
    "outfit": 0.219,
    "n_items": 7999,
-   "p_correct": 0.856
+   "p_correct": 0.856,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -1098,7 +1213,8 @@
    "se": 0.044,
    "outfit": 0.285,
    "n_items": 7999,
-   "p_correct": 0.855
+   "p_correct": 0.855,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -1106,7 +1222,8 @@
    "se": 0.044,
    "outfit": 0.437,
    "n_items": 7999,
-   "p_correct": 0.85
+   "p_correct": 0.85,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -1114,7 +1231,8 @@
    "se": 0.044,
    "outfit": 0.227,
    "n_items": 7999,
-   "p_correct": 0.85
+   "p_correct": 0.85,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -1122,7 +1240,8 @@
    "se": 0.044,
    "outfit": 0.229,
    "n_items": 7999,
-   "p_correct": 0.849
+   "p_correct": 0.849,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k128",
@@ -1130,7 +1249,8 @@
    "se": 0.043,
    "outfit": 0.338,
    "n_items": 7999,
-   "p_correct": 0.848
+   "p_correct": 0.848,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -1138,7 +1258,8 @@
    "se": 0.043,
    "outfit": 0.275,
    "n_items": 7999,
-   "p_correct": 0.842
+   "p_correct": 0.842,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -1146,7 +1267,8 @@
    "se": 0.042,
    "outfit": 0.543,
    "n_items": 7999,
-   "p_correct": 0.84
+   "p_correct": 0.84,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -1154,7 +1276,8 @@
    "se": 0.042,
    "outfit": 0.84,
    "n_items": 7999,
-   "p_correct": 0.839
+   "p_correct": 0.839,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -1162,7 +1285,35 @@
    "se": 0.042,
    "outfit": 0.545,
    "n_items": 7999,
-   "p_correct": 0.839
+   "p_correct": 0.839,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 2.562,
+   "se": 0.041,
+   "outfit": 1.836,
+   "n_items": 7999,
+   "p_correct": 0.827,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.428,
+   "se": 0.04,
+   "outfit": 1.414,
+   "n_items": 7999,
+   "p_correct": 0.815,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.31,
+   "se": 0.039,
+   "outfit": 2.026,
+   "n_items": 7999,
+   "p_correct": 0.806,
+   "placement": "anchored"
   },
   {
    "respondent_id": "ica_k16",
@@ -1170,7 +1321,8 @@
    "se": 0.036,
    "outfit": 0.522,
    "n_items": 7999,
-   "p_correct": 0.763
+   "p_correct": 0.763,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -1178,7 +1330,8 @@
    "se": 0.036,
    "outfit": 0.526,
    "n_items": 7999,
-   "p_correct": 0.763
+   "p_correct": 0.763,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k100",
@@ -1186,7 +1339,8 @@
    "se": 0.036,
    "outfit": 0.843,
    "n_items": 7999,
-   "p_correct": 0.756
+   "p_correct": 0.756,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -1194,7 +1348,8 @@
    "se": 0.034,
    "outfit": 1.069,
    "n_items": 7999,
-   "p_correct": 0.732
+   "p_correct": 0.732,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -1202,7 +1357,17 @@
    "se": 0.034,
    "outfit": 1.037,
    "n_items": 7999,
-   "p_correct": 0.727
+   "p_correct": 0.727,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 1.101,
+   "se": 0.032,
+   "outfit": 1.156,
+   "n_items": 7999,
+   "p_correct": 0.682,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k30",
@@ -1210,7 +1375,8 @@
    "se": 0.032,
    "outfit": 1.14,
    "n_items": 7999,
-   "p_correct": 0.678
+   "p_correct": 0.678,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -1218,7 +1384,17 @@
    "se": 0.032,
    "outfit": 1.062,
    "n_items": 7999,
-   "p_correct": 0.675
+   "p_correct": 0.675,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 0.964,
+   "se": 0.032,
+   "outfit": 2.03,
+   "n_items": 7999,
+   "p_correct": 0.667,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k8",
@@ -1226,7 +1402,8 @@
    "se": 0.03,
    "outfit": 0.979,
    "n_items": 7999,
-   "p_correct": 0.556
+   "p_correct": 0.556,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -1234,7 +1411,8 @@
    "se": 0.029,
    "outfit": 1.821,
    "n_items": 7999,
-   "p_correct": 0.519
+   "p_correct": 0.519,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -1242,7 +1420,8 @@
    "se": 0.029,
    "outfit": 1.16,
    "n_items": 7999,
-   "p_correct": 0.501
+   "p_correct": 0.501,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -1250,7 +1429,8 @@
    "se": 0.029,
    "outfit": 1.898,
    "n_items": 7999,
-   "p_correct": 0.501
+   "p_correct": 0.501,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -1258,7 +1438,8 @@
    "se": 0.029,
    "outfit": 1.451,
    "n_items": 7999,
-   "p_correct": 0.357
+   "p_correct": 0.357,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -1266,7 +1447,8 @@
    "se": 0.031,
    "outfit": 4.761,
    "n_items": 7999,
-   "p_correct": 0.248
+   "p_correct": 0.248,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -1274,7 +1456,8 @@
    "se": 0.032,
    "outfit": 3.255,
    "n_items": 7999,
-   "p_correct": 0.245
+   "p_correct": 0.245,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -1282,7 +1465,8 @@
    "se": 0.032,
    "outfit": 3.384,
    "n_items": 7999,
-   "p_correct": 0.217
+   "p_correct": 0.217,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -1290,7 +1474,8 @@
    "se": 0.052,
    "outfit": 14.602,
    "n_items": 7999,
-   "p_correct": 0.058
+   "p_correct": 0.058,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -1298,17 +1483,37 @@
    "se": 0.052,
    "outfit": 11.798,
    "n_items": 7999,
-   "p_correct": 0.058
+   "p_correct": 0.058,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_heart_states": [
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 0.644,
+   "se": 0.023,
+   "outfit": 1.421,
+   "n_items": 14396,
+   "p_correct": 0.622,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 0.641,
+   "se": 0.023,
+   "outfit": 1.407,
+   "n_items": 14396,
+   "p_correct": 0.622,
+   "placement": "anchored"
+  },
   {
    "respondent_id": "nystroem_k256_g0.5",
    "ability": 0.633,
    "se": 0.023,
    "outfit": 0.499,
    "n_items": 14396,
-   "p_correct": 0.611
+   "p_correct": 0.611,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -1316,7 +1521,17 @@
    "se": 0.023,
    "outfit": 0.405,
    "n_items": 14396,
-   "p_correct": 0.605
+   "p_correct": 0.605,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 0.581,
+   "se": 0.023,
+   "outfit": 1.483,
+   "n_items": 14396,
+   "p_correct": 0.616,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k128",
@@ -1324,7 +1539,8 @@
    "se": 0.023,
    "outfit": 0.533,
    "n_items": 14396,
-   "p_correct": 0.603
+   "p_correct": 0.603,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -1332,7 +1548,8 @@
    "se": 0.023,
    "outfit": 0.695,
    "n_items": 14396,
-   "p_correct": 0.603
+   "p_correct": 0.603,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -1340,7 +1557,8 @@
    "se": 0.023,
    "outfit": 0.398,
    "n_items": 14396,
-   "p_correct": 0.601
+   "p_correct": 0.601,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -1348,7 +1566,8 @@
    "se": 0.023,
    "outfit": 0.402,
    "n_items": 14396,
-   "p_correct": 0.601
+   "p_correct": 0.601,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -1356,7 +1575,8 @@
    "se": 0.023,
    "outfit": 0.794,
    "n_items": 14396,
-   "p_correct": 0.601
+   "p_correct": 0.601,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -1364,7 +1584,8 @@
    "se": 0.023,
    "outfit": 0.522,
    "n_items": 14396,
-   "p_correct": 0.601
+   "p_correct": 0.601,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -1372,7 +1593,17 @@
    "se": 0.023,
    "outfit": 0.897,
    "n_items": 14396,
-   "p_correct": 0.598
+   "p_correct": 0.598,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 0.462,
+   "se": 0.023,
+   "outfit": 1.611,
+   "n_items": 14396,
+   "p_correct": 0.6,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k32",
@@ -1380,7 +1611,8 @@
    "se": 0.023,
    "outfit": 0.486,
    "n_items": 14396,
-   "p_correct": 0.577
+   "p_correct": 0.577,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -1388,7 +1620,8 @@
    "se": 0.023,
    "outfit": 0.58,
    "n_items": 14396,
-   "p_correct": 0.576
+   "p_correct": 0.576,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -1396,7 +1629,8 @@
    "se": 0.023,
    "outfit": 0.946,
    "n_items": 14396,
-   "p_correct": 0.568
+   "p_correct": 0.568,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -1404,7 +1638,26 @@
    "se": 0.023,
    "outfit": 0.75,
    "n_items": 14396,
-   "p_correct": 0.559
+   "p_correct": 0.559,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 0.016,
+   "se": 0.022,
+   "outfit": 1.358,
+   "n_items": 14396,
+   "p_correct": 0.534,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": -0.06,
+   "se": 0.022,
+   "outfit": 1.726,
+   "n_items": 14396,
+   "p_correct": 0.528,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k16",
@@ -1412,7 +1665,8 @@
    "se": 0.022,
    "outfit": 0.625,
    "n_items": 14396,
-   "p_correct": 0.505
+   "p_correct": 0.505,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -1420,7 +1674,8 @@
    "se": 0.022,
    "outfit": 0.623,
    "n_items": 14396,
-   "p_correct": 0.504
+   "p_correct": 0.504,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -1428,7 +1683,8 @@
    "se": 0.022,
    "outfit": 1.023,
    "n_items": 14396,
-   "p_correct": 0.485
+   "p_correct": 0.485,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -1436,7 +1692,17 @@
    "se": 0.022,
    "outfit": 1.093,
    "n_items": 14396,
-   "p_correct": 0.48
+   "p_correct": 0.48,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": -0.493,
+   "se": 0.022,
+   "outfit": 1.846,
+   "n_items": 14396,
+   "p_correct": 0.464,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k100",
@@ -1444,7 +1710,8 @@
    "se": 0.022,
    "outfit": 0.984,
    "n_items": 14396,
-   "p_correct": 0.453
+   "p_correct": 0.453,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -1452,7 +1719,8 @@
    "se": 0.022,
    "outfit": 1.09,
    "n_items": 14396,
-   "p_correct": 0.449
+   "p_correct": 0.449,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -1460,7 +1728,8 @@
    "se": 0.022,
    "outfit": 1.083,
    "n_items": 14396,
-   "p_correct": 0.397
+   "p_correct": 0.397,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -1468,7 +1737,8 @@
    "se": 0.022,
    "outfit": 1.817,
    "n_items": 14396,
-   "p_correct": 0.308
+   "p_correct": 0.308,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -1476,7 +1746,8 @@
    "se": 0.022,
    "outfit": 1.661,
    "n_items": 14396,
-   "p_correct": 0.301
+   "p_correct": 0.301,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -1484,7 +1755,8 @@
    "se": 0.023,
    "outfit": 1.697,
    "n_items": 14396,
-   "p_correct": 0.292
+   "p_correct": 0.292,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -1492,7 +1764,8 @@
    "se": 0.023,
    "outfit": 1.825,
    "n_items": 14396,
-   "p_correct": 0.287
+   "p_correct": 0.287,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -1500,7 +1773,8 @@
    "se": 0.026,
    "outfit": 3.367,
    "n_items": 14396,
-   "p_correct": 0.154
+   "p_correct": 0.154,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -1508,7 +1782,8 @@
    "se": 0.027,
    "outfit": 3.265,
    "n_items": 14396,
-   "p_correct": 0.142
+   "p_correct": 0.142,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -1516,7 +1791,8 @@
    "se": 0.03,
    "outfit": 4.2,
    "n_items": 14396,
-   "p_correct": 0.109
+   "p_correct": 0.109,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -1524,7 +1800,8 @@
    "se": 0.04,
    "outfit": 4.346,
    "n_items": 14396,
-   "p_correct": 0.053
+   "p_correct": 0.053,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -1532,7 +1809,8 @@
    "se": 0.052,
    "outfit": 8.378,
    "n_items": 14396,
-   "p_correct": 0.029
+   "p_correct": 0.029,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -1540,7 +1818,8 @@
    "se": 0.053,
    "outfit": 8.703,
    "n_items": 14396,
-   "p_correct": 0.028
+   "p_correct": 0.028,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_hlca_core_donor": [
@@ -1550,7 +1829,17 @@
    "se": 0.035,
    "outfit": 0.469,
    "n_items": 11389,
-   "p_correct": 0.82
+   "p_correct": 0.82,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.672,
+   "se": 0.035,
+   "outfit": 2.189,
+   "n_items": 11389,
+   "p_correct": 0.82,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k256",
@@ -1558,7 +1847,17 @@
    "se": 0.035,
    "outfit": 0.512,
    "n_items": 11389,
-   "p_correct": 0.818
+   "p_correct": 0.818,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 2.652,
+   "se": 0.035,
+   "outfit": 2.214,
+   "n_items": 11389,
+   "p_correct": 0.821,
+   "placement": "anchored"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -1566,7 +1865,8 @@
    "se": 0.034,
    "outfit": 1.377,
    "n_items": 11389,
-   "p_correct": 0.815
+   "p_correct": 0.815,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -1574,7 +1874,8 @@
    "se": 0.034,
    "outfit": 0.636,
    "n_items": 11389,
-   "p_correct": 0.814
+   "p_correct": 0.814,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -1582,7 +1883,8 @@
    "se": 0.034,
    "outfit": 0.317,
    "n_items": 11389,
-   "p_correct": 0.813
+   "p_correct": 0.813,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -1590,7 +1892,8 @@
    "se": 0.034,
    "outfit": 0.314,
    "n_items": 11389,
-   "p_correct": 0.812
+   "p_correct": 0.812,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -1598,7 +1901,17 @@
    "se": 0.034,
    "outfit": 0.977,
    "n_items": 11389,
-   "p_correct": 0.811
+   "p_correct": 0.811,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 2.495,
+   "se": 0.034,
+   "outfit": 3.764,
+   "n_items": 11389,
+   "p_correct": 0.809,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -1606,7 +1919,17 @@
    "se": 0.033,
    "outfit": 0.353,
    "n_items": 11389,
-   "p_correct": 0.803
+   "p_correct": 0.803,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.426,
+   "se": 0.033,
+   "outfit": 2.153,
+   "n_items": 11389,
+   "p_correct": 0.802,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -1614,7 +1937,8 @@
    "se": 0.033,
    "outfit": 0.906,
    "n_items": 11389,
-   "p_correct": 0.798
+   "p_correct": 0.798,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -1622,7 +1946,8 @@
    "se": 0.033,
    "outfit": 1.501,
    "n_items": 11389,
-   "p_correct": 0.796
+   "p_correct": 0.796,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -1630,7 +1955,8 @@
    "se": 0.032,
    "outfit": 0.383,
    "n_items": 11389,
-   "p_correct": 0.783
+   "p_correct": 0.783,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -1638,7 +1964,8 @@
    "se": 0.032,
    "outfit": 0.868,
    "n_items": 11389,
-   "p_correct": 0.774
+   "p_correct": 0.774,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -1646,7 +1973,17 @@
    "se": 0.032,
    "outfit": 1.041,
    "n_items": 11389,
-   "p_correct": 0.772
+   "p_correct": 0.772,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 2.093,
+   "se": 0.032,
+   "outfit": 2.693,
+   "n_items": 11389,
+   "p_correct": 0.774,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nmf_k64",
@@ -1654,7 +1991,8 @@
    "se": 0.032,
    "outfit": 0.731,
    "n_items": 11389,
-   "p_correct": 0.77
+   "p_correct": 0.77,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -1662,7 +2000,17 @@
    "se": 0.03,
    "outfit": 1.093,
    "n_items": 11389,
-   "p_correct": 0.749
+   "p_correct": 0.749,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 1.721,
+   "se": 0.03,
+   "outfit": 1.953,
+   "n_items": 11389,
+   "p_correct": 0.739,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k16",
@@ -1670,7 +2018,8 @@
    "se": 0.028,
    "outfit": 0.546,
    "n_items": 11389,
-   "p_correct": 0.696
+   "p_correct": 0.696,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -1678,7 +2027,17 @@
    "se": 0.028,
    "outfit": 0.545,
    "n_items": 11389,
-   "p_correct": 0.696
+   "p_correct": 0.696,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 1.293,
+   "se": 0.028,
+   "outfit": 2.417,
+   "n_items": 11389,
+   "p_correct": 0.695,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k100",
@@ -1686,7 +2045,8 @@
    "se": 0.027,
    "outfit": 0.821,
    "n_items": 11389,
-   "p_correct": 0.638
+   "p_correct": 0.638,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -1694,7 +2054,8 @@
    "se": 0.026,
    "outfit": 1.131,
    "n_items": 11389,
-   "p_correct": 0.608
+   "p_correct": 0.608,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -1702,7 +2063,8 @@
    "se": 0.026,
    "outfit": 1.469,
    "n_items": 11389,
-   "p_correct": 0.589
+   "p_correct": 0.589,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -1710,7 +2072,8 @@
    "se": 0.026,
    "outfit": 1.456,
    "n_items": 11389,
-   "p_correct": 0.586
+   "p_correct": 0.586,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -1718,7 +2081,8 @@
    "se": 0.025,
    "outfit": 1.157,
    "n_items": 11389,
-   "p_correct": 0.565
+   "p_correct": 0.565,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -1726,7 +2090,8 @@
    "se": 0.025,
    "outfit": 1.029,
    "n_items": 11389,
-   "p_correct": 0.542
+   "p_correct": 0.542,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -1734,7 +2099,8 @@
    "se": 0.025,
    "outfit": 2.369,
    "n_items": 11389,
-   "p_correct": 0.37
+   "p_correct": 0.37,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -1742,7 +2108,8 @@
    "se": 0.026,
    "outfit": 5.01,
    "n_items": 11389,
-   "p_correct": 0.275
+   "p_correct": 0.275,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -1750,7 +2117,8 @@
    "se": 0.027,
    "outfit": 4.192,
    "n_items": 11389,
-   "p_correct": 0.257
+   "p_correct": 0.257,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -1758,7 +2126,8 @@
    "se": 0.027,
    "outfit": 3.316,
    "n_items": 11389,
-   "p_correct": 0.231
+   "p_correct": 0.231,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -1766,7 +2135,8 @@
    "se": 0.037,
    "outfit": 10.353,
    "n_items": 11389,
-   "p_correct": 0.106
+   "p_correct": 0.106,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -1774,7 +2144,8 @@
    "se": 0.057,
    "outfit": 4.021,
    "n_items": 11389,
-   "p_correct": 0.042
+   "p_correct": 0.042,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -1782,7 +2153,8 @@
    "se": 0.057,
    "outfit": 2.97,
    "n_items": 11389,
-   "p_correct": 0.041
+   "p_correct": 0.041,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_hlca_core_study": [
@@ -1792,7 +2164,8 @@
    "se": 0.02,
    "outfit": 0.856,
    "n_items": 32221,
-   "p_correct": 0.835
+   "p_correct": 0.835,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -1800,7 +2173,8 @@
    "se": 0.02,
    "outfit": 0.796,
    "n_items": 32221,
-   "p_correct": 0.834
+   "p_correct": 0.834,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -1808,7 +2182,8 @@
    "se": 0.02,
    "outfit": 0.734,
    "n_items": 32221,
-   "p_correct": 0.819
+   "p_correct": 0.819,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -1816,7 +2191,8 @@
    "se": 0.019,
    "outfit": 0.363,
    "n_items": 32221,
-   "p_correct": 0.812
+   "p_correct": 0.812,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -1824,7 +2200,8 @@
    "se": 0.019,
    "outfit": 0.35,
    "n_items": 32221,
-   "p_correct": 0.812
+   "p_correct": 0.812,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -1832,7 +2209,8 @@
    "se": 0.019,
    "outfit": 0.388,
    "n_items": 32221,
-   "p_correct": 0.811
+   "p_correct": 0.811,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -1840,7 +2218,17 @@
    "se": 0.019,
    "outfit": 0.299,
    "n_items": 32221,
-   "p_correct": 0.81
+   "p_correct": 0.81,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.469,
+   "se": 0.019,
+   "outfit": 1.507,
+   "n_items": 32221,
+   "p_correct": 0.809,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k128",
@@ -1848,7 +2236,8 @@
    "se": 0.019,
    "outfit": 0.606,
    "n_items": 32221,
-   "p_correct": 0.806
+   "p_correct": 0.806,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -1856,7 +2245,8 @@
    "se": 0.019,
    "outfit": 0.393,
    "n_items": 32221,
-   "p_correct": 0.803
+   "p_correct": 0.803,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -1864,7 +2254,17 @@
    "se": 0.019,
    "outfit": 0.716,
    "n_items": 32221,
-   "p_correct": 0.795
+   "p_correct": 0.795,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 2.331,
+   "se": 0.019,
+   "outfit": 1.819,
+   "n_items": 32221,
+   "p_correct": 0.797,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nmf_k64",
@@ -1872,7 +2272,8 @@
    "se": 0.018,
    "outfit": 0.786,
    "n_items": 32221,
-   "p_correct": 0.782
+   "p_correct": 0.782,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -1880,7 +2281,17 @@
    "se": 0.018,
    "outfit": 0.747,
    "n_items": 32221,
-   "p_correct": 0.781
+   "p_correct": 0.781,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.098,
+   "se": 0.018,
+   "outfit": 1.535,
+   "n_items": 32221,
+   "p_correct": 0.776,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -1888,7 +2299,26 @@
    "se": 0.018,
    "outfit": 0.668,
    "n_items": 32221,
-   "p_correct": 0.772
+   "p_correct": 0.772,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 1.965,
+   "se": 0.018,
+   "outfit": 2.175,
+   "n_items": 32221,
+   "p_correct": 0.763,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 1.947,
+   "se": 0.018,
+   "outfit": 1.241,
+   "n_items": 32221,
+   "p_correct": 0.761,
+   "placement": "anchored"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -1896,7 +2326,17 @@
    "se": 0.018,
    "outfit": 0.939,
    "n_items": 32221,
-   "p_correct": 0.757
+   "p_correct": 0.757,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 1.922,
+   "se": 0.018,
+   "outfit": 2.642,
+   "n_items": 32221,
+   "p_correct": 0.759,
+   "placement": "anchored"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -1904,7 +2344,8 @@
    "se": 0.018,
    "outfit": 0.935,
    "n_items": 32221,
-   "p_correct": 0.754
+   "p_correct": 0.754,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -1912,7 +2353,8 @@
    "se": 0.017,
    "outfit": 0.654,
    "n_items": 32221,
-   "p_correct": 0.712
+   "p_correct": 0.712,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -1920,7 +2362,8 @@
    "se": 0.017,
    "outfit": 0.647,
    "n_items": 32221,
-   "p_correct": 0.712
+   "p_correct": 0.712,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k100",
@@ -1928,7 +2371,17 @@
    "se": 0.016,
    "outfit": 0.844,
    "n_items": 32221,
-   "p_correct": 0.702
+   "p_correct": 0.702,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 1.185,
+   "se": 0.016,
+   "outfit": 2.144,
+   "n_items": 32221,
+   "p_correct": 0.676,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nmf_k16",
@@ -1936,7 +2389,8 @@
    "se": 0.015,
    "outfit": 1.172,
    "n_items": 32221,
-   "p_correct": 0.616
+   "p_correct": 0.616,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -1944,7 +2398,8 @@
    "se": 0.015,
    "outfit": 1.106,
    "n_items": 32221,
-   "p_correct": 0.574
+   "p_correct": 0.574,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -1952,7 +2407,8 @@
    "se": 0.015,
    "outfit": 1.006,
    "n_items": 32221,
-   "p_correct": 0.573
+   "p_correct": 0.573,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -1960,7 +2416,8 @@
    "se": 0.015,
    "outfit": 1.641,
    "n_items": 32221,
-   "p_correct": 0.551
+   "p_correct": 0.551,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -1968,7 +2425,8 @@
    "se": 0.015,
    "outfit": 1.528,
    "n_items": 32221,
-   "p_correct": 0.548
+   "p_correct": 0.548,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -1976,7 +2434,8 @@
    "se": 0.015,
    "outfit": 1.984,
    "n_items": 32221,
-   "p_correct": 0.388
+   "p_correct": 0.388,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -1984,7 +2443,8 @@
    "se": 0.015,
    "outfit": 3.19,
    "n_items": 32221,
-   "p_correct": 0.335
+   "p_correct": 0.335,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -1992,7 +2452,8 @@
    "se": 0.016,
    "outfit": 4.222,
    "n_items": 32221,
-   "p_correct": 0.253
+   "p_correct": 0.253,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -2000,7 +2461,8 @@
    "se": 0.016,
    "outfit": 3.334,
    "n_items": 32221,
-   "p_correct": 0.239
+   "p_correct": 0.239,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -2008,7 +2470,8 @@
    "se": 0.024,
    "outfit": 8.617,
    "n_items": 32221,
-   "p_correct": 0.095
+   "p_correct": 0.095,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -2016,7 +2479,8 @@
    "se": 0.033,
    "outfit": 5.823,
    "n_items": 32221,
-   "p_correct": 0.052
+   "p_correct": 0.052,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -2024,17 +2488,55 @@
    "se": 0.033,
    "outfit": 4.904,
    "n_items": 32221,
-   "p_correct": 0.051
+   "p_correct": 0.051,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_immune_atlas_donor": [
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 2.422,
+   "se": 0.024,
+   "outfit": 1.813,
+   "n_items": 20548,
+   "p_correct": 0.828,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.265,
+   "se": 0.023,
+   "outfit": 1.604,
+   "n_items": 20548,
+   "p_correct": 0.814,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 2.202,
+   "se": 0.023,
+   "outfit": 1.638,
+   "n_items": 20548,
+   "p_correct": 0.808,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.131,
+   "se": 0.023,
+   "outfit": 1.747,
+   "n_items": 20548,
+   "p_correct": 0.802,
+   "placement": "anchored"
+  },
   {
    "respondent_id": "nystroem_k256_g0.5",
    "ability": 2.006,
    "se": 0.022,
    "outfit": 0.454,
    "n_items": 20548,
-   "p_correct": 0.782
+   "p_correct": 0.782,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k128",
@@ -2042,7 +2544,8 @@
    "se": 0.022,
    "outfit": 0.474,
    "n_items": 20548,
-   "p_correct": 0.781
+   "p_correct": 0.781,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -2050,7 +2553,8 @@
    "se": 0.022,
    "outfit": 0.369,
    "n_items": 20548,
-   "p_correct": 0.775
+   "p_correct": 0.775,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -2058,7 +2562,8 @@
    "se": 0.022,
    "outfit": 0.638,
    "n_items": 20548,
-   "p_correct": 0.775
+   "p_correct": 0.775,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -2066,7 +2571,8 @@
    "se": 0.022,
    "outfit": 0.371,
    "n_items": 20548,
-   "p_correct": 0.775
+   "p_correct": 0.775,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -2074,7 +2580,17 @@
    "se": 0.022,
    "outfit": 0.382,
    "n_items": 20548,
-   "p_correct": 0.774
+   "p_correct": 0.774,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 1.858,
+   "se": 0.022,
+   "outfit": 1.661,
+   "n_items": 20548,
+   "p_correct": 0.774,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -2082,7 +2598,8 @@
    "se": 0.022,
    "outfit": 0.523,
    "n_items": 20548,
-   "p_correct": 0.766
+   "p_correct": 0.766,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -2090,7 +2607,8 @@
    "se": 0.022,
    "outfit": 0.805,
    "n_items": 20548,
-   "p_correct": 0.763
+   "p_correct": 0.763,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -2098,7 +2616,8 @@
    "se": 0.022,
    "outfit": 0.835,
    "n_items": 20548,
-   "p_correct": 0.76
+   "p_correct": 0.76,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -2106,7 +2625,8 @@
    "se": 0.021,
    "outfit": 0.494,
    "n_items": 20548,
-   "p_correct": 0.739
+   "p_correct": 0.739,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -2114,7 +2634,8 @@
    "se": 0.021,
    "outfit": 0.864,
    "n_items": 20548,
-   "p_correct": 0.725
+   "p_correct": 0.725,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -2122,7 +2643,17 @@
    "se": 0.02,
    "outfit": 1.119,
    "n_items": 20548,
-   "p_correct": 0.716
+   "p_correct": 0.716,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 1.222,
+   "se": 0.02,
+   "outfit": 1.431,
+   "n_items": 20548,
+   "p_correct": 0.7,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nmf_k64",
@@ -2130,7 +2661,8 @@
    "se": 0.02,
    "outfit": 0.967,
    "n_items": 20548,
-   "p_correct": 0.694
+   "p_correct": 0.694,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -2138,7 +2670,8 @@
    "se": 0.019,
    "outfit": 1.001,
    "n_items": 20548,
-   "p_correct": 0.638
+   "p_correct": 0.638,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -2146,7 +2679,8 @@
    "se": 0.019,
    "outfit": 1.051,
    "n_items": 20548,
-   "p_correct": 0.631
+   "p_correct": 0.631,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -2154,7 +2688,8 @@
    "se": 0.019,
    "outfit": 0.668,
    "n_items": 20548,
-   "p_correct": 0.629
+   "p_correct": 0.629,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -2162,7 +2697,17 @@
    "se": 0.019,
    "outfit": 0.666,
    "n_items": 20548,
-   "p_correct": 0.629
+   "p_correct": 0.629,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 0.705,
+   "se": 0.019,
+   "outfit": 1.821,
+   "n_items": 20548,
+   "p_correct": 0.633,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k100",
@@ -2170,7 +2715,8 @@
    "se": 0.018,
    "outfit": 1.097,
    "n_items": 20548,
-   "p_correct": 0.561
+   "p_correct": 0.561,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -2178,7 +2724,8 @@
    "se": 0.018,
    "outfit": 1.117,
    "n_items": 20548,
-   "p_correct": 0.544
+   "p_correct": 0.544,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -2186,7 +2733,8 @@
    "se": 0.018,
    "outfit": 0.946,
    "n_items": 20548,
-   "p_correct": 0.52
+   "p_correct": 0.52,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -2194,7 +2742,8 @@
    "se": 0.018,
    "outfit": 1.071,
    "n_items": 20548,
-   "p_correct": 0.458
+   "p_correct": 0.458,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -2202,7 +2751,8 @@
    "se": 0.018,
    "outfit": 1.476,
    "n_items": 20548,
-   "p_correct": 0.401
+   "p_correct": 0.401,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -2210,7 +2760,8 @@
    "se": 0.018,
    "outfit": 1.532,
    "n_items": 20548,
-   "p_correct": 0.392
+   "p_correct": 0.392,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -2218,7 +2769,8 @@
    "se": 0.018,
    "outfit": 1.441,
    "n_items": 20548,
-   "p_correct": 0.375
+   "p_correct": 0.375,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -2226,7 +2778,8 @@
    "se": 0.019,
    "outfit": 2.273,
    "n_items": 20548,
-   "p_correct": 0.271
+   "p_correct": 0.271,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -2234,7 +2787,8 @@
    "se": 0.021,
    "outfit": 2.641,
    "n_items": 20548,
-   "p_correct": 0.184
+   "p_correct": 0.184,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -2242,7 +2796,8 @@
    "se": 0.022,
    "outfit": 2.577,
    "n_items": 20548,
-   "p_correct": 0.159
+   "p_correct": 0.159,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -2250,7 +2805,8 @@
    "se": 0.022,
    "outfit": 3.687,
    "n_items": 20548,
-   "p_correct": 0.156
+   "p_correct": 0.156,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -2258,7 +2814,8 @@
    "se": 0.031,
    "outfit": 7.51,
    "n_items": 20548,
-   "p_correct": 0.064
+   "p_correct": 0.064,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -2266,17 +2823,46 @@
    "se": 0.031,
    "outfit": 8.355,
    "n_items": 20548,
-   "p_correct": 0.061
+   "p_correct": 0.061,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_immune_atlas_tissue": [
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 2.551,
+   "se": 0.024,
+   "outfit": 2.373,
+   "n_items": 23038,
+   "p_correct": 0.817,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 2.339,
+   "se": 0.024,
+   "outfit": 2.411,
+   "n_items": 23038,
+   "p_correct": 0.8,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.298,
+   "se": 0.023,
+   "outfit": 1.824,
+   "n_items": 23038,
+   "p_correct": 0.795,
+   "placement": "anchored"
+  },
   {
    "respondent_id": "scvi_k30_btissue",
    "ability": 2.168,
    "se": 0.023,
    "outfit": 0.867,
    "n_items": 23038,
-   "p_correct": 0.776
+   "p_correct": 0.776,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -2284,7 +2870,8 @@
    "se": 0.023,
    "outfit": 0.501,
    "n_items": 23038,
-   "p_correct": 0.773
+   "p_correct": 0.773,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -2292,7 +2879,17 @@
    "se": 0.023,
    "outfit": 0.79,
    "n_items": 23038,
-   "p_correct": 0.771
+   "p_correct": 0.771,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.114,
+   "se": 0.023,
+   "outfit": 2.342,
+   "n_items": 23038,
+   "p_correct": 0.781,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k128",
@@ -2300,7 +2897,8 @@
    "se": 0.022,
    "outfit": 0.454,
    "n_items": 23038,
-   "p_correct": 0.765
+   "p_correct": 0.765,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -2308,7 +2906,8 @@
    "se": 0.022,
    "outfit": 0.318,
    "n_items": 23038,
-   "p_correct": 0.761
+   "p_correct": 0.761,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -2316,7 +2915,8 @@
    "se": 0.022,
    "outfit": 0.321,
    "n_items": 23038,
-   "p_correct": 0.761
+   "p_correct": 0.761,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -2324,7 +2924,8 @@
    "se": 0.022,
    "outfit": 0.613,
    "n_items": 23038,
-   "p_correct": 0.761
+   "p_correct": 0.761,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -2332,7 +2933,17 @@
    "se": 0.022,
    "outfit": 0.356,
    "n_items": 23038,
-   "p_correct": 0.756
+   "p_correct": 0.756,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 1.912,
+   "se": 0.022,
+   "outfit": 2.078,
+   "n_items": 23038,
+   "p_correct": 0.762,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k32",
@@ -2340,7 +2951,8 @@
    "se": 0.022,
    "outfit": 0.441,
    "n_items": 23038,
-   "p_correct": 0.743
+   "p_correct": 0.743,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -2348,7 +2960,8 @@
    "se": 0.021,
    "outfit": 0.895,
    "n_items": 23038,
-   "p_correct": 0.732
+   "p_correct": 0.732,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -2356,7 +2969,17 @@
    "se": 0.021,
    "outfit": 0.618,
    "n_items": 23038,
-   "p_correct": 0.728
+   "p_correct": 0.728,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 1.332,
+   "se": 0.021,
+   "outfit": 1.548,
+   "n_items": 23038,
+   "p_correct": 0.704,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nmf_k64",
@@ -2364,7 +2987,8 @@
    "se": 0.02,
    "outfit": 0.838,
    "n_items": 23038,
-   "p_correct": 0.697
+   "p_correct": 0.697,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -2372,7 +2996,8 @@
    "se": 0.02,
    "outfit": 1.052,
    "n_items": 23038,
-   "p_correct": 0.686
+   "p_correct": 0.686,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -2380,7 +3005,8 @@
    "se": 0.02,
    "outfit": 0.545,
    "n_items": 23038,
-   "p_correct": 0.663
+   "p_correct": 0.663,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -2388,7 +3014,8 @@
    "se": 0.02,
    "outfit": 0.545,
    "n_items": 23038,
-   "p_correct": 0.663
+   "p_correct": 0.663,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -2396,7 +3023,8 @@
    "se": 0.019,
    "outfit": 1.0,
    "n_items": 23038,
-   "p_correct": 0.642
+   "p_correct": 0.642,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -2404,7 +3032,17 @@
    "se": 0.019,
    "outfit": 0.984,
    "n_items": 23038,
-   "p_correct": 0.635
+   "p_correct": 0.635,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 0.557,
+   "se": 0.019,
+   "outfit": 2.02,
+   "n_items": 23038,
+   "p_correct": 0.614,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k100",
@@ -2412,7 +3050,8 @@
    "se": 0.019,
    "outfit": 0.974,
    "n_items": 23038,
-   "p_correct": 0.589
+   "p_correct": 0.589,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -2420,7 +3059,8 @@
    "se": 0.018,
    "outfit": 1.093,
    "n_items": 23038,
-   "p_correct": 0.551
+   "p_correct": 0.551,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -2428,7 +3068,8 @@
    "se": 0.018,
    "outfit": 0.95,
    "n_items": 23038,
-   "p_correct": 0.529
+   "p_correct": 0.529,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -2436,7 +3077,8 @@
    "se": 0.018,
    "outfit": 0.956,
    "n_items": 23038,
-   "p_correct": 0.483
+   "p_correct": 0.483,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -2444,7 +3086,8 @@
    "se": 0.017,
    "outfit": 1.446,
    "n_items": 23038,
-   "p_correct": 0.446
+   "p_correct": 0.446,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -2452,7 +3095,8 @@
    "se": 0.017,
    "outfit": 1.818,
    "n_items": 23038,
-   "p_correct": 0.41
+   "p_correct": 0.41,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -2460,7 +3104,8 @@
    "se": 0.017,
    "outfit": 1.786,
    "n_items": 23038,
-   "p_correct": 0.37
+   "p_correct": 0.37,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -2468,7 +3113,8 @@
    "se": 0.018,
    "outfit": 1.55,
    "n_items": 23038,
-   "p_correct": 0.291
+   "p_correct": 0.291,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -2476,7 +3122,8 @@
    "se": 0.02,
    "outfit": 2.935,
    "n_items": 23038,
-   "p_correct": 0.197
+   "p_correct": 0.197,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -2484,7 +3131,8 @@
    "se": 0.02,
    "outfit": 3.454,
    "n_items": 23038,
-   "p_correct": 0.171
+   "p_correct": 0.171,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -2492,7 +3140,8 @@
    "se": 0.021,
    "outfit": 5.221,
    "n_items": 23038,
-   "p_correct": 0.147
+   "p_correct": 0.147,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -2500,7 +3149,8 @@
    "se": 0.033,
    "outfit": 6.968,
    "n_items": 23038,
-   "p_correct": 0.048
+   "p_correct": 0.048,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -2508,7 +3158,8 @@
    "se": 0.033,
    "outfit": 5.545,
    "n_items": 23038,
-   "p_correct": 0.048
+   "p_correct": 0.048,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_parse_pbmc_celltype": [
@@ -2518,7 +3169,8 @@
    "se": 0.035,
    "outfit": 0.209,
    "n_items": 16811,
-   "p_correct": 0.892
+   "p_correct": 0.892,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -2526,7 +3178,8 @@
    "se": 0.035,
    "outfit": 0.153,
    "n_items": 16811,
-   "p_correct": 0.891
+   "p_correct": 0.891,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -2534,7 +3187,8 @@
    "se": 0.034,
    "outfit": 0.228,
    "n_items": 16811,
-   "p_correct": 0.889
+   "p_correct": 0.889,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -2542,7 +3196,8 @@
    "se": 0.034,
    "outfit": 0.424,
    "n_items": 16811,
-   "p_correct": 0.888
+   "p_correct": 0.888,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -2550,7 +3205,8 @@
    "se": 0.034,
    "outfit": 0.166,
    "n_items": 16811,
-   "p_correct": 0.888
+   "p_correct": 0.888,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k128",
@@ -2558,7 +3214,8 @@
    "se": 0.034,
    "outfit": 0.217,
    "n_items": 16811,
-   "p_correct": 0.888
+   "p_correct": 0.888,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -2566,7 +3223,8 @@
    "se": 0.034,
    "outfit": 0.166,
    "n_items": 16811,
-   "p_correct": 0.888
+   "p_correct": 0.888,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -2574,7 +3232,8 @@
    "se": 0.034,
    "outfit": 0.183,
    "n_items": 16811,
-   "p_correct": 0.886
+   "p_correct": 0.886,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -2582,7 +3241,17 @@
    "se": 0.034,
    "outfit": 0.476,
    "n_items": 16811,
-   "p_correct": 0.886
+   "p_correct": 0.886,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_geneformer_v2_316m",
+   "ability": 3.276,
+   "se": 0.034,
+   "outfit": 1.523,
+   "n_items": 16811,
+   "p_correct": 0.887,
+   "placement": "anchored"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -2590,7 +3259,8 @@
    "se": 0.033,
    "outfit": 0.437,
    "n_items": 16811,
-   "p_correct": 0.883
+   "p_correct": 0.883,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -2598,7 +3268,8 @@
    "se": 0.033,
    "outfit": 0.34,
    "n_items": 16811,
-   "p_correct": 0.882
+   "p_correct": 0.882,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -2606,7 +3277,8 @@
    "se": 0.033,
    "outfit": 0.393,
    "n_items": 16811,
-   "p_correct": 0.878
+   "p_correct": 0.878,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -2614,7 +3286,8 @@
    "se": 0.033,
    "outfit": 0.46,
    "n_items": 16811,
-   "p_correct": 0.877
+   "p_correct": 0.877,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -2622,7 +3295,8 @@
    "se": 0.032,
    "outfit": 0.3,
    "n_items": 16811,
-   "p_correct": 0.868
+   "p_correct": 0.868,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -2630,7 +3304,35 @@
    "se": 0.032,
    "outfit": 0.302,
    "n_items": 16811,
-   "p_correct": 0.867
+   "p_correct": 0.867,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_uce",
+   "ability": 2.752,
+   "se": 0.03,
+   "outfit": 1.578,
+   "n_items": 16811,
+   "p_correct": 0.856,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_scgpt",
+   "ability": 2.752,
+   "se": 0.03,
+   "outfit": 1.507,
+   "n_items": 16811,
+   "p_correct": 0.856,
+   "placement": "anchored"
+  },
+  {
+   "respondent_id": "fm_state",
+   "ability": 2.699,
+   "se": 0.03,
+   "outfit": 1.476,
+   "n_items": 16811,
+   "p_correct": 0.853,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k100",
@@ -2638,7 +3340,8 @@
    "se": 0.029,
    "outfit": 0.805,
    "n_items": 16811,
-   "p_correct": 0.844
+   "p_correct": 0.844,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -2646,7 +3349,8 @@
    "se": 0.029,
    "outfit": 0.69,
    "n_items": 16811,
-   "p_correct": 0.842
+   "p_correct": 0.842,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -2654,7 +3358,8 @@
    "se": 0.028,
    "outfit": 0.783,
    "n_items": 16811,
-   "p_correct": 0.827
+   "p_correct": 0.827,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -2662,7 +3367,17 @@
    "se": 0.028,
    "outfit": 0.74,
    "n_items": 16811,
-   "p_correct": 0.825
+   "p_correct": 0.825,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_cellplm",
+   "ability": 2.266,
+   "se": 0.027,
+   "outfit": 1.372,
+   "n_items": 16811,
+   "p_correct": 0.82,
+   "placement": "anchored"
   },
   {
    "respondent_id": "gmm_k30",
@@ -2670,7 +3385,17 @@
    "se": 0.026,
    "outfit": 0.95,
    "n_items": 16811,
-   "p_correct": 0.791
+   "p_correct": 0.791,
+   "placement": "refit"
+  },
+  {
+   "respondent_id": "fm_scprint_large_v1",
+   "ability": 1.711,
+   "se": 0.024,
+   "outfit": 2.0,
+   "n_items": 16811,
+   "p_correct": 0.773,
+   "placement": "anchored"
   },
   {
    "respondent_id": "pca_k8",
@@ -2678,7 +3403,8 @@
    "se": 0.023,
    "outfit": 0.992,
    "n_items": 16811,
-   "p_correct": 0.747
+   "p_correct": 0.747,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -2686,7 +3412,8 @@
    "se": 0.02,
    "outfit": 1.557,
    "n_items": 16811,
-   "p_correct": 0.633
+   "p_correct": 0.633,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -2694,7 +3421,8 @@
    "se": 0.02,
    "outfit": 1.522,
    "n_items": 16811,
-   "p_correct": 0.63
+   "p_correct": 0.63,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -2702,7 +3430,8 @@
    "se": 0.02,
    "outfit": 1.657,
    "n_items": 16811,
-   "p_correct": 0.625
+   "p_correct": 0.625,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -2710,7 +3439,8 @@
    "se": 0.019,
    "outfit": 2.583,
    "n_items": 16811,
-   "p_correct": 0.478
+   "p_correct": 0.478,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -2718,7 +3448,8 @@
    "se": 0.019,
    "outfit": 3.301,
    "n_items": 16811,
-   "p_correct": 0.325
+   "p_correct": 0.325,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -2726,7 +3457,8 @@
    "se": 0.02,
    "outfit": 5.117,
    "n_items": 16811,
-   "p_correct": 0.294
+   "p_correct": 0.294,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -2734,7 +3466,8 @@
    "se": 0.024,
    "outfit": 18.902,
    "n_items": 16811,
-   "p_correct": 0.147
+   "p_correct": 0.147,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -2742,7 +3475,8 @@
    "se": 0.034,
    "outfit": 39.627,
    "n_items": 16811,
-   "p_correct": 0.059
+   "p_correct": 0.059,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -2750,7 +3484,8 @@
    "se": 0.035,
    "outfit": 41.219,
    "n_items": 16811,
-   "p_correct": 0.058
+   "p_correct": 0.058,
+   "placement": "refit"
   }
  ],
  "abil_panel_repr_scbasecount_human200_lung": [
@@ -4212,7 +4947,8 @@
    "se": 0.005,
    "outfit": 0.446,
    "n_items": 424478,
-   "p_correct": 0.618
+   "p_correct": 0.618,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -4220,7 +4956,8 @@
    "se": 0.005,
    "outfit": 0.698,
    "n_items": 424478,
-   "p_correct": 0.618
+   "p_correct": 0.618,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -4228,7 +4965,8 @@
    "se": 0.005,
    "outfit": 0.678,
    "n_items": 424478,
-   "p_correct": 0.617
+   "p_correct": 0.617,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k128",
@@ -4236,7 +4974,8 @@
    "se": 0.005,
    "outfit": 0.402,
    "n_items": 424478,
-   "p_correct": 0.615
+   "p_correct": 0.615,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -4244,7 +4983,8 @@
    "se": 0.005,
    "outfit": 0.481,
    "n_items": 424478,
-   "p_correct": 0.612
+   "p_correct": 0.612,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -4252,7 +4992,8 @@
    "se": 0.005,
    "outfit": 0.343,
    "n_items": 424478,
-   "p_correct": 0.612
+   "p_correct": 0.612,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -4260,7 +5001,8 @@
    "se": 0.005,
    "outfit": 0.326,
    "n_items": 424478,
-   "p_correct": 0.612
+   "p_correct": 0.612,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -4268,7 +5010,8 @@
    "se": 0.005,
    "outfit": 0.326,
    "n_items": 424478,
-   "p_correct": 0.612
+   "p_correct": 0.612,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -4276,7 +5019,8 @@
    "se": 0.005,
    "outfit": 0.496,
    "n_items": 424478,
-   "p_correct": 0.607
+   "p_correct": 0.607,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -4284,7 +5028,8 @@
    "se": 0.005,
    "outfit": 0.37,
    "n_items": 424478,
-   "p_correct": 0.597
+   "p_correct": 0.597,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -4292,7 +5037,8 @@
    "se": 0.005,
    "outfit": 0.565,
    "n_items": 424478,
-   "p_correct": 0.585
+   "p_correct": 0.585,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -4300,7 +5046,8 @@
    "se": 0.005,
    "outfit": 0.623,
    "n_items": 424478,
-   "p_correct": 0.584
+   "p_correct": 0.584,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -4308,7 +5055,8 @@
    "se": 0.005,
    "outfit": 0.791,
    "n_items": 424478,
-   "p_correct": 0.579
+   "p_correct": 0.579,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -4316,7 +5064,8 @@
    "se": 0.004,
    "outfit": 0.476,
    "n_items": 424478,
-   "p_correct": 0.55
+   "p_correct": 0.55,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -4324,7 +5073,8 @@
    "se": 0.004,
    "outfit": 0.475,
    "n_items": 424478,
-   "p_correct": 0.55
+   "p_correct": 0.55,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -4332,7 +5082,8 @@
    "se": 0.004,
    "outfit": 0.863,
    "n_items": 424478,
-   "p_correct": 0.529
+   "p_correct": 0.529,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -4340,7 +5091,8 @@
    "se": 0.004,
    "outfit": 0.865,
    "n_items": 424478,
-   "p_correct": 0.527
+   "p_correct": 0.527,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k100",
@@ -4348,7 +5100,8 @@
    "se": 0.004,
    "outfit": 0.851,
    "n_items": 424478,
-   "p_correct": 0.516
+   "p_correct": 0.516,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -4356,7 +5109,8 @@
    "se": 0.004,
    "outfit": 0.885,
    "n_items": 424478,
-   "p_correct": 0.492
+   "p_correct": 0.492,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -4364,7 +5118,8 @@
    "se": 0.004,
    "outfit": 0.893,
    "n_items": 424478,
-   "p_correct": 0.453
+   "p_correct": 0.453,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -4372,7 +5127,8 @@
    "se": 0.004,
    "outfit": 0.953,
    "n_items": 424478,
-   "p_correct": 0.453
+   "p_correct": 0.453,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -4380,7 +5136,8 @@
    "se": 0.004,
    "outfit": 1.365,
    "n_items": 424478,
-   "p_correct": 0.372
+   "p_correct": 0.372,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -4388,7 +5145,8 @@
    "se": 0.004,
    "outfit": 1.406,
    "n_items": 424478,
-   "p_correct": 0.369
+   "p_correct": 0.369,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -4396,7 +5154,8 @@
    "se": 0.004,
    "outfit": 1.421,
    "n_items": 424478,
-   "p_correct": 0.345
+   "p_correct": 0.345,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -4404,7 +5163,8 @@
    "se": 0.004,
    "outfit": 1.968,
    "n_items": 424478,
-   "p_correct": 0.295
+   "p_correct": 0.295,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -4412,7 +5172,8 @@
    "se": 0.005,
    "outfit": 2.892,
    "n_items": 424478,
-   "p_correct": 0.196
+   "p_correct": 0.196,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -4420,7 +5181,8 @@
    "se": 0.005,
    "outfit": 2.856,
    "n_items": 424478,
-   "p_correct": 0.196
+   "p_correct": 0.196,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -4428,7 +5190,8 @@
    "se": 0.005,
    "outfit": 6.991,
    "n_items": 424478,
-   "p_correct": 0.151
+   "p_correct": 0.151,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -4436,7 +5199,8 @@
    "se": 0.006,
    "outfit": 8.473,
    "n_items": 424478,
-   "p_correct": 0.095
+   "p_correct": 0.095,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -4444,7 +5208,8 @@
    "se": 0.006,
    "outfit": 8.375,
    "n_items": 424478,
-   "p_correct": 0.094
+   "p_correct": 0.094,
+   "placement": "refit"
   }
  ],
  "abil_A_ts2": [
@@ -4454,7 +5219,8 @@
    "se": 0.022,
    "outfit": 0.545,
    "n_items": 20026,
-   "p_correct": 0.654
+   "p_correct": 0.654,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k256",
@@ -4462,7 +5228,8 @@
    "se": 0.022,
    "outfit": 0.683,
    "n_items": 20026,
-   "p_correct": 0.65
+   "p_correct": 0.65,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g0.5",
@@ -4470,7 +5237,8 @@
    "se": 0.021,
    "outfit": 0.533,
    "n_items": 20026,
-   "p_correct": 0.64
+   "p_correct": 0.64,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k64",
@@ -4478,7 +5246,8 @@
    "se": 0.021,
    "outfit": 0.394,
    "n_items": 20026,
-   "p_correct": 0.636
+   "p_correct": 0.636,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k64",
@@ -4486,7 +5255,8 @@
    "se": 0.021,
    "outfit": 0.397,
    "n_items": 20026,
-   "p_correct": 0.635
+   "p_correct": 0.635,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k256_g2",
@@ -4494,7 +5264,8 @@
    "se": 0.021,
    "outfit": 0.582,
    "n_items": 20026,
-   "p_correct": 0.634
+   "p_correct": 0.634,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g0.5",
@@ -4502,7 +5273,8 @@
    "se": 0.021,
    "outfit": 0.428,
    "n_items": 20026,
-   "p_correct": 0.63
+   "p_correct": 0.63,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_bnone",
@@ -4510,7 +5282,8 @@
    "se": 0.021,
    "outfit": 0.729,
    "n_items": 20026,
-   "p_correct": 0.627
+   "p_correct": 0.627,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k32",
@@ -4518,7 +5291,8 @@
    "se": 0.021,
    "outfit": 0.46,
    "n_items": 20026,
-   "p_correct": 0.606
+   "p_correct": 0.606,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k64",
@@ -4526,7 +5300,8 @@
    "se": 0.021,
    "outfit": 0.682,
    "n_items": 20026,
-   "p_correct": 0.599
+   "p_correct": 0.599,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k30_btissue",
@@ -4534,7 +5309,8 @@
    "se": 0.021,
    "outfit": 0.786,
    "n_items": 20026,
-   "p_correct": 0.596
+   "p_correct": 0.596,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s0",
@@ -4542,7 +5318,8 @@
    "se": 0.02,
    "outfit": 0.846,
    "n_items": 20026,
-   "p_correct": 0.582
+   "p_correct": 0.582,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k128_s1",
@@ -4550,7 +5327,8 @@
    "se": 0.02,
    "outfit": 0.86,
    "n_items": 20026,
-   "p_correct": 0.581
+   "p_correct": 0.581,
+   "placement": "refit"
   },
   {
    "respondent_id": "nystroem_k64_g2",
@@ -4558,7 +5336,8 @@
    "se": 0.02,
    "outfit": 0.834,
    "n_items": 20026,
-   "p_correct": 0.574
+   "p_correct": 0.574,
+   "placement": "refit"
   },
   {
    "respondent_id": "scvi_k10_btissue",
@@ -4566,7 +5345,8 @@
    "se": 0.02,
    "outfit": 0.731,
    "n_items": 20026,
-   "p_correct": 0.552
+   "p_correct": 0.552,
+   "placement": "refit"
   },
   {
    "respondent_id": "ica_k16",
@@ -4574,7 +5354,8 @@
    "se": 0.02,
    "outfit": 0.633,
    "n_items": 20026,
-   "p_correct": 0.526
+   "p_correct": 0.526,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k16",
@@ -4582,7 +5363,8 @@
    "se": 0.02,
    "outfit": 0.632,
    "n_items": 20026,
-   "p_correct": 0.526
+   "p_correct": 0.526,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k100",
@@ -4590,7 +5372,8 @@
    "se": 0.019,
    "outfit": 0.725,
    "n_items": 20026,
-   "p_correct": 0.464
+   "p_correct": 0.464,
+   "placement": "refit"
   },
   {
    "respondent_id": "nmf_k16",
@@ -4598,7 +5381,8 @@
    "se": 0.019,
    "outfit": 0.906,
    "n_items": 20026,
-   "p_correct": 0.461
+   "p_correct": 0.461,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s1",
@@ -4606,7 +5390,8 @@
    "se": 0.019,
    "outfit": 1.11,
    "n_items": 20026,
-   "p_correct": 0.44
+   "p_correct": 0.44,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k32_s0",
@@ -4614,7 +5399,8 @@
    "se": 0.019,
    "outfit": 1.086,
    "n_items": 20026,
-   "p_correct": 0.426
+   "p_correct": 0.426,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k30",
@@ -4622,7 +5408,8 @@
    "se": 0.019,
    "outfit": 1.209,
    "n_items": 20026,
-   "p_correct": 0.394
+   "p_correct": 0.394,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k8",
@@ -4630,7 +5417,8 @@
    "se": 0.019,
    "outfit": 1.035,
    "n_items": 20026,
-   "p_correct": 0.359
+   "p_correct": 0.359,
+   "placement": "refit"
   },
   {
    "respondent_id": "pca_k4",
@@ -4638,7 +5426,8 @@
    "se": 0.02,
    "outfit": 1.65,
    "n_items": 20026,
-   "p_correct": 0.251
+   "p_correct": 0.251,
+   "placement": "refit"
   },
   {
    "respondent_id": "gmm_k10",
@@ -4646,7 +5435,8 @@
    "se": 0.02,
    "outfit": 1.796,
    "n_items": 20026,
-   "p_correct": 0.228
+   "p_correct": 0.228,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s0",
@@ -4654,7 +5444,8 @@
    "se": 0.021,
    "outfit": 1.494,
    "n_items": 20026,
-   "p_correct": 0.211
+   "p_correct": 0.211,
+   "placement": "refit"
   },
   {
    "respondent_id": "rproj_k8_s1",
@@ -4662,7 +5453,8 @@
    "se": 0.021,
    "outfit": 1.721,
    "n_items": 20026,
-   "p_correct": 0.199
+   "p_correct": 0.199,
+   "placement": "refit"
   },
   {
    "respondent_id": "depth2",
@@ -4670,7 +5462,8 @@
    "se": 0.022,
    "outfit": 1.995,
    "n_items": 20026,
-   "p_correct": 0.156
+   "p_correct": 0.156,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s1",
@@ -4678,7 +5471,8 @@
    "se": 0.03,
    "outfit": 4.253,
    "n_items": 20026,
-   "p_correct": 0.066
+   "p_correct": 0.066,
+   "placement": "refit"
   },
   {
    "respondent_id": "random_k32_s0",
@@ -4686,7 +5480,8 @@
    "se": 0.03,
    "outfit": 4.255,
    "n_items": 20026,
-   "p_correct": 0.066
+   "p_correct": 0.066,
+   "placement": "refit"
   }
  ],
  "abil_B_pooled": [
@@ -4914,7 +5709,7 @@
     "ability": -0.74,
     "se": 0.12,
     "p_correct": 0.35,
-    "outfit": 1.5,
+    "outfit": 1.49,
     "rank": 1
    },
    {
@@ -4922,7 +5717,7 @@
     "ability": -0.91,
     "se": 0.12,
     "p_correct": 0.33,
-    "outfit": 2.12,
+    "outfit": 2.11,
     "rank": 2
    },
    {
@@ -4930,7 +5725,7 @@
     "ability": -1.15,
     "se": 0.12,
     "p_correct": 0.31,
-    "outfit": 0.49,
+    "outfit": 0.52,
     "rank": 3
    },
    {
@@ -4938,7 +5733,7 @@
     "ability": -1.4,
     "se": 0.13,
     "p_correct": 0.28,
-    "outfit": 2.09,
+    "outfit": 2.06,
     "rank": 4
    },
    {
@@ -4946,7 +5741,7 @@
     "ability": -1.51,
     "se": 0.13,
     "p_correct": 0.27,
-    "outfit": 0.95,
+    "outfit": 0.94,
     "rank": 5
    },
    {
@@ -4954,23 +5749,23 @@
     "ability": -1.51,
     "se": 0.13,
     "p_correct": 0.27,
-    "outfit": 0.61,
+    "outfit": 0.6,
     "rank": 6
    },
    {
     "respondent_id": "ridge_d10_lam100",
-    "ability": -1.52,
+    "ability": -1.53,
     "se": 0.13,
     "p_correct": 0.27,
-    "outfit": 0.41,
+    "outfit": 0.4,
     "rank": 7
    },
    {
     "respondent_id": "gp_d50_ls2",
-    "ability": -1.57,
+    "ability": -1.58,
     "se": 0.13,
     "p_correct": 0.27,
-    "outfit": 0.35,
+    "outfit": 0.34,
     "rank": 8
    },
    {
@@ -4991,7 +5786,7 @@
    },
    {
     "respondent_id": "ridge_d50_lam100",
-    "ability": -1.89,
+    "ability": -1.9,
     "se": 0.13,
     "p_correct": 0.24,
     "outfit": 0.23,
@@ -4999,7 +5794,7 @@
    },
    {
     "respondent_id": "pcareg_k20",
-    "ability": -2.13,
+    "ability": -2.14,
     "se": 0.14,
     "p_correct": 0.22,
     "outfit": 0.25,
@@ -5007,7 +5802,7 @@
    },
    {
     "respondent_id": "pcareg_k50",
-    "ability": -2.34,
+    "ability": -2.35,
     "se": 0.14,
     "p_correct": 0.2,
     "outfit": 0.19,
@@ -5015,275 +5810,259 @@
    },
    {
     "respondent_id": "ridge_d50_lam1",
-    "ability": -2.44,
+    "ability": -2.45,
     "se": 0.14,
     "p_correct": 0.2,
-    "outfit": 0.19,
+    "outfit": 0.18,
     "rank": 14
    },
    {
     "respondent_id": "pcareg_k100",
-    "ability": -2.46,
+    "ability": -2.47,
     "se": 0.14,
     "p_correct": 0.19,
-    "outfit": 0.2,
+    "outfit": 0.19,
     "rank": 15
    },
    {
     "respondent_id": "pcareg_k200",
-    "ability": -2.65,
+    "ability": -2.66,
     "se": 0.15,
     "p_correct": 0.18,
     "outfit": 0.2,
     "rank": 16
    },
    {
-    "respondent_id": "scgen",
-    "ability": -2.94,
-    "se": 0.15,
-    "p_correct": 0.16,
-    "outfit": 0.69,
-    "rank": 17
-   },
-   {
     "respondent_id": "knn_k20",
-    "ability": -3.15,
+    "ability": -3.16,
     "se": 0.16,
     "p_correct": 0.15,
     "outfit": 0.55,
-    "rank": 18
+    "rank": 17
    },
    {
     "respondent_id": "knn_k5",
-    "ability": -3.22,
+    "ability": -3.24,
     "se": 0.16,
     "p_correct": 0.14,
-    "outfit": 0.41,
-    "rank": 19
+    "outfit": 0.44,
+    "rank": 18
    },
    {
     "respondent_id": "ridge_d50_lam100_tf0.3",
-    "ability": -3.22,
+    "ability": -3.24,
     "se": 0.16,
     "p_correct": 0.14,
     "outfit": 0.48,
-    "rank": 20
+    "rank": 19
    },
    {
     "respondent_id": "knn_k1",
-    "ability": -3.27,
+    "ability": -3.29,
     "se": 0.16,
     "p_correct": 0.14,
-    "outfit": 0.68,
-    "rank": 21
+    "outfit": 0.76,
+    "rank": 20
    },
    {
     "respondent_id": "knn_k20_tf0.3",
-    "ability": -3.84,
+    "ability": -3.86,
     "se": 0.17,
     "p_correct": 0.11,
     "outfit": 0.56,
-    "rank": 22
+    "rank": 21
    },
    {
     "respondent_id": "ridge_d50_lam100_tf0.1",
-    "ability": -4.22,
+    "ability": -4.23,
     "se": 0.18,
     "p_correct": 0.09,
-    "outfit": 0.29,
-    "rank": 23
+    "outfit": 0.32,
+    "rank": 22
    },
    {
     "respondent_id": "target_kd",
-    "ability": -4.39,
+    "ability": -4.4,
     "se": 0.19,
     "p_correct": 0.08,
-    "outfit": 7.4,
-    "rank": 24
+    "outfit": 7.43,
+    "rank": 23
    },
    {
     "respondent_id": "knn_k20_tf0.1",
-    "ability": -4.42,
+    "ability": -4.43,
     "se": 0.19,
     "p_correct": 0.08,
-    "outfit": 0.76,
-    "rank": 25
+    "outfit": 0.75,
+    "rank": 24
    },
    {
     "respondent_id": "control_mean",
-    "ability": -4.64,
+    "ability": -4.65,
     "se": 0.2,
     "p_correct": 0.07,
-    "outfit": 0.61,
-    "rank": 26
+    "outfit": 0.76,
+    "rank": 25
    },
    {
     "respondent_id": "random_shift_s0",
     "ability": -4.89,
     "se": 0.2,
     "p_correct": 0.06,
-    "outfit": 0.32,
-    "rank": 27
+    "outfit": 0.38,
+    "rank": 26
    },
    {
     "respondent_id": "random_shift_s1",
-    "ability": -4.97,
+    "ability": -4.98,
     "se": 0.21,
     "p_correct": 0.06,
     "outfit": 0.7,
-    "rank": 28
+    "rank": 27
    }
   ],
   "McFarlandTsherniak2020": [
    {
     "respondent_id": "pcareg_k200",
-    "ability": 4.73,
+    "ability": 5.13,
     "se": 0.16,
     "p_correct": 0.9,
-    "outfit": 0.21,
+    "outfit": 0.23,
     "rank": 1
    },
    {
     "respondent_id": "pcareg_k100",
-    "ability": 3.38,
-    "se": 0.13,
+    "ability": 3.64,
+    "se": 0.14,
     "p_correct": 0.82,
-    "outfit": 0.22,
+    "outfit": 0.23,
     "rank": 2
    },
    {
-    "respondent_id": "scgen",
-    "ability": 3.15,
+    "respondent_id": "pcareg_k50",
+    "ability": 2.79,
     "se": 0.13,
-    "p_correct": 0.81,
-    "outfit": 1.94,
+    "p_correct": 0.77,
+    "outfit": 0.17,
     "rank": 3
    },
    {
-    "respondent_id": "pcareg_k50",
-    "ability": 2.65,
-    "se": 0.12,
-    "p_correct": 0.77,
-    "outfit": 0.19,
+    "respondent_id": "pcareg_k20",
+    "ability": 2.12,
+    "se": 0.13,
+    "p_correct": 0.73,
+    "outfit": 0.21,
     "rank": 4
    },
    {
-    "respondent_id": "pcareg_k20",
-    "ability": 2.07,
+    "respondent_id": "pcareg_k10",
+    "ability": 1.41,
     "se": 0.12,
-    "p_correct": 0.73,
-    "outfit": 0.21,
+    "p_correct": 0.67,
+    "outfit": 0.26,
     "rank": 5
    },
    {
-    "respondent_id": "pcareg_k10",
-    "ability": 1.43,
+    "respondent_id": "pcareg_k5",
+    "ability": 0.54,
     "se": 0.11,
-    "p_correct": 0.67,
-    "outfit": 0.27,
+    "p_correct": 0.59,
+    "outfit": 0.44,
     "rank": 6
    },
    {
-    "respondent_id": "pcareg_k5",
-    "ability": 0.62,
+    "respondent_id": "pcareg_k2",
+    "ability": -0.1,
     "se": 0.1,
-    "p_correct": 0.59,
-    "outfit": 0.44,
+    "p_correct": 0.52,
+    "outfit": 0.7,
     "rank": 7
    },
    {
-    "respondent_id": "pcareg_k2",
-    "ability": 0.01,
+    "respondent_id": "lowrank_r10",
+    "ability": -0.98,
     "se": 0.1,
-    "p_correct": 0.52,
-    "outfit": 0.71,
+    "p_correct": 0.42,
+    "outfit": 1.09,
     "rank": 8
    },
    {
-    "respondent_id": "lowrank_r10",
-    "ability": -0.86,
+    "respondent_id": "lowrank_r5",
+    "ability": -1.32,
     "se": 0.1,
-    "p_correct": 0.42,
-    "outfit": 1.11,
+    "p_correct": 0.38,
+    "outfit": 1.23,
     "rank": 9
    },
    {
-    "respondent_id": "lowrank_r5",
-    "ability": -1.19,
+    "respondent_id": "lowrank_r2",
+    "ability": -1.4,
     "se": 0.1,
-    "p_correct": 0.38,
-    "outfit": 1.24,
+    "p_correct": 0.37,
+    "outfit": 2.38,
     "rank": 10
    },
    {
-    "respondent_id": "lowrank_r2",
-    "ability": -1.28,
-    "se": 0.1,
-    "p_correct": 0.37,
-    "outfit": 2.31,
+    "respondent_id": "random_shift_s0",
+    "ability": -3.25,
+    "se": 0.12,
+    "p_correct": 0.18,
+    "outfit": 6.42,
     "rank": 11
    },
    {
-    "respondent_id": "random_shift_s0",
-    "ability": -3.13,
+    "respondent_id": "random_shift_s1",
+    "ability": -3.27,
     "se": 0.12,
     "p_correct": 0.18,
-    "outfit": 4.4,
+    "outfit": 5.16,
     "rank": 12
    },
    {
-    "respondent_id": "random_shift_s1",
-    "ability": -3.15,
-    "se": 0.12,
-    "p_correct": 0.18,
-    "outfit": 2.61,
+    "respondent_id": "control_mean",
+    "ability": -4.43,
+    "se": 0.15,
+    "p_correct": 0.1,
+    "outfit": 3.13,
     "rank": 13
    },
    {
-    "respondent_id": "control_mean",
-    "ability": -4.31,
-    "se": 0.15,
-    "p_correct": 0.1,
-    "outfit": 1.79,
-    "rank": 14
-   },
-   {
     "respondent_id": "target_kd",
-    "ability": -9.81,
-    "se": 0.92,
+    "ability": -9.9,
+    "se": 0.91,
     "p_correct": 0.0,
     "outfit": 0.0,
-    "rank": 15
+    "rank": 14
    }
   ],
   "SrivatsanTrapnell2020_sciplex3": [
    {
     "respondent_id": "pcareg_k50",
-    "ability": 0.07,
+    "ability": 0.11,
     "se": 0.06,
     "p_correct": 0.52,
-    "outfit": 0.36,
+    "outfit": 0.34,
     "rank": 1
    },
    {
     "respondent_id": "pcareg_k100",
-    "ability": -0.04,
+    "ability": -0.01,
     "se": 0.06,
     "p_correct": 0.51,
-    "outfit": 0.37,
+    "outfit": 0.35,
     "rank": 2
    },
    {
     "respondent_id": "pcareg_k20",
-    "ability": -0.05,
+    "ability": -0.02,
     "se": 0.06,
     "p_correct": 0.51,
-    "outfit": 0.36,
+    "outfit": 0.34,
     "rank": 3
    },
    {
     "respondent_id": "pcareg_k200",
-    "ability": -0.18,
+    "ability": -0.15,
     "se": 0.06,
     "p_correct": 0.49,
     "outfit": 0.39,
@@ -5291,10 +6070,10 @@
    },
    {
     "respondent_id": "pcareg_k10",
-    "ability": -0.49,
+    "ability": -0.47,
     "se": 0.06,
     "p_correct": 0.45,
-    "outfit": 0.39,
+    "outfit": 0.36,
     "rank": 5
    },
    {
@@ -5302,7 +6081,7 @@
     "ability": -0.72,
     "se": 0.06,
     "p_correct": 0.42,
-    "outfit": 1.16,
+    "outfit": 1.17,
     "rank": 6
    },
    {
@@ -5310,7 +6089,7 @@
     "ability": -0.79,
     "se": 0.06,
     "p_correct": 0.41,
-    "outfit": 0.45,
+    "outfit": 0.43,
     "rank": 7
    },
    {
@@ -5318,64 +6097,56 @@
     "ability": -0.88,
     "se": 0.06,
     "p_correct": 0.4,
-    "outfit": 1.0,
+    "outfit": 0.98,
     "rank": 8
    },
    {
     "respondent_id": "lowrank_r2",
-    "ability": -0.88,
+    "ability": -0.89,
     "se": 0.06,
     "p_correct": 0.4,
-    "outfit": 1.4,
+    "outfit": 1.39,
     "rank": 9
    },
    {
     "respondent_id": "pcareg_k2",
-    "ability": -0.89,
+    "ability": -0.9,
     "se": 0.06,
     "p_correct": 0.4,
-    "outfit": 0.63,
+    "outfit": 0.6,
     "rank": 10
    },
    {
-    "respondent_id": "scgen",
-    "ability": -2.04,
-    "se": 0.06,
-    "p_correct": 0.25,
-    "outfit": 1.5,
+    "respondent_id": "random_shift_s0",
+    "ability": -3.41,
+    "se": 0.07,
+    "p_correct": 0.12,
+    "outfit": 2.67,
     "rank": 11
    },
    {
-    "respondent_id": "random_shift_s0",
-    "ability": -3.3,
+    "respondent_id": "random_shift_s1",
+    "ability": -3.47,
     "se": 0.07,
-    "p_correct": 0.12,
-    "outfit": 1.9,
+    "p_correct": 0.11,
+    "outfit": 3.23,
     "rank": 12
    },
    {
-    "respondent_id": "random_shift_s1",
-    "ability": -3.36,
-    "se": 0.07,
-    "p_correct": 0.11,
-    "outfit": 2.28,
+    "respondent_id": "control_mean",
+    "ability": -3.81,
+    "se": 0.08,
+    "p_correct": 0.09,
+    "outfit": 3.37,
     "rank": 13
    },
    {
-    "respondent_id": "control_mean",
-    "ability": -3.7,
-    "se": 0.08,
-    "p_correct": 0.09,
-    "outfit": 2.03,
-    "rank": 14
-   },
-   {
     "respondent_id": "target_kd",
-    "ability": -9.75,
+    "ability": -9.81,
     "se": 0.92,
     "p_correct": 0.0,
     "outfit": 0.0,
-    "rank": 15
+    "rank": 14
    }
   ],
   "tahoe100m": [
