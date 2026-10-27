@@ -3227,6 +3227,15 @@
    "placement": "refit"
   },
   {
+   "respondent_id": "fm_transcriptformer",
+   "ability": 3.307,
+   "se": 0.034,
+   "outfit": 1.552,
+   "n_items": 16811,
+   "p_correct": 0.89,
+   "placement": "anchored"
+  },
+  {
    "respondent_id": "pca_k32",
    "ability": 3.305,
    "se": 0.034,

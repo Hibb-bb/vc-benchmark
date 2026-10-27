@@ -572,8 +572,7 @@ in the appendix gives plain accuracy.
 \caption{Pretrained foundation models on the curated Part A panels, next to the best
 simple models. Each column is one panel's own fit; abilities are comparable within a
 column. HLCA d.\ and s.\ are the lung atlas with donors and with studies held out; Immune
-d.\ and t.\ the immune atlas with donors and with tissues held out. The dash marks the one
-run still in progress, TranscriptFormer on Parse PBMC.}
+d.\ and t.\ the immune atlas with donors and with tissues held out.}
 \label{tab:fm}
 \footnotesize
 \input{bench/tab_fm.tex}
@@ -592,7 +591,8 @@ $2.55$) are above every simple model under both splits; UCE is above them with d
 out and just below them with tissues held out. On the lung atlas with donors held out,
 scGPT and Geneformer ($2.67$, $2.65$) are level with PCA-128D ($2.69$). With studies held
 out, the best foundation model, scGPT at $2.47$, is $0.35$ below tissue-corrected
-scVI-30D. On Parse PBMC, Geneformer ($3.28$) is $0.13$ below Nystr\"om-256D, and CellPLM is
+scVI-30D. On Parse PBMC, TranscriptFormer and Geneformer ($3.31$, $3.28$) are $0.10$ and $0.13$ below
+Nystr\"om-256D ($3.41$), and CellPLM is
 at $2.27$. On the adult heart panel, the top is flat: TranscriptFormer and scGPT ($0.64$),
 Nystr\"om-256D ($0.63$) and Geneformer ($0.58$) are within $0.06$ of one another, while
 STATE, CellPLM and scPRINT fall to between $-0.49$ and $0.02$. On Tabula Sapiens,
@@ -606,13 +606,12 @@ panels. It is within half a point on Hao PBMC, Parse PBMC and the donor-held-out
 atlas, and 2.6 points behind on the study-held-out lung atlas.
 
 The foundation models were also placed on the pooled scale of \Cref{fig:abilities}a, again
-with difficulties held fixed, from the cells of the curated panels they answered: 126,402
-cells, or 109,591 for TranscriptFormer and CellPLM, whose Parse runs came later. Tabula
-Sapiens and the six scBaseCount panels are not yet included. Placed this way, scGPT
-($1.07$), Geneformer ($1.06$) and TranscriptFormer ($1.02$) are above the best simple model
-($0.72$), UCE ($0.88$) and STATE ($0.76$) are just above it, CellPLM is at $0.37$ and
-scPRINT at $-0.20$. Because these values rest on the curated panels only, the per-panel
-fits in \Cref{tab:fm} are the fairer comparison for now.
+with difficulties held fixed, from the 146,428 cells of the eight curated panels. The six
+scBaseCount panels are not yet included. Placed this way, Geneformer ($1.05$), scGPT
+($1.02$) and TranscriptFormer ($1.01$) are above the best simple model ($0.72$), UCE
+($0.87$) and STATE ($0.75$) are just above it, CellPLM is at $0.36$ and scPRINT at
+$-0.15$. Because these values rest on the curated panels only, the per-panel fits in
+\Cref{tab:fm} are the fairer comparison for now.
 
 The foundation models also behave differently from the simple pool in one way that the
 scale makes visible. Their outfit values are 1.1 to 3.8, with a median of 1.7. Simple
@@ -756,7 +755,7 @@ being replaced by it.
 \caption{Part A models on the pooled cell-level scale of all fourteen panels, 424,478
 items: ability and plain accuracy, which is the fraction of test cells labelled
 correctly. $^\dagger$Pretrained foundation models, placed afterwards with difficulties held
-fixed, from the cells of the curated panels other than Tabula Sapiens. Their accuracy is
+fixed, from the cells of the eight curated panels. Their accuracy is
 over those cells only, which are easier than the scBaseCount cells, so it cannot be
 compared with the other rows.}
 \label{tab:abilA}
