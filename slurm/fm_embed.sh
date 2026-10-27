@@ -36,6 +36,11 @@ case "$EMBEDDER" in
                       export LAMINDB_STORAGE="$SCFM_IRT/cache/scprint_workdir/lamindb" LAMIN_CACHE_DIR="$SCFM_IRT/cache/scprint_workdir/lamin_cache" ;;
   transcriptformer)   VENV=.venv-transcriptformer; PYMOD=python/3.12.10; export SCFM_TRANSCRIPTFORMER_WORKDIR="$SCFM_IRT/cache/tf_workdir" ;;
   langcell)           VENV=.venv-langcell;        PYMOD=python/3.10.1; export SCFM_LANGCELL_WORKDIR="$SCFM_IRT/cache/langcell_workdir" ;;
+  tahoex1_70m|tahoex1_1b)
+                      VENV=.venv-tahoex1;         PYMOD=python/3.10.1; export SCFM_TAHOEX1_WORKDIR="$SCFM_IRT/cache/tahoex1_workdir"
+                      command -v module >/dev/null 2>&1 && module load apptainer/1.1.9 ;;
+  aidocell_3m|aidocell_10m|aidocell_100m)
+                      VENV=.venv-aidocell;        PYMOD=python/3.10.1; export HF_HOME="$SCFM_IRT/cache/aidocell_workdir/hf" ;;
   state)              VENV=.venv-state;           PYMOD=python/3.12.10; export SCFM_STATE_WORKDIR="$SCFM_IRT/cache/state_workdir" ;;
   *) echo "[fm] unknown embedder $EMBEDDER"; exit 1 ;;
 esac

@@ -5,7 +5,7 @@ import re
 # scfm-irt registry name -> display name (respondent id is fm_<registry name>)
 FM_NAMES = {
     "scgpt": "scGPT (whole-human)", "geneformer": "Geneformer V1-10M", "geneformer_v2": "Geneformer V2-104M", "geneformer_v2_316m": "Geneformer V2-316M",
-    "uce": "UCE (4 layer)", "scimilarity": "SCimilarity v1.1", "cellplm": "CellPLM 85M", "scfoundation": "scFoundation", "scprint": "scPRINT medium v1.5",
+    "uce": "UCE (4 layer)", "scimilarity": "SCimilarity v1.1", "cellplm": "CellPLM 85M", "scfoundation": "scFoundation", "aidocell_3m": "AIDO.Cell 3M", "aidocell_10m": "AIDO.Cell 10M", "aidocell_100m": "AIDO.Cell 100M", "tahoex1_70m": "Tahoe-x1 70M", "tahoex1_1b": "Tahoe-x1 1B", "scprint": "scPRINT medium v1.5",
     "scprint2": "scPRINT small v2", "scprint_small_v1": "scPRINT small v1", "scprint_medium_v1": "scPRINT medium v1", "scprint_large_v1": "scPRINT large v1",
     "transcriptformer": "TranscriptFormer (sapiens)", "langcell": "LangCell", "state": "STATE SE-600M",
 }
