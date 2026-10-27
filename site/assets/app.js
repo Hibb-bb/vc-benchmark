@@ -52,13 +52,13 @@ function chrome() {
     nav.innerHTML = `<div class="nav-inner">
       <a class="brand" href="${BASE}">${MARK}<span>Virtual Cell Bench</span><span class="ver">0.1</span></a>
       <nav class="nav-links" aria-label="Site">${PAGES.map(([h, l]) => `<a href="${BASE}${h}"${page === h.replace('/', '') ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
-      <a class="theme-btn" href="${BASE}virtual-cell-bench-0.1.pdf" title="Read the paper (PDF)" aria-label="Read the paper (PDF)">${PAPER}</a></div>`;
+      <a class="theme-btn" href="${BASE}virtual-cell-bench-0.1.pdf" target="_blank" rel="noopener" title="Read the paper (PDF)" aria-label="Read the paper (PDF)">${PAPER}</a></div>`;
   }
   const foot = $('#footer');
   if (foot) {
     foot.className = 'footer';
     foot.innerHTML = `<div class="footer-inner"><span>Virtual Cell Bench 0.1 · a living item-response benchmark for virtual cell models.</span>
-      <span><a href="${BASE}virtual-cell-bench-0.1.pdf">paper (PDF)</a> · <a href="https://github.com/Hibb-bb/vc-benchmark">Code and item bank on GitHub</a> · <a href="${BASE}versions/">scale versions</a> · <a href="${BASE}contribute/">contribute</a></span></div>`;
+      <span><a href="${BASE}virtual-cell-bench-0.1.pdf" target="_blank" rel="noopener">paper (PDF)</a> · <a href="https://github.com/Hibb-bb/vc-benchmark">Code and item bank on GitHub</a> · <a href="${BASE}versions/">scale versions</a> · <a href="${BASE}contribute/">contribute</a></span></div>`;
   }
   // one floating tooltip for every chart; marks carry data-tip (HTML allowed, we build it ourselves)
   const tip = document.createElement('div'); tip.id = 'tip'; tip.hidden = true; document.body.appendChild(tip);
