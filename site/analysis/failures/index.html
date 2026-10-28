@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Failure modes · Virtual Cell Bench</title>
+<meta name="description" content="Why perturbation models fail on Parse cytokine responses: what makes an item hard, with simple definitions of every quantity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="module" src="../../assets/app.js"></script>
+</head>
+<body data-page="failures" data-base="../../">
+<div id="nav"></div>
+<main>
+  <header class="wrap page-head">
+    <p class="kicker"><a href="../">Analysis</a> · Parse cytokine screen · unseen combinations</p>
+    <h1>Why models fail on cytokine responses</h1>
+    <p>Most hard items are hard because the response was barely measured, not because the models got the biology wrong.</p>
+    <div class="fm-tiles" id="tiles"></div>
+  </header>
+
+  <section class="wrap section tight" id="scoring">
+    <div class="head"><h2>1 · How a model is scored</h2><p class="lead">Each item is one cytokine in one donor's cell type. A model passes if it beats the context's average response.</p></div>
+    <div class="grid cols-2">
+      <div class="fig"><div id="rule"></div><p class="foot">Correlation is taken over the 2,000 most variable genes.</p></div>
+      <div class="fig"><dl class="fm-gloss" id="gloss"></dl></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="dials">
+    <div class="head"><h2>2 · Two things decide whether an item can be passed</h2><p class="lead">How reliably the response was measured, and how close the average response already is.</p></div>
+    <div class="grid cols-2">
+      <div class="fig"><h3>Share of models passing</h3><p class="sub">Rows: reliability. Columns: how well the average response already fits.</p><div id="heat"></div></div>
+      <div class="fig"><h3>Reliability matters, raw effect size does not</h3><p class="sub">Share of models passing, items grouped into tenths.</p><div id="curves"></div><div id="curves-leg" class="legend"></div></div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="kinds">
+    <div class="head"><h2>3 · Six kinds of item</h2><p class="lead">Only the first kind is a fair test of the model. Each card shows one real item.</p></div>
+    <div class="fig"><div id="stack"></div><div id="stack-leg" class="legend"></div></div>
+    <div class="fm-cards" id="cards"></div>
+  </section>
+
+  <section class="wrap section" id="biology">
+    <div class="head"><h2>4 · The biology behind it</h2><p class="lead">Cells respond when they carry the receptor and the signal is strong. Interferons and common-gamma-chain cytokines are easy; cytokines aimed at tissues are not.</p></div>
+    <div class="grid cols-2">
+      <div class="fm-col">
+        <div class="fig"><h3>By cytokine</h3><p class="sub">Share of models passing, all 90 cytokines. Colour is the signalling family.</p><div id="cyt"></div><div id="cyt-leg" class="legend"></div></div>
+        <div class="fig"><h3>Donor</h3><div id="don"></div><p class="foot"><i class="sw" style="--c:var(--s7)"></i> donors with high baseline interferon activity: their cells respond differently.</p></div>
+      </div>
+      <div class="fm-col">
+        <div class="fig"><h3>Receptor expression in the cell type</h3><p class="sub">Share of models passing, by how much receptor the untreated cells carry.</p><div id="rec"></div></div>
+        <div class="fig"><h3>Cell lineage</h3><div id="lin"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section" id="rank">
+    <div class="head"><h2>5 · Noisy items still rank models</h2><p class="lead">Even on unreliable items, stronger models pass more. Noise lowers precision; it does not scramble the order.</p></div>
+    <div class="fig"><div id="rankchart"></div><div id="rank-leg" class="legend"></div></div>
+  </section>
+
+  <section class="wrap section" id="models">
+    <div class="head"><h2>6 · Four numbers per model</h2><p class="lead">Pass rate and ability come from the pass rule; the two correlations from the raw predictions.</p></div>
+    <div class="fig"><div class="tbl-wrap"><table id="mtable"></table></div><p class="foot" id="mfoot"></p></div>
+  </section>
+
+  <section class="wrap section" id="meaning">
+    <div class="head"><h2>What this means</h2></div>
+    <div class="grid cols-3">
+      <div class="card"><h3>For model builders</h3><p class="sub">Read the pass rate on clear items first. Elsewhere, a model can only gain by matching noise or by beating an already-good average.</p></div>
+      <div class="card"><h3>For biologists</h3><p class="sub">Failures cluster where cells lack the receptor, in rare cell types, and in donors whose cells were already interferon-activated.</p></div>
+      <div class="card"><h3>For the benchmark</h3><p class="sub">Weight items by reliability, report the correlation after removing the average, and flag non-cytokines (Megalin, IL-18Ra).</p></div>
+    </div>
+  </section>
+</main>
+<div id="footer"></div>
+</body>
+</html>

@@ -11,7 +11,7 @@
 | response strength (L2) | +0.01 | 3.2 | 2.93 | 2.7 |
 | signal-to-noise | -0.56 | 1.13 | 1.62 | 1.2 |
 | agreement with other donors | -0.72 | 0.183 | 0.42 | 0.164 |
-| receptor expression | -0.24 | 0.00361 | 0.00867 | 0.00305 |
+| receptor expression | -0.22 | 0.00549 | 0.0134 | 0.00363 |
 | interferon-gene share | -0.29 | 0.00159 | 0.00444 | 0.00292 |
 | cells per item | -0.40 | 166 | 404 | 292 |
 | mean-shift reference r | +0.37 | 0.393 | 0.344 | 0.45 |
@@ -62,7 +62,7 @@
 | response strength (L2) | -0.29 | 2.83 | 3.2 | 2.9 |
 | signal-to-noise | -0.54 | 1.3 | 1.83 | 1.21 |
 | agreement with other donors | -0.36 | 0.308 | 0.451 | 0.248 |
-| receptor expression | -0.20 | 0.00449 | 0.00928 | 0.00584 |
+| receptor expression | -0.18 | 0.00712 | 0.0136 | 0.00927 |
 | interferon-gene share | -0.39 | 0.00224 | 0.00595 | 0.00231 |
 | cells per item | -0.21 | 286 | 438 | 230 |
 | mean-shift reference r | +0.09 | 0.384 | 0.328 | 0.39 |
@@ -104,34 +104,3 @@
 | CD4 T | 3107 | -0.32 | 18% |
 | monocyte | 2041 | -0.74 | 10% |
 
-
-## Failure modes (2026-10-28)
-
-"Hard" = the hardest 10% of items that someone passed, plus every item nobody passed. "No real response" =
-signal-to-noise below 1.5 and agreement with the other donors below 0.3. "Real response" = signal-to-noise
-at least 2 and donor agreement at least 0.5.
-
-| split | hard items | hard with no real response | same share among other items | hard with a real response |
-|---|---|---|---|---|
-| unseen combination | 3,031 | 2,306 (76%) | 15% | 18 (1%) |
-| unseen cytokine | 6,417 | 3,131 (49%) | 9% | 341 (5%) |
-
-1. Most hard items have nothing to predict. The cytokine barely moves those cells: the shift is the size of
-   sampling noise and does not repeat in the other donors. Raw response size does not track difficulty
-   (r = +0.01) because noise inflates it; signal-to-noise (r = -0.56) and donor agreement (r = -0.72) do.
-2. Receptor absence explains much of it. Items whose cell type barely expresses the cytokine's receptor
-   (control mean below 0.01) average difficulty +0.47; items with clear receptor expression (above 0.2) -1.02.
-   The hardest cytokines (IL-26, IL-17E, SCF, IL-35, HGF, LIF, GDNF, FLT3L, 4-1BBL, Megalin) mostly act on
-   tissue or progenitor cells, not on circulating blood cells.
-3. The easy cytokines are the strong JAK-STAT signals: type I and II interferons and the common-gamma-chain
-   cytokines (IL-2, IL-4, IL-7, IL-15), plus IL-1-beta and CD40L. Their responses repeat across donors
-   (agreement 0.73 to 0.88).
-4. When the response is real but the item is hard in the unseen-combination split, the response looks
-   like the cell type's average response (mean-shift reference r 0.80 against 0.37 overall): the pass
-   rule asks to beat a reference that is already nearly right.
-5. In the unseen-cytokine split, real but missed responses concentrate on cytokines with a distinctive
-   programme that other cytokines do not predict: IFN-epsilon, IFN-lambda1 and 3, IFN-alpha1, IL-32-beta,
-   TSLP, IL-21, IL-3, IL-4, IL-12, mostly in CD4 memory T cells and CD14 monocytes. These are the genuine
-   generalisation failures.
-6. Innate-like T cells (MAIT, NKT) and NK cells are the hardest lineages, monocytes the easiest; fewer cells
-   per item (r = -0.40) adds noise.

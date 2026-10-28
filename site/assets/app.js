@@ -273,5 +273,5 @@ export function wright(el, b, comp, scale, { w = 620, h = 440, animate = true, m
 /* ---------- boot ---------- */
 chrome();
 const page = document.body.dataset.page;
-const modules = { home: './home.js', leaderboard: './leaderboard.js', datasets: './datasets.js', items: './items.js', analysis: './analysis.js', anatomy: './anatomy.js', link: './link.js', how: './how.js' };
+const modules = { failures: './failures.js', home: './home.js', leaderboard: './leaderboard.js', datasets: './datasets.js', items: './items.js', analysis: './analysis.js', anatomy: './anatomy.js', link: './link.js', how: './how.js' };
 if (modules[page]) import(modules[page]).then((m) => m.default()).catch((e) => { console.error(e); const el = $('#err'); if (el) { el.hidden = false; el.textContent = 'Could not load the data for this page: ' + e.message; } });

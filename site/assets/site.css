@@ -324,3 +324,26 @@ dl.kv dd { margin: 0.1rem 0 0; font-family: var(--mono); font-size: 0.88rem; }
 
 .toggle { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: var(--fg-2); cursor: pointer; }
 .toggle input { accent-color: var(--accent); }
+
+/* ---------- failure modes page (analysis/failures/) ---------- */
+.fm-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 0.8rem; margin-top: 1.4rem; }
+.fm-tile { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem 1rem; display: grid; gap: 0.3rem; align-content: start; background: var(--bg-2); }
+.fm-tile b { font-family: var(--display); font-size: 1.9rem; line-height: 1.05; letter-spacing: -0.01em; }
+.fm-tile span { font-size: 0.86rem; color: var(--fg-2); }
+.fm-gloss { display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1rem; margin: 0; font-size: 0.88rem; }
+.fm-gloss dt { font-weight: 600; }
+.fm-gloss dd { margin: 0; color: var(--fg-2); }
+.fm-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1rem; margin-top: 1rem; }
+.fm-card { border-top: 4px solid var(--c); }
+.fm-meter { height: 6px; background: var(--bg-3); border-radius: 999px; overflow: hidden; }
+.fm-meter i { display: block; height: 100%; background: var(--c); }
+.fm-item { border: 1px dashed var(--line-2); border-radius: 8px; padding: 0.6rem 0.7rem; display: grid; gap: 0.4rem; }
+.fm-item-h { font-weight: 600; font-size: 0.92rem; }
+.fm-item-h span { color: var(--fg-3); font-weight: 400; }
+.fm-item-h em { font-style: normal; font-weight: 400; color: var(--fg-3); margin-left: 0.5rem; font-size: 0.82rem; }
+.fm-item dl { display: grid; grid-template-columns: auto 1fr; gap: 0.1rem 0.8rem; margin: 0; font-size: 0.82rem; }
+.fm-item dt { color: var(--fg-3); }
+.fm-item dd { margin: 0; font-family: var(--mono); font-size: 0.8rem; }
+.fm-col { display: grid; gap: 1rem; align-content: start; }
+.foot .sw, .fm-col .sw { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; background: var(--c); vertical-align: -1px; }
+body[data-page="failures"] .fig { align-content: start; }

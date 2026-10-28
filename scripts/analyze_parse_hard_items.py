@@ -16,8 +16,9 @@ Descriptors
   response leaves little room to beat it.
 - reproducibility: Pearson r between the item's shift and the mean shift of the same cytokine in the
   same cell type in the other donors (a ceiling set by biology and noise, not by any model).
-- receptor expression: for the cytokine's receptor subunits (src/vcb/data/parse_cytokines.tsv), the
-  lowest control mean expression across required subunits in that donor and cell type.
+- receptor expression: for each alternative receptor complex of the cytokine (receptor_complexes in
+  src/vcb/data/parse_cytokines.tsv), the lowest control mean expression across its required subunits;
+  the item takes the best complex (a cell needs only one working receptor).
 - interferon share: share of the squared shift carried by a fixed set of interferon-stimulated genes.
 - cytokine family, cell lineage, donor, cells per item.
 """
@@ -79,13 +80,16 @@ f["ifn_share"] = (Dh[:, isg] ** 2).sum(1) / ((Dh ** 2).sum(1) + 1e-12)
 
 # receptor expression in the responding cells' controls
 def receptor_level(cyt, ctx):
-    rec = [g for g in str(ref["receptor_genes"].get(cyt, "")).split(",") if g in gpos]
-    if not rec:
+    """Best receptor complex: max over alternative complexes of the min over its required subunits."""
+    alts = [[g for g in c.split("+") if g] for c in str(ref["receptor_complexes"].get(cyt, "")).split("|")]
+    alts = [c for c in alts if c and all(g in gpos for g in c)]
+    if not alts:
         return np.nan
     m = np.asarray(stats[ctx]["mean"])
-    return float(min(m[gpos[g]] for g in rec))
+    return float(max(min(m[gpos[g]] for g in c) for c in alts))
 f["receptor_expr"] = [receptor_level(c, x) for c, x in zip(f["cytokine"], f["context"].astype(str))]
 f["receptor_known"] = f["receptor_expr"].notna()
+f["is_cytokine"] = f["cytokine"].map(ref["is_cytokine"].astype(str).str.lower().eq("true")).fillna(True)
 
 # reproducibility across donors (same cytokine, same cell type)
 key = f["cytokine"] + "|" + f["cell_type"]
