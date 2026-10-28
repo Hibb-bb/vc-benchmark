@@ -57,7 +57,11 @@ function chrome() {
   const foot = $('#footer');
   if (foot) {
     foot.className = 'footer';
-    foot.innerHTML = `<div class="footer-inner"><span>Virtual Cell Bench 0.1 · a living item-response benchmark for virtual cell models.</span>
+    foot.innerHTML = `<div class="footer-logos" aria-label="With support from">
+      <img src="${BASE}assets/logos/biohub.png" alt="CZ Biohub" height="32">
+      <img src="${BASE}assets/logos/northwestern.png" alt="Northwestern University" height="34">
+      <img src="${BASE}assets/logos/cfmg.png" alt="Center for Foundation Models and Generative AI, Northwestern University" height="56"></div>
+    <div class="footer-inner"><span>Virtual Cell Bench 0.1 · a living item-response benchmark for virtual cell models.</span>
       <span><a href="${BASE}virtual-cell-bench-0.1.pdf" target="_blank" rel="noopener">paper (PDF)</a> · <a href="https://github.com/Hibb-bb/vc-benchmark">Code and item bank on GitHub</a> · <a href="${BASE}versions/">scale versions</a> · <a href="${BASE}contribute/">contribute</a></span></div>`;
   }
   // one floating tooltip for every chart; marks carry data-tip (HTML allowed, we build it ourselves)
