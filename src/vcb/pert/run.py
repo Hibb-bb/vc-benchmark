@@ -33,9 +33,11 @@ def hvg_mask(items: ad.AnnData, n_top: int = 2000) -> np.ndarray:
     return mask
 
 
-def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: str = "perturbation", n_folds: int = 5, seed: int = 0, min_cells: int = 50, pool=None, merge: bool = False) -> pd.DataFrame:
+def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: str = "perturbation", n_folds: int = 5, seed: int = 0, min_cells: int = 50, pool=None, merge: bool = False, features=None) -> pd.DataFrame:
     """pool: explicit list of respondents (default: default_pool). merge=True appends/replaces
-    these respondents in an existing scores table instead of rewriting it."""
+    these respondents in an existing scores table instead of rewriting it. features: optional
+    callable meta -> (F, found) that overrides the built-in item features (e.g. cytokine gene
+    representations from a pretrained model)."""
     t0 = time.time()
     items = ad.read_h5ad(items_path)
     dataset_id = items.obs["dataset_id"].iloc[0]
@@ -49,7 +51,12 @@ def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: 
 
     # Features
     featured = genetic
-    if genetic:
+    if features is not None:
+        F, found = features(meta)
+        meta["target_in_var"] = found
+        featured = True
+        print(f"  external features {F.shape} for {found.mean():.1%} of items", flush=True)
+    elif genetic:
         cells = ad.read_h5ad(cells_path)
         ctrl_cells = cells[cells.obs["is_control"].values.astype(bool)]
         gene_emb = gene_embedding_from_controls(ctrl_cells.X, items.var_names, seed=seed)
