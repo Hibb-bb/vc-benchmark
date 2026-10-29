@@ -24,7 +24,7 @@ from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[2]
 T = ROOT / "runs" / "pert_text"
-keys = (T / "emb" / "keys.txt").read_text().split()
+keys = (T / "emb" / "keys.txt").read_text().splitlines()
 kpos = {k: i for i, k in enumerate(keys)}
 EMB = {}
 for f in sorted((T / "emb").glob("*.npy")):

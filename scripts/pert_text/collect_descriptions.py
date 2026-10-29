@@ -131,14 +131,17 @@ for d in drugs:
     cid = tahoe["pubchem_cid"].get(d) if d in tahoe.index else None
     if cid is None or pd.isna(cid):
         name = d.split(" (")[0]
-        j = http_json(f"{PUG}/compound/name/{urllib.parse.quote(name)}/cids/JSON", timeout=30)
+        j = http_json(f"{PUG}/compound/name/{urllib.parse.quote(name)}/cids/JSON", timeout=15)
         cid = (j or {}).get("IdentifierList", {}).get("CID", [None])[0]
     desc = ""
     if cid:
-        j = http_json(f"{PUG}/compound/cid/{int(cid)}/description/JSON", timeout=30)
+        j = http_json(f"{PUG}/compound/cid/{int(cid)}/description/JSON", timeout=15)
         infos = [x.get("Description") for x in (j or {}).get("InformationList", {}).get("Information", []) if x.get("Description")]
         desc = infos[0] if infos else ""
     dinfo.loc[d] = [cid, desc]
+    if len(dinfo) % 20 == 0:
+        dinfo.to_parquet(dcache)             # save as we go: PubChem is slow and a killed run should resume
+        print(f"  drugs {len(dinfo)}/{len(drugs)}", flush=True)
     time.sleep(0.25)
 dinfo.to_parquet(dcache)
 print(f"drugs: {len(drugs)}; with PubChem text {int((dinfo.reindex(drugs)['description'].fillna('') != '').sum())}", flush=True)
