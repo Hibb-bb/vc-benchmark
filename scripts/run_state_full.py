@@ -44,7 +44,9 @@ STATE = os.environ.get("STATE_BIN", str(ROOT.parent / "scfm-irt" / ".venv-state"
 W = ROOT / "cache" / "statetx_full" / f"fold{a.fold}{'_debug' if a.debug else ''}"
 steps = 300 if a.debug else a.max_steps
 
-if a.stage == "train":
+if a.stage == "train" and (W / "TRAINED").exists():
+    log("training already finished for this fold; nothing to do")
+elif a.stage == "train":
     assert (W / "data" / "train.h5ad").exists(), f"build the data first: scripts/state_full_fold_data.py --fold {a.fold}"
     # STATE needs a validation set: a few (cell type, cytokine) pairs held back from its own fit
     (W / "split.toml").write_text("\n".join([
@@ -72,7 +74,10 @@ else:
            "--pert-col", "cytokine", "--celltype-col", "cell_type", "--batch-col", "donor", "--control-pert", "PBS",
            "--output", str(W / "pred.h5ad")] + (["--checkpoint", str(ck)] if ck.exists() else [])
     log("infer: " + " ".join(cmd[2:]))
-    subprocess.run(cmd, check=True, cwd=W)
+    # our own checkpoints store NumPy scalars (best validation score); allow exactly those types in torch's
+    # weights-only loader (cache/statetx_full/pyhooks/sitecustomize.py) rather than disabling it
+    env = dict(os.environ, PYTHONPATH=str(ROOT / "cache" / "statetx_full" / "pyhooks") + os.pathsep + os.environ.get("PYTHONPATH", ""))
+    subprocess.run(cmd, check=True, cwd=W, env=env)
     q = ad.read_h5ad(W / "query.h5ad", backed="r").obs
     pr = ad.read_h5ad(W / "pred.h5ad")
     P = pr.X.toarray() if hasattr(pr.X, "toarray") else np.asarray(pr.X)

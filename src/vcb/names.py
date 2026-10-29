@@ -12,7 +12,7 @@ FM_NAMES = {
 
 
 GENE_SOURCES = {"scgpt": "scGPT", "geneformer": "Geneformer", "scfoundation": "scFoundation", "esm2": "ESM2", "ctrlpca": "control cells"}
-STATETX = {"state": "STATE transition", "state_sm": "STATE transition (small)", "cpa": "CPA (STATE package)", "scvi": "scVI (STATE package)"}
+STATETX = {"state": "STATE transition (30 cells per condition)", "state_full": "STATE transition (all cells, Arc settings)", "state_sm": "STATE transition (small)", "cpa": "CPA (STATE package)", "scvi": "scVI (STATE package)"}
 
 
 def display_name(rid: str) -> str:
