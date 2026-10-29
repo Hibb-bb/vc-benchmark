@@ -17,7 +17,7 @@ const GLOSS = [
   ['Pass', 'The model\'s predicted shift correlates with the truth better than the average response does.'],
   ['Pass rate', 'Share of items a model passes, or share of models that pass an item.'],
   ['Difficulty, ability', 'Pass rates put on one logit scale. Ability above an item\'s difficulty: likely to pass.'],
-  ['Reliability', 'How well two random halves of the item\'s cells agree. Near 0: the shift is noise.'],
+  ['Reliability', ''],
   ['Signal-to-noise', 'Size of the shift divided by the size expected from sampling noise alone.'],
   ['Receptor expression', 'Expression of the cytokine\'s receptor in untreated cells of that type.'],
 ];
@@ -51,7 +51,8 @@ function rule(D) {
   s += `<text x="${x0}" y="${34 + 3 * rowH - 6}" style="font-size:11px;fill:var(--fg-3)">one bar per gene</text>`;
   s += `<rect x="${x0 + 220}" y="${34 + 3 * rowH - 22}" width="150" height="26" rx="13" fill="var(--s3)" opacity=".15"/><text x="${x0 + 295}" y="${34 + 3 * rowH - 4}" text-anchor="middle" style="font-size:12px;font-weight:600;fill:var(--s3)">0.93 &gt; 0.46 → pass</text>`;
   $('#rule').innerHTML = s + '</svg>';
-  const g = D.meta.has_reliability ? GLOSS : GLOSS.map(([t, d]) => (t === 'Reliability' ? [t, 'How well the same cytokine\'s shift in this cell type agrees across the other donors. Near 0: noise.'] : [t, d]));
+  const g = GLOSS.map(([t, d]) => (t === 'Reliability' ? (D.meta.has_reliability ? [t, 'How well two random halves of the item\'s own cells agree. Near 0: the shift is mostly noise.'] : ['Donor agreement', 'How well this donor\'s shift matches the same cytokine and cell type in the other donors. Low: a different response, or noise.']) : [t, d]));
+  $('#defs-note').textContent = D.meta.has_reliability ? 'Charts labelled "reliability" use within-item reliability; the item cards show both it and donor agreement.' : 'Within-item reliability is still being computed from the full 9.7-million-cell file; until then, charts labelled "reliability" use donor agreement.';
   $('#gloss').innerHTML = g.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('');
 }
 

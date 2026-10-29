@@ -51,15 +51,19 @@ ap.add_argument("--cell-set-len", type=int, default=None, help="override model.k
 ap.add_argument("--pred-cells", type=int, default=64, help="control cells relabelled per test item")
 ap.add_argument("--debug", action="store_true", help="few contexts, 200 steps: checks the code path")
 ap.add_argument("--work", default=None)
+ap.add_argument("--infer-only", action="store_true", help="skip training; predict from the run's best.ckpt (e.g. after a time-limit kill)")
 a = ap.parse_args()
 t0 = time.time()
 log = lambda s: print(f"[{time.time()-t0:6.0f}s] {s}", flush=True)
 resp = a.respondent or f"statetx_{a.model}"
 STATE = os.environ.get("STATE_BIN", str(ROOT.parent / "scfm-irt" / ".venv-state" / "bin" / "state"))
 work = Path(a.work or ROOT / "cache" / "statetx" / f"{resp}_{a.dataset}_fold{a.fold}{'_debug' if a.debug else ''}")
-if work.exists():
-    shutil.rmtree(work)
-(work / "data").mkdir(parents=True)
+if a.infer_only:
+    assert (work / "run" / "checkpoints").exists(), f"no checkpoints under {work}"
+else:
+    if work.exists():
+        shutil.rmtree(work)
+    (work / "data").mkdir(parents=True)
 
 items = ad.read_h5ad(DATA / "items" / f"{a.dataset}.items.h5ad")
 meta, D, ctrl_rows = item_table(items)
@@ -99,10 +103,11 @@ def obs_frame(pert, ctx):
 
 o = obs_frame(np.where(is_ctrl[sel], "control", cobs["perturbation"].astype(str).values[sel]), cell_ctx[sel])
 o.index = cobs.index[sel].astype(str)
-train = ad.AnnData(X=sp.csr_matrix(Xh), obs=o, var=pd.DataFrame(index=genes))
-train.obsm["X_hvg"] = Xh
-train.write_h5ad(work / "data" / "train.h5ad")
-log(f"wrote training file {train.shape}")
+if not a.infer_only:
+    train = ad.AnnData(X=sp.csr_matrix(Xh), obs=o, var=pd.DataFrame(index=genes))
+    train.obsm["X_hvg"] = Xh
+    train.write_h5ad(work / "data" / "train.h5ad")
+    log(f"wrote training file {train.shape}")
 
 # STATE needs a validation set: a few training (context, cytokine) pairs held back from its own fit
 rng = np.random.default_rng(a.fold)
@@ -125,8 +130,11 @@ cmd = [STATE, "tx", "train",
        f"model={a.model}", "use_wandb=false", f"output_dir={work}", "name=run"]
 if a.cell_set_len:
     cmd.append(f"model.kwargs.cell_set_len={a.cell_set_len}")
-log("train: " + " ".join(cmd[2:]))
-subprocess.run(cmd, check=True, cwd=work)
+if a.infer_only:
+    log("inference only: training skipped")
+else:
+    log("train: " + " ".join(cmd[2:]))
+    subprocess.run(cmd, check=True, cwd=work)
 
 # prediction input: controls of each test item's context, relabelled with the item's cytokine
 ctrl_by_ctx = {c: np.where((o["pert"].values == "control") & (o["cell_type"].values == c))[0] for c in np.unique(o["cell_type"].values)}
@@ -148,6 +156,9 @@ query.write_h5ad(work / "query.h5ad")
 cmd = [STATE, "tx", "infer", "--model-dir", str(work / "run"), "--adata", str(work / "query.h5ad"),
        "--embed-key", "X_hvg", "--pert-col", "pert", "--celltype-col", "cell_type", "--batch-col", "gem_group",
        "--control-pert", "control", "--output", str(work / "pred.h5ad")]
+ck = work / "run" / "checkpoints" / "best.ckpt"
+if ck.exists():
+    cmd += ["--checkpoint", str(ck)]
 log("infer: " + " ".join(cmd[2:]))
 subprocess.run(cmd, check=True, cwd=work)
 pred_ad = ad.read_h5ad(work / "pred.h5ad")
