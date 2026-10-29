@@ -31,8 +31,7 @@
       <h3>How each item quantity is computed</h3>
       <div class="fm-def"><b>Response, Δ</b><span>Mean expression of treated cells minus mean of untreated (PBS) cells, same donor and cell type, per gene (log of counts per 10,000, 2,000 most variable genes).</span><code>Δ = mean(treated) − mean(control)</code></div>
       <div class="fm-def"><b>Signal-to-noise</b><span>Size of the response divided by the size expected if the cytokine did nothing. Near 1: indistinguishable from no effect.</span><code>‖Δ‖ ÷ √( Σ<sub>genes</sub> σ²<sub>control</sub> · (1/n<sub>treated</sub> + 1/n<sub>control</sub>) )</code></div>
-      <div class="fm-def"><b>Within-item reliability</b><span>Split the item's treated and control cells at random into two halves, compute Δ in each, correlate the halves, scale up to full size. Low: the measurement is noisy, even within one donor.</span><code>2r ÷ (1 + r),  r = corr(Δ<sub>half 1</sub>, Δ<sub>half 2</sub>)</code></div>
-      <div class="fm-def"><b>Donor agreement</b><span>Correlation of this donor's Δ with the average Δ of the same cytokine and cell type in the other donors. Low: this donor's cells responded differently, or the measurement is noisy.</span><code>corr(Δ<sub>donor</sub>, mean Δ<sub>other donors</sub>)</code></div>
+            <div class="fm-def"><b>Donor agreement</b><span>Correlation of this donor's Δ with the average Δ of the same cytokine and cell type in the other donors. Low: this donor's cells responded differently, or the measurement is noisy.</span><code>corr(Δ<sub>donor</sub>, mean Δ<sub>other donors</sub>)</code></div>
       <div class="fm-def"><b>Average-response fit</b><span>How well the bar to beat already matches the truth.</span><code>corr(Δ, Δ<sub>average response</sub>)</code></div>
       <div class="fm-def"><b>Receptor expression</b><span>Mean expression in untreated cells of the least-expressed subunit of the best receptor complex (a cell needs only one working receptor).</span><code>max<sub>complexes</sub> min<sub>subunits</sub> mean(control)</code></div>
       <p class="foot" id="defs-note"></p>
@@ -40,10 +39,10 @@
   </section>
 
   <section class="wrap section" id="dials">
-    <div class="head"><h2>2 · Two things decide whether an item can be passed</h2><p class="lead">How reliably the response was measured, and how close the average response already is.</p></div>
+    <div class="head"><h2>2 · Two things decide whether an item can be passed</h2><p class="lead">How far the response stands above noise, and how close the average response already is.</p></div>
     <div class="grid cols-2">
-      <div class="fig"><h3>Share of models passing</h3><p class="sub">Rows: reliability. Columns: how well the average response already fits.</p><div id="heat"></div></div>
-      <div class="fig"><h3>Reliability matters, raw effect size does not</h3><p class="sub">Share of models passing, items grouped into tenths.</p><div id="curves"></div><div id="curves-leg" class="legend"></div></div>
+      <div class="fig"><h3>Share of models passing</h3><p class="sub">Rows: signal-to-noise. Columns: how well the average response already fits.</p><div id="heat"></div></div>
+      <div class="fig"><h3>Signal-to-noise matters, raw effect size does not</h3><p class="sub">Share of models passing, items grouped into tenths.</p><div id="curves"></div><div id="curves-leg" class="legend"></div></div>
     </div>
   </section>
 
@@ -68,7 +67,7 @@
   </section>
 
   <section class="wrap section" id="rank">
-    <div class="head"><h2>5 · Noisy items still rank models</h2><p class="lead">Even on unreliable items, stronger models pass more. Noise lowers precision; it does not scramble the order.</p></div>
+    <div class="head"><h2>5 · Noisy items still rank models</h2><p class="lead">Even on low signal-to-noise items, stronger models pass more. Noise lowers precision; it does not scramble the order.</p></div>
     <div class="fig"><div id="rankchart"></div><div id="rank-leg" class="legend"></div></div>
   </section>
 
@@ -82,7 +81,7 @@
     <div class="grid cols-3">
       <div class="card"><h3>For model builders</h3><p class="sub">Read the pass rate on clear items first. Elsewhere, a model can only gain by matching noise or by beating an already-good average.</p></div>
       <div class="card"><h3>For biologists</h3><p class="sub">Failures cluster where cells lack the receptor, in rare cell types, and in donors whose cells were already interferon-activated.</p></div>
-      <div class="card"><h3>For the benchmark</h3><p class="sub">Weight items by reliability, report the correlation after removing the average, and flag non-cytokines (Megalin, IL-18Ra).</p></div>
+      <div class="card"><h3>For the benchmark</h3><p class="sub">Weight items by signal-to-noise, report the correlation after removing the average, and flag non-cytokines (Megalin, IL-18Ra).</p></div>
     </div>
   </section>
 </main>

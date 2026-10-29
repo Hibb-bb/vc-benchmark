@@ -26,23 +26,23 @@ sh = A / "split_half.parquet"
 has_rel = sh.exists()
 if has_rel:
     f = f.join(pd.read_parquet(sh)[["reliability"]])
-rel = f["reliability"] if has_rel else f["reproducibility"]
-f["rel"] = rel
+f["rel"] = f["snr"]            # one measure of measurement quality: signal-to-noise
+rel_check = float(f["snr"].corr(f["reliability"], method="spearman")) if has_rel else None
 d, p, nb, ref = f["difficulty_context"], f["p_correct_context"], f["nobody_context"], f["reference_r_context"]
 
 # ---- classes ----
-donor_specific = (f["rel"] >= 0.5) & (f["reproducibility"] < 0.3) if has_rel else pd.Series(False, index=f.index)
+donor_specific = (f["rel"] >= 2) & (f["reproducibility"] < 0.3)
 cls = np.select(
-    [donor_specific, (f["rel"] >= 0.5) & (ref < 0.5), (f["rel"] >= 0.5) & (ref >= 0.5),
-     (f["rel"] < 0.3) & (f["n_cells"] < 300), (f["rel"] < 0.3)],
+    [donor_specific, (f["rel"] >= 2) & (ref < 0.5), (f["rel"] >= 2) & (ref >= 0.5),
+     (f["rel"] < 1.5) & (f["n_cells"] < 300), (f["rel"] < 1.5)],
     ["donor", "clear", "refright", "fewcells", "noresp"], default="between")
 f["cls"] = cls
 CLASSES = [
-    ("clear", "Clear response", "Measured reliably; the reference is not already right. A fair test of the model."),
-    ("refright", "Reference already right", "Measured reliably, but the context's average response is nearly the answer, so it is hard to beat."),
-    ("donor", "Donor-specific response", "Reliable in this donor, different in the others. Seen only in other donors, it cannot be inferred."),
-    ("between", "In between", "Partly reliable. Mixed reasons."),
-    ("noresp", "No detectable response", "Enough cells, but the shift is the size of noise: little or nothing to predict."),
+    ("clear", "Clear response", "Signal-to-noise 2 or more; the average response is not already right. A fair test of the model."),
+    ("refright", "Reference already right", "Clear response, but the context's average response is nearly the answer, so it is hard to beat."),
+    ("donor", "Donor-specific response", "Clear in this donor, different in the others. Seen only in other donors, it cannot be inferred."),
+    ("between", "In between", "Signal-to-noise 1.5 to 2: a weak response. Mixed reasons."),
+    ("noresp", "No detectable response", "Signal-to-noise below 1.5 despite enough cells: little or nothing to predict."),
     ("fewcells", "Too few cells", "Under 300 cells: the shift is mostly sampling noise."),
 ]
 q90 = d[~nb].quantile(0.9)
@@ -80,7 +80,7 @@ for k, name, desc in CLASSES:
                     "ref_r": float(ref[m].median()) if m.any() else None, "example": examples.get(k)})
 
 # ---- two dials: pass rate by reliability x reference r ----
-rel_edges = [-1, 0.2, 0.35, 0.5, 0.7, 1.01]
+rel_edges = [0, 1.2, 1.5, 2, 3, 1000]
 ref_edges = [-1, 0.2, 0.35, 0.5, 0.7, 1.01]
 rb = pd.cut(f.rel, rel_edges, right=False, labels=False)
 fb = pd.cut(ref, ref_edges, right=False, labels=False)
@@ -104,7 +104,7 @@ ab = pd.read_csv(RUNS / "pert_pool_v0" / "rasch" / f"{DS}.{SCH}.abilities.csv")
 pool = ab[ab.get("placement", pd.Series("refit", index=ab.index)).fillna("refit") != "anchored"]
 b = binarize(sc)
 abil = pool.set_index("respondent_id")["ability"]
-bands = [("unreliable (below 0.3)", f.rel < 0.3), ("partly reliable (0.3 to 0.5)", (f.rel >= 0.3) & (f.rel < 0.5)), ("reliable (0.5 and above)", f.rel >= 0.5)]
+bands = [("signal-to-noise below 1.5", f.rel < 1.5), ("signal-to-noise 1.5 to 2", (f.rel >= 1.5) & (f.rel < 2)), ("signal-to-noise 2 and above", f.rel >= 2)]
 rank = []
 for name, m in bands:
     pr = b[b.item_id.isin(f.index[m]) & b.respondent_id.isin(abil.index)].groupby("respondent_id").k.mean()
@@ -150,7 +150,7 @@ ms_r = float(r_all.get("mean_shift", np.nan))
 out = {
     "meta": {"n_items": int(len(f)), "n_cytokines": int(f.cytokine.nunique()), "n_contexts": int(f.context.nunique()), "n_donors": int(f.donor.nunique()),
              "n_cell_types": int(f.cell_type.nunique()), "n_models": n_models, "has_reliability": bool(has_rel), "mean_shift_r": ms_r,
-             "reliability_source": "within-item split-half" if has_rel else "agreement across donors"},
+             "reliability_source": "signal-to-noise", "snr_vs_split_half": rel_check},
     "headline": {"share_clear": float((f.cls == "clear").mean()), "n_hard": int(hard.sum()), "n_nobody": int(nb.sum()),
                  "hard_unmeasurable": float((hard & f.cls.isin(["fewcells", "noresp"])).sum() / hard.sum()),
                  "hard_clear": int((hard & f.cls.eq("clear")).sum()),

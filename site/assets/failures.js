@@ -28,7 +28,7 @@ function tiles(D) {
     [pct(h.hard_unmeasurable), 'of the hardest items have too few cells or no detectable response'],
     [int(h.hard_clear), `hardest items with a clear, reliable response that models miss`],
     [pct(h.share_clear), `of ${int(m.n_items)} items are a clean test of the model`],
-    [`${fmt(h.rho_rel, 2)} vs ${fmt(h.rho_strength, 2)}`, 'correlation of pass rate with reliability, and with raw effect size'],
+    [`${fmt(h.rho_rel, 2)} vs ${fmt(h.rho_strength, 2)}`, 'correlation of pass rate with signal-to-noise, and with raw effect size'],
   ];
   $('#tiles').innerHTML = t.map(([v, l]) => `<div class="fm-tile"><b>${v}</b><span>${esc(l)}</span></div>`).join('');
 }
@@ -51,30 +51,30 @@ function rule(D) {
   s += `<text x="${x0}" y="${34 + 3 * rowH - 6}" style="font-size:11px;fill:var(--fg-3)">one bar per gene</text>`;
   s += `<rect x="${x0 + 220}" y="${34 + 3 * rowH - 22}" width="150" height="26" rx="13" fill="var(--s3)" opacity=".15"/><text x="${x0 + 295}" y="${34 + 3 * rowH - 4}" text-anchor="middle" style="font-size:12px;font-weight:600;fill:var(--s3)">0.93 &gt; 0.46 → pass</text>`;
   $('#rule').innerHTML = s + '</svg>';
-  const g = GLOSS.map(([t, d]) => (t === 'Reliability' ? (D.meta.has_reliability ? [t, 'How well two random halves of the item\'s own cells agree. Near 0: the shift is mostly noise.'] : ['Donor agreement', 'How well this donor\'s shift matches the same cytokine and cell type in the other donors. Low: a different response, or noise.']) : [t, d]));
-  $('#defs-note').textContent = D.meta.has_reliability ? 'Charts labelled "reliability" use within-item reliability; the item cards show both it and donor agreement.' : 'Within-item reliability is still being computed from the full 9.7-million-cell file; until then, charts labelled "reliability" use donor agreement.';
+  const g = GLOSS.filter(([t]) => t !== 'Reliability').concat([['Donor agreement', 'How well this donor\'s shift matches the same cytokine and cell type in the other donors. Low: a different response, or noise.']]);
+  $('#defs-note').textContent = D.meta.snr_vs_split_half != null ? `Check: splitting each item's cells into two halves and correlating the halves gives the same ordering as signal-to-noise (rank correlation ${fmt(D.meta.snr_vs_split_half, 2)}), so the page uses signal-to-noise alone.` : '';
   $('#gloss').innerHTML = g.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('');
 }
 
 function heat(D) {
-  const H = D.heat, relL = ['below 0.2', '0.2–0.35', '0.35–0.5', '0.5–0.7', '0.7 and up'], refL = relL;
+  const H = D.heat, relL = ['below 1.2', '1.2–1.5', '1.5–2', '2–3', '3 and up'], refL = ['below 0.2', '0.2–0.35', '0.35–0.5', '0.5–0.7', '0.7 and up'];
   const w = 520, h = 300, m = { l: 96, t: 24, r: 8, b: 46 }, cw = (w - m.l - m.r) / 5, ch = (h - m.t - m.b) / 5;
   let s = svgOpen(w, h);
   for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) {
     const p = H.p[i][j], n = H.n[i][j];
     if (p == null) continue;
     const y = m.t + (4 - i) * ch, x = m.l + j * cw;
-    s += `<g class="mark" data-tip="reliability ${relL[i]}, average-response fit ${refL[j]}<br>${pct(p)} of models pass · ${int(n)} items"><rect x="${x + 1}" y="${y + 1}" width="${cw - 2}" height="${ch - 2}" rx="4" fill="var(--s3)" opacity="${0.08 + 0.92 * p}"/><text x="${x + cw / 2}" y="${y + ch / 2 + 4}" text-anchor="middle" class="mono" style="font-size:12px;fill:${p > 0.55 ? '#fff' : 'var(--fg)'}">${pct(p)}</text></g>`;
+    s += `<g class="mark" data-tip="signal-to-noise ${relL[i]}, average-response fit ${refL[j]}<br>${pct(p)} of models pass · ${int(n)} items"><rect x="${x + 1}" y="${y + 1}" width="${cw - 2}" height="${ch - 2}" rx="4" fill="var(--s3)" opacity="${0.08 + 0.92 * p}"/><text x="${x + cw / 2}" y="${y + ch / 2 + 4}" text-anchor="middle" class="mono" style="font-size:12px;fill:${p > 0.55 ? '#fff' : 'var(--fg)'}">${pct(p)}</text></g>`;
   }
   relL.forEach((l, i) => { s += `<text x="${m.l - 8}" y="${m.t + (4 - i) * ch + ch / 2 + 4}" text-anchor="end" style="font-size:11px">${l}</text>`; });
   refL.forEach((l, j) => { s += `<text x="${m.l + j * cw + cw / 2}" y="${h - m.b + 16}" text-anchor="middle" style="font-size:11px">${l}</text>`; });
   s += `<text x="${m.l + (w - m.l - m.r) / 2}" y="${h - 8}" text-anchor="middle">how well the average response already fits (r) →</text>`;
-  s += `<text transform="translate(12 ${m.t + (h - m.t - m.b) / 2}) rotate(-90)" text-anchor="middle">reliability →</text>`;
+  s += `<text transform="translate(12 ${m.t + (h - m.t - m.b) / 2}) rotate(-90)" text-anchor="middle">signal-to-noise →</text>`;
   $('#heat').innerHTML = s + '</svg>';
 }
 
 function curves(D) {
-  const ser = [['reliability', 'rel', 'var(--s3)'], ['signal-to-noise', 'snr', 'var(--s1)'], ['raw effect size', 'strength', 'var(--s2)']]
+  const ser = [['signal-to-noise', 'snr', 'var(--s3)'], ['cells per item', 'cells', 'var(--s1)'], ['raw effect size', 'strength', 'var(--s2)']]
     .map(([name, k, color]) => ({ name, color, pts: D.curves[k].map((p, i) => ({ x: i + 1, y: p.y, tip: `${pct(p.y)} pass · median ${fmt(p.x, 2)}` })) }));
   $('#curves').innerHTML = lines(ser, { xlabel: 'tenth of items, lowest to highest', ylabel: 'share of models passing', ydom: [0, 0.9], xdom: [1, 10], xfmt: (t) => String(t), yfmt: (t) => pct(t) });
   $('#curves-leg').innerHTML = ser.map((s) => `<span><i class="sw" style="--c:${s.color}"></i>${esc(s.name)}</span>`).join('');
@@ -102,7 +102,7 @@ function cards(D) {
   D = { ...D, classes: D.classes.filter((c) => c.n > 0) };
   const it = (e) => !e ? '<p class="faint">No item in this class.</p>' : `
     <div class="fm-item"><div class="fm-item-h">${esc(e.cytokine)} <span>→</span> ${esc(e.cell_type)}<em>${esc(e.donor)}</em></div>
-    <dl><dt>cells</dt><dd>${int(e.n_cells)}</dd><dt>reliability</dt><dd>${fmt(e.rel)}</dd><dt>donor agreement</dt><dd>${fmt(e.repro)}</dd>
+    <dl><dt>cells</dt><dd>${int(e.n_cells)}</dd><dt>signal-to-noise</dt><dd>${fmt(e.snr)}</dd><dt>donor agreement</dt><dd>${fmt(e.repro)}</dd>
     <dt>average-response fit</dt><dd>${fmt(e.ref_r)}</dd><dt>receptor</dt><dd>${e.receptor == null ? 'none known' : fmt(e.receptor, 3)}</dd>
     <dt>models passing</dt><dd>${e.passed} of ${e.of}</dd></dl></div>`;
   $('#cards').innerHTML = D.classes.map((c) => `<div class="card fm-card" style="--c:${CLS_COLOR[c.key]}">
@@ -127,13 +127,13 @@ function biology(D) {
   [0, 0.25, 0.5, 0.75, 1].forEach((t) => { s += `<line x1="${m.l}" x2="${w - m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${m.l - 6}" y="${y(t) + 4}" text-anchor="end" class="mono" style="font-size:10px">${pct(t)}</text>`; });
   cy.forEach((c, i) => {
     const [g, col] = GROUP(c.family), x = m.l + i * bw;
-    s += `<g class="mark" data-tip="<b>${esc(c.name)}</b> · ${esc(c.family)}<br>${pct(c.pass)} of models pass<br>median reliability ${fmt(c.rel)}${c.is_cytokine === false ? '<br>not a cytokine' : ''}"><rect x="${x + 0.5}" y="${y(c.pass)}" width="${Math.max(bw - 1, 1)}" height="${y(0) - y(c.pass)}" fill="${col}" ${c.is_cytokine === false ? 'opacity=".35"' : ''}/></g>`;
+    s += `<g class="mark" data-tip="<b>${esc(c.name)}</b> · ${esc(c.family)}<br>${pct(c.pass)} of models pass<br>median signal-to-noise ${fmt(c.rel)}${c.is_cytokine === false ? '<br>not a cytokine' : ''}"><rect x="${x + 0.5}" y="${y(c.pass)}" width="${Math.max(bw - 1, 1)}" height="${y(0) - y(c.pass)}" fill="${col}" ${c.is_cytokine === false ? 'opacity=".35"' : ''}/></g>`;
   });
   s += `<text x="${m.l + (w - m.l - m.r) / 2}" y="${h - 6}" text-anchor="middle" style="font-size:11px;fill:var(--fg-3)">90 cytokines, easiest to hardest</text>`;
   $('#cyt').innerHTML = s + '</svg>' + `<p class="foot"><b>Easiest:</b> ${cy.slice(0, 5).map((c) => esc(c.name)).join(', ')}. <b>Hardest:</b> ${cy.slice(-5).reverse().map((c) => esc(c.name)).join(', ')}.</p>`;
   $('#cyt-leg').innerHTML = GROUP_ORDER.map((g) => `<span><i class="sw" style="--c:${GROUP(g === 'Interferons' ? 'interferon' : g === 'Common gamma chain' ? 'gamma chain' : g === 'IL-6 / gp130' ? 'gp130' : g === 'TNF superfamily' ? 'TNF' : g === 'IL-1 family' ? 'IL-1 family' : g === 'IL-10, IL-12, IL-17' ? 'IL-10' : 'x')[1]}"></i>${esc(g)}</span>`).join('');
-  $('#rec').innerHTML = hbars(D.receptor, { color: () => 'var(--s1)', tip: (r) => `${int(r.n)} items · median reliability ${fmt(r.rel)}` });
-  $('#lin').innerHTML = hbars(D.lineage.filter((r) => r.n > 20), { color: () => 'var(--s3)', tip: (r) => `${int(r.n)} items · median reliability ${fmt(r.rel)}` });
+  $('#rec').innerHTML = hbars(D.receptor, { color: () => 'var(--s1)', tip: (r) => `${int(r.n)} items · median signal-to-noise ${fmt(r.rel)}` });
+  $('#lin').innerHTML = hbars(D.lineage.filter((r) => r.n > 20), { color: () => 'var(--s3)', tip: (r) => `${int(r.n)} items · median signal-to-noise ${fmt(r.rel)}` });
   const dn = [...D.donors].sort((a, b) => b.pass - a.pass);
   $('#don').innerHTML = hbars(dn, { labelW: 90, color: (r) => (r.high_isg ? 'var(--s7)' : 'var(--s0)'), tip: (r) => `${int(r.n)} items · median donor agreement ${fmt(r.repro)}` });
 }
