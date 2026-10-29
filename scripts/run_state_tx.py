@@ -48,7 +48,7 @@ ap.add_argument("--respondent", default=None)
 ap.add_argument("--max-steps", type=int, default=20000)
 ap.add_argument("--batch-size", type=int, default=16)
 ap.add_argument("--cell-set-len", type=int, default=None, help="override model.kwargs.cell_set_len")
-ap.add_argument("--pred-cells", type=int, default=64, help="control cells relabelled per test item")
+ap.add_argument("--pred-cells", type=int, default=256, help="control cells relabelled per test item (all if fewer)")
 ap.add_argument("--debug", action="store_true", help="few contexts, 200 steps: checks the code path")
 ap.add_argument("--work", default=None)
 ap.add_argument("--infer-only", action="store_true", help="skip training; predict from the run's best.ckpt (e.g. after a time-limit kill)")
@@ -174,7 +174,10 @@ for j in te:
     pred = ms.copy()
     m = owner == iid
     if m.any():
-        pred[hv] = P[m].mean(0) - X_items[ctrl_rows[c]][hv]
+        # the predicted shift is what STATE did to the cells it was given: predicted mean minus the mean of the
+        # same input control cells (subtracting the full control mean instead would add the sampling
+        # difference between those cells and all controls to every prediction)
+        pred[hv] = P[m].mean(0) - Xin[: len(rows)][m].mean(0)
     preds.append(pred.astype(np.float32)); ids.append(iid)
 out = RUNS / "pert_pool_v0" / resp
 out.mkdir(parents=True, exist_ok=True)
