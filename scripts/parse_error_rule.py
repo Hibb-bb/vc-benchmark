@@ -27,11 +27,16 @@ from vcb.irt.rasch import fit_from_long, fit_rasch
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--k", type=float, default=1.5)
+ap.add_argument("--rule", choices=["error", "combo"], default="error",
+                help="error: pass if ||pred - Δ|| <= k*noise on every item. combo: items with signal-to-noise >= --split pass on "
+                     "R² >= --r2 times the R² a perfect model would reach; weaker items pass on the error rule")
+ap.add_argument("--r2", type=float, default=0.5)
+ap.add_argument("--split", type=float, default=1.5)
 a = ap.parse_args()
 G = 2000
 R = RUNS / "pert_pool_v0"
-OUTS = R / "rasch_error"; OUTS.mkdir(exist_ok=True)
-OUTA = R / "analysis_parse" / "error_rule"; OUTA.mkdir(parents=True, exist_ok=True)
+OUTS = R / ("rasch_error" if a.rule == "error" else "rasch_combo"); OUTS.mkdir(exist_ok=True)
+OUTA = R / "analysis_parse" / ("error_rule" if a.rule == "error" else "combo_rule"); OUTA.mkdir(parents=True, exist_ok=True)
 TAG = "parse_pbmc_cytokines.context"
 
 sc = pd.read_parquet(R / f"{TAG}.scores.parquet")
@@ -39,13 +44,26 @@ f = pd.read_parquet(R / "analysis_parse" / "item_factors.parquet").join(pd.read_
 mse = sc[sc.metric == "mse@hvg"].pivot(index="item_id", columns="respondent_id", values="value")
 ratio = np.sqrt(mse * G).div(f["noise"].reindex(mse.index), axis=0)
 ratio.to_parquet(OUTA / "error_ratio.parquet")
+fi = f.reindex(mse.index)
+r2 = 1 - mse.div(fi["strength"] ** 2 / G, axis=0)                      # share of the measured response explained
+r2_ceiling = (1 - (fi["noise"] / fi["strength"]) ** 2).clip(lower=0.05)   # what a perfect model reaches in expectation
+nr2 = r2.div(r2_ceiling, axis=0)
+clear = (fi["snr"] >= a.split).values
+
+
+def passes(cols):
+    """Pass matrix (items x respondents) under the chosen rule."""
+    if a.rule == "error":
+        return ratio[cols] <= a.k
+    return pd.DataFrame(np.where(clear[:, None], nr2[cols].values >= a.r2, ratio[cols].values <= a.k),
+                        index=pd.Index(ratio.index, name="item_id"), columns=pd.Index(cols, name="respondent_id"))
 
 pub = pd.read_csv(R / "rasch" / f"{TAG}.abilities.csv")
 pool = [r for r in pub.loc[pub["placement"].fillna("refit") != "anchored", "respondent_id"] if r in ratio.columns]
 late = [r for r in ratio.columns if r not in pool and r != "mean_shift"]
 
 def long_of(cols):
-    P = (ratio[cols] <= a.k)
+    P = passes(cols)
     d = P.stack().rename("k").reset_index()
     d["k"] = d["k"].astype(int); d["n"] = 1
     return d
@@ -61,7 +79,7 @@ if late:
     np.add.at(K, (rs.get_indexer(L["respondent_id"]), items.get_indexer(L["item_id"])), L["k"].values)
     np.add.at(N, (rs.get_indexer(L["respondent_id"]), items.get_indexer(L["item_id"])), L["n"].values)
     th, se, _, _, inf = fit_rasch(K, N, anchors={i: float(dd[it]) for i, it in enumerate(items)}, n_iter=300)
-    pc = (ratio[late] <= a.k).mean()
+    pc = passes(late).mean()
     abil = pd.concat([abil, pd.DataFrame({"respondent_id": rs, "ability": th, "se": se, "outfit": inf["outfit_resp"], "n_items": len(ratio),
                                           "p_correct": pc.reindex(rs).values, "placement": "anchored"})], ignore_index=True)
 abil = abil.sort_values("ability", ascending=False)
@@ -81,7 +99,9 @@ f.to_parquet(OUTA / "item_factors_err.parquet")
 pc = f["p_correct_err"]
 NUM = {"reliability": "within-item reliability", "snr": "signal-to-noise", "strength": "response size", "reproducibility": "donor agreement",
        "n_cells": "cells per item", "receptor_expr": "receptor expression", "ifn_share": "interferon-gene share", "ratio_nochange": "error of 'no change' (× noise)"}
-lines = [f"# Parse error analysis under the absolute rule (pass if error <= {a.k} x noise)", "",
+title = (f"pass if error <= {a.k} x noise" if a.rule == "error" else
+         f"signal-to-noise >= {a.split}: pass if R² >= {a.r2} x the achievable R²; weaker items: pass if error <= {a.k} x noise")
+lines = [f"# Parse error analysis under the absolute rule ({title})", "",
          f"Scale fitted on {len(pool)} respondents ({len(late)} more placed with difficulties held fixed). {len(f)} items; "
          f"passed by nobody {f['nobody_err'].mean():.0%}, by everyone {f['everyone_err'].mean():.0%}.", "",
          "## What predicts passing", "", "| descriptor | Spearman r with share of models passing | (published rule) |", "|---|---|---|"]
@@ -106,3 +126,19 @@ cols = ["cytokine", "family", "donor", "cell_type", "difficulty_err", "p_correct
         "receptor_expr", "ifn_share", "ratio_best", "ratio_nochange", "difficulty_context"]
 f.sort_values("p_correct_err").head(80)[cols].to_csv(OUTA / "hardest.csv")
 print("\n".join(lines))
+
+# ---- compensating analysis on weak and null responses (signal-to-noise below the split) ----
+weak = ~clear
+pnull = (ratio.loc[weak] <= a.k)
+over = ratio.loc[weak].median()
+nl = ["", f"## Weak and null responses (signal-to-noise below {a.split}, {int(weak.sum())} items)", "",
+      "A correct answer here is a small change. 'Error ratio' is the median distance from the measured change in units of noise "
+      "(about 1.0 for a perfect model); a model that invents a response where there is none lands well above it.", "",
+      "| model | passes (error <= k x noise) | median error ratio |", "|---|---|---|"]
+order = pnull.mean().sort_values(ascending=False).index
+for m in order:
+    nl.append(f"| {m} | {pnull[m].mean():.0%} | {over[m]:.2f} |")
+with open(OUTA / "summary.md", "a") as fh:
+    fh.write("\n".join(nl) + "\n")
+print("\n".join(nl[:6]))
+
