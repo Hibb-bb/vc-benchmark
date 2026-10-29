@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Failure modes · Virtual Cell Bench</title>
-<meta name="description" content="Why perturbation models fail on Parse cytokine responses: what makes an item hard, with simple definitions of every quantity.">
+<meta name="description" content="Where perturbation models fail on Parse cytokine responses, scored with a fixed rule that credits correct small and null responses.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -16,72 +16,80 @@
 <main>
   <header class="wrap page-head">
     <p class="kicker"><a href="../">Analysis</a> · Parse cytokine screen · unseen combinations</p>
-    <h1>Why models fail on cytokine responses</h1>
-    <p>Most hard items are hard because the response was barely measured, not because the models got the biology wrong.</p>
+    <h1>Models get the quiet responses right and miss the strong ones</h1>
+    <p>Scored with a fixed rule that credits a correct “almost nothing happens”, the hard items are clear, well-measured cytokine responses that models predict only partly.</p>
     <div class="fm-tiles" id="tiles"></div>
   </header>
 
   <section class="wrap section tight" id="scoring">
-    <div class="head"><h2>1 · How a model is scored</h2><p class="lead">Each item is one cytokine in one donor's cell type. A model passes if it beats the context's average response.</p></div>
+    <div class="head"><h2>1 · How a model is scored</h2><p class="lead">Each item is one cytokine in one donor's cell type. Which test applies depends on how clearly the response stands above noise.</p></div>
     <div class="grid cols-2">
-      <div class="fig"><div id="rule"></div><p class="foot">Correlation is taken over the 2,000 most variable genes.</p></div>
+      <div class="fig"><div id="rule"></div></div>
       <div class="fig"><dl class="fm-gloss" id="gloss"></dl></div>
     </div>
-    <div class="fig fm-defs" id="defs">
-      <h3>How each item quantity is computed</h3>
-      <div class="fm-def"><b>Response, Δ</b><span>Mean expression of treated cells minus mean of untreated (PBS) cells, same donor and cell type, per gene (log of counts per 10,000, 2,000 most variable genes).</span><code>Δ = mean(treated) − mean(control)</code></div>
-      <div class="fm-def"><b>Signal-to-noise</b><span>Size of the response divided by the size expected if the cytokine did nothing. Near 1: indistinguishable from no effect.</span><code>‖Δ‖ ÷ √( Σ<sub>genes</sub> σ²<sub>control</sub> · (1/n<sub>treated</sub> + 1/n<sub>control</sub>) )</code></div>
-            <div class="fm-def"><b>Donor agreement</b><span>Correlation of this donor's Δ with the average Δ of the same cytokine and cell type in the other donors. Low: this donor's cells responded differently, or the measurement is noisy.</span><code>corr(Δ<sub>donor</sub>, mean Δ<sub>other donors</sub>)</code></div>
-      <div class="fm-def"><b>Average-response fit</b><span>How well the bar to beat already matches the truth.</span><code>corr(Δ, Δ<sub>average response</sub>)</code></div>
-      <div class="fm-def"><b>Receptor expression</b><span>Mean expression in untreated cells of the least-expressed subunit of the best receptor complex (a cell needs only one working receptor).</span><code>max<sub>complexes</sub> min<sub>subunits</sub> mean(control)</code></div>
+    <div class="fig fm-defs">
+      <h3>How each quantity is computed</h3>
+      <div class="fm-def"><b>Response, Δ</b><span>Mean expression of treated cells minus untreated (PBS) cells, same donor and cell type, per gene (log counts per 10,000, 2,000 most variable genes).</span><code>Δ = mean(treated) − mean(control)</code></div>
+      <div class="fm-def"><b>Noise</b><span>How large Δ would be if the cytokine did nothing, from the spread of untreated cells and the cell counts.</span><code>√( Σ<sub>genes</sub> σ²<sub>control</sub> · (1/n<sub>treated</sub> + 1/n<sub>control</sub>) )</code></div>
+      <div class="fm-def"><b>Signal-to-noise</b><span>Size of the response over the noise. Near 1: indistinguishable from no effect.</span><code>‖Δ‖ ÷ noise</code></div>
+      <div class="fm-def"><b>Explained R²</b><span>Share of the measured response the prediction accounts for.</span><code>1 − ‖prediction − Δ‖² ÷ ‖Δ‖²</code></div>
+      <div class="fm-def"><b>Achievable R²</b><span>What a model that knew the true response would reach: the rest of Δ is noise.</span><code>1 − (noise ÷ ‖Δ‖)²</code></div>
+      <div class="fm-def"><b>Error ratio</b><span>Distance from the measured response in units of noise. A perfect model lands near 1.</span><code>‖prediction − Δ‖ ÷ noise</code></div>
+      <div class="fm-def"><b>Donor agreement</b><span>Correlation of this donor's Δ with the same cytokine and cell type in the other donors.</span><code>corr(Δ<sub>donor</sub>, mean Δ<sub>other donors</sub>)</code></div>
+      <div class="fm-def"><b>Receptor expression</b><span>Expression in untreated cells of the weakest subunit of the best receptor complex.</span><code>max<sub>complexes</sub> min<sub>subunits</sub> mean(control)</code></div>
       <p class="foot" id="defs-note"></p>
     </div>
   </section>
 
-  <section class="wrap section" id="dials">
-    <div class="head"><h2>2 · Two things decide whether an item can be passed</h2><p class="lead">How far the response stands above noise, and how close the average response already is.</p></div>
+  <section class="wrap section" id="decides">
+    <div class="head"><h2>2 · The clearer the response, the harder the item</h2><p class="lead">Quiet responses are easy to get right; strong ones demand a precise prediction, and monocytes are where models fall shortest.</p></div>
     <div class="grid cols-2">
-      <div class="fig"><h3>Share of models passing</h3><p class="sub">Rows: signal-to-noise. Columns: how well the average response already fits.</p><div id="heat"></div></div>
-      <div class="fig"><h3>Signal-to-noise matters, raw effect size does not</h3><p class="sub">Share of models passing, items grouped into tenths.</p><div id="curves"></div><div id="curves-leg" class="legend"></div></div>
+      <div class="fig"><h3>Share of models passing</h3><p class="sub">Items grouped into tenths along each quantity.</p><div id="curves"></div><div id="curves-leg" class="legend"></div></div>
+      <div class="fig"><h3>By signal-to-noise and cell lineage</h3><p class="sub">Share of models passing.</p><div id="heat"></div></div>
     </div>
   </section>
 
   <section class="wrap section" id="kinds">
-    <div class="head"><h2>3 · Six kinds of item</h2><p class="lead">Only the first kind is a fair test of the model. Each card shows one real item.</p></div>
+    <div class="head"><h2>3 · Six kinds of item</h2><p class="lead">Each card shows one real item.</p></div>
     <div class="fig"><div id="stack"></div><div id="stack-leg" class="legend"></div></div>
     <div class="fm-cards" id="cards"></div>
   </section>
 
+  <section class="wrap section" id="nulls">
+    <div class="head"><h2>4 · Who invents a response that is not there</h2><p class="lead">On weak and null items the right answer is a small change. Most models give it; a few predict responses that never happened.</p></div>
+    <div class="fig"><h3>Share of weak and null items passed</h3><p class="sub" id="nulls-sub"></p><div id="nullbars"></div></div>
+  </section>
+
   <section class="wrap section" id="biology">
-    <div class="head"><h2>4 · The biology behind it</h2><p class="lead">Cells respond when they carry the receptor and the signal is strong. Interferons and common-gamma-chain cytokines are easy; cytokines aimed at tissues are not.</p></div>
+    <div class="head"><h2>5 · The biology behind it</h2><p class="lead">Strong JAK-STAT signals (common gamma chain cytokines, interferons) are the hardest to predict precisely; cytokines that barely move blood cells are easy.</p></div>
     <div class="grid cols-2">
       <div class="fm-col">
         <div class="fig"><h3>By cytokine</h3><p class="sub">Share of models passing, all 90 cytokines. Colour is the signalling family.</p><div id="cyt"></div><div id="cyt-leg" class="legend"></div></div>
-        <div class="fig"><h3>Donor</h3><div id="don"></div><p class="foot"><i class="sw" style="--c:var(--s7)"></i> donors with high baseline interferon activity: their cells respond differently.</p></div>
+        <div class="fig"><h3>Donor</h3><div id="don"></div><p class="foot"><i class="sw" style="--c:var(--s7)"></i> donors with high baseline interferon activity.</p></div>
       </div>
       <div class="fm-col">
-        <div class="fig"><h3>Receptor expression in the cell type</h3><p class="sub">Share of models passing, by how much receptor the untreated cells carry.</p><div id="rec"></div></div>
+        <div class="fig"><h3>Receptor expression in the cell type</h3><div id="rec"></div></div>
         <div class="fig"><h3>Cell lineage</h3><div id="lin"></div></div>
       </div>
     </div>
   </section>
 
   <section class="wrap section" id="rank">
-    <div class="head"><h2>5 · Noisy items still rank models</h2><p class="lead">Even on low signal-to-noise items, stronger models pass more. Noise lowers precision; it does not scramble the order.</p></div>
+    <div class="head"><h2>6 · Every kind of item ranks models the same way</h2><p class="lead">Stronger models pass more items in every signal-to-noise band.</p></div>
     <div class="fig"><div id="rankchart"></div><div id="rank-leg" class="legend"></div></div>
   </section>
 
   <section class="wrap section" id="models">
-    <div class="head"><h2>6 · Four numbers per model</h2><p class="lead">Pass rate and ability come from the pass rule; the two correlations from the raw predictions.</p></div>
-    <div class="fig"><div class="tbl-wrap"><table id="mtable"></table></div><p class="foot" id="mfoot"></p></div>
+    <div class="head"><h2>7 · Models on Parse</h2><p class="lead">Ability on this rule, how often each model passes clear and weak items, and its ability under the published rule.</p></div>
+    <div class="fig"><div class="tbl-wrap"><table id="mtable"></table></div><p class="foot">Grey rows were added after the scale was fitted and placed with item difficulties held fixed.</p></div>
   </section>
 
   <section class="wrap section" id="meaning">
     <div class="head"><h2>What this means</h2></div>
     <div class="grid cols-3">
-      <div class="card"><h3>For model builders</h3><p class="sub">Read the pass rate on clear items first. Elsewhere, a model can only gain by matching noise or by beating an already-good average.</p></div>
-      <div class="card"><h3>For biologists</h3><p class="sub">Failures cluster where cells lack the receptor, in rare cell types, and in donors whose cells were already interferon-activated.</p></div>
-      <div class="card"><h3>For the benchmark</h3><p class="sub">Weight items by signal-to-noise, report the correlation after removing the average, and flag non-cytokines (Megalin, IL-18Ra).</p></div>
+      <div class="card"><h3>For model builders</h3><p class="sub">Getting the direction right is not enough on strong responses: the size must match too. And do not invent responses where the cell barely reacts.</p></div>
+      <div class="card"><h3>For biologists</h3><p class="sub">The open problems are the strong, well-measured responses: common gamma chain cytokines and interferons, above all in monocytes and CD4 T cells.</p></div>
+      <div class="card"><h3>For the benchmark</h3><p class="sub">A fixed rule keeps quiet and null responses scorable and stops crediting a model for copying the average response.</p></div>
     </div>
   </section>
 </main>
