@@ -11,7 +11,7 @@ Reads the full 9.7M-cell Parse file once and writes, under cache/statetx_full/fo
 - query.h5ad: for every test item, up to --pred-cells untreated cells of its donor and cell type, once labelled
   with the item's cytokine and once as PBS (STATE is read through its own contrast). obs: cytokine, cell_type,
   donor, item_id.
-Files are written incrementally (anndata sparse_dataset.append), so memory stays bounded.
+Files are written incrementally (CSR with 64-bit row pointers, appended block by block), so memory stays bounded.
 """
 import argparse
 import time
@@ -79,7 +79,25 @@ q_pos = {c: i for i, c in enumerate(q_cells)}
 Q = np.zeros((len(q_cells), len(gpos)), dtype=np.float32)
 
 train_path = OUT / "data" / "train.h5ad"
-first = True
+
+
+def append_csr(fh, block):
+    """Append rows to an on-disk CSR X with 64-bit row pointers (a full fold holds ~6e9 non-zeros, past
+    int32; anndata's writer would downcast them). Encoding attributes follow the h5ad CSR spec."""
+    if "X" not in fh:
+        g = fh.create_group("X")
+        g.attrs["encoding-type"] = "csr_matrix"; g.attrs["encoding-version"] = "0.1.0"
+        g.attrs["shape"] = np.array([0, block.shape[1]], dtype=np.int64)
+        g.create_dataset("data", shape=(0,), maxshape=(None,), dtype=np.float32, chunks=(1 << 20,))
+        g.create_dataset("indices", shape=(0,), maxshape=(None,), dtype=np.int32, chunks=(1 << 20,))
+        g.create_dataset("indptr", data=np.zeros(1, dtype=np.int64), maxshape=(None,), chunks=(1 << 16,))
+    g = fh["X"]
+    n0, nnz0 = int(g.attrs["shape"][0]), int(g["indptr"][-1])
+    d, ind, ptr = g["data"], g["indices"], g["indptr"]
+    d.resize((nnz0 + block.nnz,)); d[nnz0:] = block.data.astype(np.float32)
+    ind.resize((nnz0 + block.nnz,)); ind[nnz0:] = block.indices.astype(np.int32)
+    ptr.resize((n0 + block.shape[0] + 1,)); ptr[n0 + 1:] = block.indptr[1:].astype(np.int64) + nnz0
+    g.attrs["shape"] = np.array([n0 + block.shape[0], block.shape[1]], dtype=np.int64)
 rows_out = []
 with h5py.File(train_path, "w") as fh:
     n_rows = 1_600_000 if a.debug else raw.n_obs          # debug: the first 1.6M cells only
@@ -98,10 +116,7 @@ with h5py.File(train_path, "w") as fh:
         loc = pd.Index(need)
         if len(sel):
             block = Xh[loc.get_indexer(sel)]
-            if first:
-                write_elem(fh, "X", block); first = False
-            else:
-                sparse_dataset(fh["X"]).append(block)
+            append_csr(fh, block)
             rows_out.append(i0 + sel)
         if len(qs):
             Q[[q_pos[c] for c in qs]] = Xh[loc.get_indexer(qs - i0)].toarray()
