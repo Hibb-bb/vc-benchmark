@@ -76,7 +76,9 @@ elif a.stage == "train":
            "data.kwargs.val_subsample_fraction=0.1",
            "use_wandb=false", f"output_dir={W}", "name=run"]
     log(("resuming from last.ckpt: " if (W / "run" / "checkpoints" / "last.ckpt").exists() else "training: ") + " ".join(cmd[2:]))
-    subprocess.run(cmd, check=True, cwd=W)
+    # resuming loads our own checkpoint, which stores NumPy scalars: same narrow allow-list as at prediction
+    env = dict(os.environ, PYTHONPATH=str(ROOT / "cache" / "statetx_full" / "pyhooks") + os.pathsep + os.environ.get("PYTHONPATH", ""))
+    subprocess.run(cmd, check=True, cwd=W, env=env)
     (W / "TRAINED").write_text(f"{steps}\n")
     log("training finished")
 
