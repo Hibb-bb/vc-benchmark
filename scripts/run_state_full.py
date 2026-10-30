@@ -48,9 +48,19 @@ if a.stage == "train" and (W / "TRAINED").exists():
     log("training already finished for this fold; nothing to do")
 elif a.stage == "train":
     assert (W / "data" / "train.h5ad").exists(), f"build the data first: scripts/state_full_fold_data.py --fold {a.fold}"
+    # STATE reads ~16,000 random cells per step; from the shared filesystem that ran at ~0.15 steps/s against
+    # ~6.6 for the GPU step itself. Copy the training file into the node's memory (/dev/shm) for this job and
+    # point STATE at the copy; it is removed when the job ends, also on failure or time limit.
+    stage = Path(os.environ.get("STATE_STAGE_DIR", "/dev/shm")) / f"stfull_fold{a.fold}_{os.environ.get('SLURM_JOB_ID', os.getpid())}"
+    stage.mkdir(parents=True, exist_ok=True)
+    import atexit, signal  # noqa: E401
+    atexit.register(shutil.rmtree, stage, True)
+    signal.signal(signal.SIGTERM, lambda *_: (shutil.rmtree(stage, True), os._exit(143)))
+    shutil.copy2(W / "data" / "train.h5ad", stage / "train.h5ad")
+    log(f"staged the training file in {stage}")
     # STATE needs a validation set: a few (cell type, cytokine) pairs held back from its own fit
     (W / "split.toml").write_text("\n".join([
-        "[datasets]", f'parse = "{W / "data"}"', "", "[training]", 'parse = "train"', "",
+        "[datasets]", f'parse = "{stage}"', "", "[training]", 'parse = "train"', "",
         '[fewshot."parse.CD4 Memory"]', 'val = ["IL-2", "IFN-gamma"]', "test = []", "",
         '[fewshot."parse.CD14 Mono"]', 'val = ["IL-6", "TNF-alpha"]', "test = []", ""]))
     cmd = [STATE, "tx", "train",
