@@ -60,7 +60,10 @@ elif a.stage == "train":
            "model=state", "model.kwargs.hidden_dim=384", "model.kwargs.transformer_backbone_kwargs.hidden_size=384",
            "model.kwargs.cell_set_len=512",
            f"training.max_steps={steps}", "training.batch_size=32", "training.lr=0.0003", "training.weight_decay=0.0005",
-           f"training.val_freq={min(1000, max(steps // 4, 50))}", f"training.ckpt_every_n_steps={min(4000, max(steps // 4, 50))}",
+           # validate every 2,000 steps on 10% of the held-back cells: at every 1,000 steps on all 321k cells, validation
+           # took longer than training itself (training runs at ~7 steps/s on an A100)
+           f"training.val_freq={min(2000, max(steps // 4, 50))}", f"training.ckpt_every_n_steps={min(4000, max(steps // 4, 50))}",
+           "data.kwargs.val_subsample_fraction=0.1",
            "use_wandb=false", f"output_dir={W}", "name=run"]
     log(("resuming from last.ckpt: " if (W / "run" / "checkpoints" / "last.ckpt").exists() else "training: ") + " ".join(cmd[2:]))
     subprocess.run(cmd, check=True, cwd=W)

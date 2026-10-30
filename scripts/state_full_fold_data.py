@@ -130,7 +130,9 @@ with h5py.File(train_path, "w") as fh:
     for k in ("obsm", "varm", "obsp", "varp", "layers", "uns"):
         write_elem(fh, k, {})
     fh.attrs["encoding-type"] = "anndata"; fh.attrs["encoding-version"] = "0.1.0"
-log(f"wrote {train_path} ({train_path.stat().st_size / 1e9:.1f} GB, {len(rows)} cells)")
+import subprocess, sys  # noqa: E401
+subprocess.run([sys.executable, str(ROOT / "scripts" / "state_repack_csr.py"), str(train_path)], check=True)
+log(f"wrote {train_path} ({train_path.stat().st_size / 1e9:.1f} GB, {len(rows)} cells), repacked contiguous")
 
 # query: each test item's context controls, labelled with the item's cytokine and as PBS
 qrows, qobs = [], []
