@@ -57,7 +57,18 @@ elif a.stage == "train":
     atexit.register(shutil.rmtree, stage, True)
     signal.signal(signal.SIGTERM, lambda *_: (shutil.rmtree(stage, True), os._exit(143)))
     shutil.copy2(W / "data" / "train.h5ad", stage / "train.h5ad")
-    log(f"staged the training file in {stage}")
+    # the same CSR arrays as .npy: the training hook (scripts/state_hooks/sitecustomize.py) reads cells from these
+    # memory maps instead of through h5py's per-cell calls, which held training to ~0.15 steps/s
+    import h5py  # noqa: E401
+    (stage / "X").mkdir(exist_ok=True)
+    with h5py.File(stage / "train.h5ad", "r") as fh:
+        for name in ("indptr", "indices", "data"):
+            d = fh["X"][name]
+            out = np.lib.format.open_memmap(stage / "X" / f"{name}.npy", mode="w+", dtype=d.dtype, shape=d.shape)
+            for i in range(0, d.shape[0], 1 << 27):
+                out[i:i + (1 << 27)] = d[i:i + (1 << 27)]
+            out.flush(); del out
+    log(f"staged the training file and its CSR arrays in {stage}")
     # STATE needs a validation set: a few (cell type, cytokine) pairs held back from its own fit
     (W / "split.toml").write_text("\n".join([
         "[datasets]", f'parse = "{stage}"', "", "[training]", 'parse = "train"', "",
@@ -76,8 +87,10 @@ elif a.stage == "train":
            "data.kwargs.val_subsample_fraction=0.1",
            "use_wandb=false", f"output_dir={W}", "name=run"]
     log(("resuming from last.ckpt: " if (W / "run" / "checkpoints" / "last.ckpt").exists() else "training: ") + " ".join(cmd[2:]))
-    # resuming loads our own checkpoint, which stores NumPy scalars: same narrow allow-list as at prediction
-    env = dict(os.environ, PYTHONPATH=str(ROOT / "cache" / "statetx_full" / "pyhooks") + os.pathsep + os.environ.get("PYTHONPATH", ""))
+    # resuming loads our own checkpoint, which stores NumPy scalars: same narrow allow-list as at prediction;
+    # the same hook serves cell reads from the .npy arrays
+    env = dict(os.environ, PYTHONPATH=str(ROOT / "cache" / "statetx_full" / "pyhooks") + os.pathsep + os.environ.get("PYTHONPATH", ""),
+               STATE_NPY_X=str(stage / "X"), STATE_NPY_H5=str(stage / "train.h5ad"))
     subprocess.run(cmd, check=True, cwd=W, env=env)
     (W / "TRAINED").write_text(f"{steps}\n")
     log("training finished")
