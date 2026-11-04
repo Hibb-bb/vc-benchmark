@@ -1,0 +1,106 @@
+screen,model,builtin,text
+Norman 2019,Gaussian process (kernel width = 0.5),2.739,3.176
+Norman 2019,Gaussian process (kernel width = 2),2.384,2.834
+Norman 2019,KNN (K=20),1.751,2.643
+Norman 2019,"Ridge (d=50, λ=100)",1.8,2.643
+Norman 2019,"MLP (1024 hidden, d=50)",1.654,2.289
+Norman 2019,"Ridge (d=10, λ=100)",1.467,2.177
+Norman 2019,PCA regression-20D,1.467,2.015
+Norman 2019,PCA regression-10D,1.377,2.015
+Norman 2019,PCA regression-100D,1.332,1.963
+Norman 2019,PCA regression-200D,1.377,1.911
+Norman 2019,"Ridge (d=10, λ=1)",1.332,1.911
+Norman 2019,"Ridge (d=50, λ=1)",1.513,1.911
+Norman 2019,"MLP (256 hidden, d=50)",1.559,1.911
+Norman 2019,PCA regression-50D,1.421,1.86
+Norman 2019,KNN (K=5),1.8,1.809
+Norman 2019,"Ridge (d=50, λ=100), 30% train",1.077,1.614
+Norman 2019,PCA regression-5D,1.077,1.566
+Norman 2019,PCA regression-2D,0.763,1.294
+Norman 2019,KNN (K=1),0.726,0.999
+Norman 2019,"Ridge (d=50, λ=100), 10% train",-0.278,0.113
+Norman 2019,"KNN (K=20), 30% train",0.019,0.082
+Norman 2019,"KNN (K=20), 10% train",-1.094,-1.095
+"Replogle 2022, K562 essential",Gaussian process (kernel width = 2),0.37,1.063
+"Replogle 2022, K562 essential",Gaussian process (kernel width = 0.5),-0.122,1.038
+"Replogle 2022, K562 essential","Ridge (d=10, λ=100)",0.394,0.908
+"Replogle 2022, K562 essential",PCA regression-5D,0.389,0.878
+"Replogle 2022, K562 essential","Ridge (d=50, λ=100)",0.201,0.873
+"Replogle 2022, K562 essential",PCA regression-100D,0.025,0.863
+"Replogle 2022, K562 essential",PCA regression-10D,0.357,0.863
+"Replogle 2022, K562 essential","Ridge (d=10, λ=1)",0.366,0.858
+"Replogle 2022, K562 essential",PCA regression-200D,-0.042,0.838
+"Replogle 2022, K562 essential",PCA regression-50D,0.142,0.833
+"Replogle 2022, K562 essential","MLP (1024 hidden, d=50)",-0.539,0.828
+"Replogle 2022, K562 essential","Ridge (d=50, λ=1)",0.124,0.824
+"Replogle 2022, K562 essential",PCA regression-20D,0.237,0.824
+"Replogle 2022, K562 essential",KNN (K=20),-0.945,0.77
+"Replogle 2022, K562 essential","MLP (256 hidden, d=50)",-0.824,0.672
+"Replogle 2022, K562 essential","Ridge (d=50, λ=100), 30% train",-0.488,0.633
+"Replogle 2022, K562 essential","KNN (K=20), 30% train",-1.046,0.391
+"Replogle 2022, K562 essential",PCA regression-2D,0.324,0.149
+"Replogle 2022, K562 essential",KNN (K=5),-1.743,0.031
+"Replogle 2022, K562 essential","Ridge (d=50, λ=100), 10% train",-1.192,0.004
+"Replogle 2022, K562 essential","KNN (K=20), 10% train",-1.188,-0.189
+"Replogle 2022, K562 essential",KNN (K=1),-2.23,-0.916
+sciPlex3,PCA regression-50D,-0.358,-0.501
+sciPlex3,PCA regression-100D,-0.36,-0.501
+sciPlex3,PCA regression-200D,-0.367,-0.524
+sciPlex3,PCA regression-20D,-0.81,-0.659
+sciPlex3,PCA regression-10D,-1.335,-0.883
+sciPlex3,"MLP (1024 hidden, d=50)",-1.395,-0.963
+sciPlex3,"MLP (256 hidden, d=50)",-1.454,-1.036
+sciPlex3,PCA regression-5D,-1.557,-1.151
+sciPlex3,PCA regression-2D,-1.651,-1.239
+Tahoe-100M,KNN (K=20),-1.41,-0.475
+Tahoe-100M,KNN (K=5),-1.038,-0.825
+Tahoe-100M,"KNN (K=20), 30% train",-1.797,-0.829
+Tahoe-100M,"Ridge (d=50, λ=100)",-1.699,-0.953
+Tahoe-100M,"Ridge (d=50, λ=1)",-1.778,-0.953
+Tahoe-100M,"Ridge (d=50, λ=100), 30% train",-1.649,-1.015
+Tahoe-100M,"KNN (K=20), 10% train",-1.967,-1.128
+Tahoe-100M,Gaussian process (kernel width = 2),-1.516,-1.166
+Tahoe-100M,"Ridge (d=50, λ=100), 10% train",-1.714,-1.18
+Tahoe-100M,Gaussian process (kernel width = 0.5),-1.395,-1.189
+Tahoe-100M,KNN (K=1),-1.277,-1.303
+Tahoe-100M,"Ridge (d=10, λ=1)",-1.866,-1.39
+Tahoe-100M,"Ridge (d=10, λ=100)",-1.821,-1.391
+Tahoe-100M,"MLP (1024 hidden, d=50)",-1.619,-2.213
+Tahoe-100M,"MLP (256 hidden, d=50)",-1.785,-2.025
+Parse PBMC cytokines,KNN (K=20),-0.202,-1.312
+Parse PBMC cytokines,"KNN (K=20), 30% train",-1.54,-1.403
+Parse PBMC cytokines,KNN (K=5),-1.603,-1.449
+Parse PBMC cytokines,KNN (K=1),-2.511,-2.001
+Parse PBMC cytokines,PCA regression-200D,-2.435,-2.145
+Parse PBMC cytokines,"KNN (K=20), 10% train",-3.183,-2.31
+Parse PBMC cytokines,"MLP (1024 hidden, d=50)",-2.988,-2.326
+Parse PBMC cytokines,Gaussian process (kernel width = 0.5),-2.882,-2.345
+Parse PBMC cytokines,PCA regression-100D,-3.122,-2.45
+Parse PBMC cytokines,"MLP (256 hidden, d=50)",-3.155,-2.497
+Parse PBMC cytokines,Gaussian process (kernel width = 2),-3.128,-2.533
+Parse PBMC cytokines,"Ridge (d=50, λ=100), 30% train",-3.141,-2.558
+Parse PBMC cytokines,"Ridge (d=50, λ=100), 10% train",-2.95,-2.574
+Parse PBMC cytokines,"Ridge (d=50, λ=1)",-3.476,-2.583
+Parse PBMC cytokines,"Ridge (d=50, λ=100)",-3.483,-2.586
+Parse PBMC cytokines,PCA regression-50D,-3.469,-2.586
+Parse PBMC cytokines,PCA regression-5D,-4.117,-2.658
+Parse PBMC cytokines,PCA regression-2D,-4.263,-2.682
+Parse PBMC cytokines,PCA regression-20D,-3.759,-2.692
+Parse PBMC cytokines,"Ridge (d=10, λ=1)",-4.007,-2.764
+Parse PBMC cytokines,PCA regression-10D,-4.015,-2.765
+Parse PBMC cytokines,"Ridge (d=10, λ=100)",-4.02,-2.767
+Immune Dictionary,Gaussian process (kernel width = 0.5),-1.899,-0.852
+Immune Dictionary,Gaussian process (kernel width = 2),-1.726,-1.077
+Immune Dictionary,"Ridge (d=50, λ=1)",-1.098,-1.543
+Immune Dictionary,"Ridge (d=50, λ=100)",-1.231,-1.301
+Immune Dictionary,"KNN (K=20), 30% train",-1.464,-1.597
+Immune Dictionary,KNN (K=20),-2.002,-1.504
+Immune Dictionary,KNN (K=5),-2.839,-1.677
+Immune Dictionary,"MLP (1024 hidden, d=50)",-2.064,-1.725
+Immune Dictionary,"Ridge (d=50, λ=100), 30% train",-2.109,-1.85
+Immune Dictionary,"Ridge (d=10, λ=100)",-3.111,-2.059
+Immune Dictionary,"Ridge (d=10, λ=1)",-3.171,-2.142
+Immune Dictionary,"MLP (256 hidden, d=50)",-2.298,-2.161
+Immune Dictionary,KNN (K=1),-4.067,-2.603
+Immune Dictionary,"Ridge (d=50, λ=100), 10% train",-3.011,-2.856
+Immune Dictionary,"KNN (K=20), 10% train",-4.039,-2.989
