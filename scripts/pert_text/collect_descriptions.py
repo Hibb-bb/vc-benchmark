@@ -77,24 +77,40 @@ gcache = OUT / "gene_info.parquet"
 ginfo = pd.read_parquet(gcache) if gcache.exists() else pd.DataFrame(columns=["symbol", "name", "summary", "go_bp"]).set_index("symbol")
 todo = [g for g in all_genes if g not in ginfo.index]
 print(f"genes: {len(all_genes)} needed, {len(todo)} to fetch", flush=True)
-new = []
-for i in range(0, len(todo), 1000):
-    batch = todo[i:i + 1000]
-    res = http_json("https://mygene.info/v3/query", data={"q": ",".join(batch), "scopes": "symbol,alias", "species": "human",
-                                                          "fields": "symbol,name,summary,go.BP.term", "size": 1}, timeout=180)
+def mygene(batch, scopes, fields):
+    res = http_json("https://mygene.info/v3/query", data={"q": ",".join(batch), "scopes": scopes, "species": "human",
+                                                          "fields": fields, "size": 5}, timeout=180)
     if res is None:
         raise SystemExit("mygene.info query failed")
-    seen = set()
-    for h in res:
-        q = h.get("query")
-        if q in seen or h.get("notfound"):
-            continue
-        seen.add(q)
-        bp = h.get("go", {}).get("BP", []) if isinstance(h.get("go"), dict) else []
-        bp = [bp] if isinstance(bp, dict) else bp
-        terms = list(dict.fromkeys(b.get("term") for b in bp if isinstance(b, dict) and b.get("term")))[:8]
-        new.append({"symbol": q, "name": h.get("name", ""), "summary": h.get("summary", ""), "go_bp": "; ".join(terms)})
-    print(f"  genes {i + len(batch)}/{len(todo)}", flush=True)
+    return res
+
+
+def record(q, h):
+    bp = h.get("go", {}).get("BP", []) if isinstance(h.get("go"), dict) else []
+    bp = [bp] if isinstance(bp, dict) else bp
+    terms = list(dict.fromkeys(b.get("term") for b in bp if isinstance(b, dict) and b.get("term")))[:8]
+    return {"symbol": q, "name": h.get("name", ""), "summary": h.get("summary", ""), "go_bp": "; ".join(terms), "matched": h.get("symbol", q)}
+
+
+# Exact symbol first. Only symbols with no exact match fall back to aliases, and an alias hit is accepted only when
+# that gene lists the symbol among its aliases (an alias search alone can return an unrelated gene: EPO -> TIMP1).
+new = []
+FIELDS = "symbol,name,summary,go.BP.term,alias"
+for i in range(0, len(todo), 1000):
+    batch = todo[i:i + 1000]
+    hits = {}
+    for h in mygene(batch, "symbol", FIELDS):
+        if not h.get("notfound") and h.get("symbol") == h["query"] and h["query"] not in hits:
+            hits[h["query"]] = h
+    rest = [g for g in batch if g not in hits]
+    if rest:
+        for h in mygene(rest, "alias", FIELDS):
+            al = h.get("alias", [])
+            al = [al] if isinstance(al, str) else al
+            if not h.get("notfound") and h["query"] in al and h["query"] not in hits:
+                hits[h["query"]] = h
+    new += [record(q, h) for q, h in hits.items()]
+    print(f"  genes {i + len(batch)}/{len(todo)}: {len(hits)} resolved ({len(batch) - len(hits)} without an entry)", flush=True)
     time.sleep(0.5)
 if new:
     ginfo = pd.concat([ginfo, pd.DataFrame(new).set_index("symbol")])

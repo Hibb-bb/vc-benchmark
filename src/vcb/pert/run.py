@@ -19,7 +19,7 @@ import pandas as pd
 from .baselines import MeanShift, default_pool
 from .features import categorical_item_features, chemical_item_features, gene_embedding_from_controls, genetic_item_features
 from .folds import fold_groups, fold_splits, item_table
-from .metrics import score_items
+from .metrics import de_scores, score_items
 
 
 def hvg_mask(items: ad.AnnData, n_top: int = 2000) -> np.ndarray:
@@ -33,11 +33,12 @@ def hvg_mask(items: ad.AnnData, n_top: int = 2000) -> np.ndarray:
     return mask
 
 
-def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: str = "perturbation", n_folds: int = 5, seed: int = 0, min_cells: int = 50, pool=None, merge: bool = False, features=None) -> pd.DataFrame:
+def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: str = "perturbation", n_folds: int = 5, seed: int = 0, min_cells: int = 50, pool=None, merge: bool = False, features=None, extra_metrics: bool = False) -> pd.DataFrame:
     """pool: explicit list of respondents (default: default_pool). merge=True appends/replaces
     these respondents in an existing scores table instead of rewriting it. features: optional
     callable meta -> (F, found) that overrides the built-in item features (e.g. cytokine gene
-    representations from a pretrained model)."""
+    representations from a pretrained model). extra_metrics: also write the DE-gene scores of
+    metrics.de_scores (k = 20 and 50, HVG space only)."""
     t0 = time.time()
     items = ad.read_h5ad(items_path)
     dataset_id = items.obs["dataset_id"].iloc[0]
@@ -97,6 +98,10 @@ def evaluate_dataset(items_path: Path, cells_path: Path, out_dir: Path, scheme: 
                 sc = score_items(pred, D[te], ms_pred, genes_mask=m)
                 for metric, vals in sc.items():
                     scores[(b.name, space, metric)][te] = vals
+            if extra_metrics:
+                for k in (20, 50):
+                    for metric, vals in de_scores(pred, D[te], genes_mask=mask, k=k).items():
+                        scores.setdefault((b.name, "hvg", metric), np.full(len(meta), np.nan))[te] = vals
             print(f"  fold {f+1}/{n_folds} {b.name:22s} {time.time()-tb:5.1f}s", flush=True)
     rows = [pd.DataFrame({"item_id": meta.index, "respondent_id": n, "metric": f"{metric}@{space}", "value": v}) for (n, space, metric), v in scores.items()]
     long = pd.concat(rows, ignore_index=True)

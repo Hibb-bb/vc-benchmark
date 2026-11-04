@@ -6,6 +6,13 @@
   mse                mean squared error of the delta
   deg_overlap50      |top50(|true|) & top50(|pred|)| / 50
   l2_ratio           ||pred - true|| / ||true||  (1.0 = as bad as predicting no change)
+
+Optional DE-gene scores (de_scores; evaluate_dataset(extra_metrics=True)). The DE genes of an item are the k genes with
+the largest measured |change| among the evaluation genes (pseudobulk deltas carry no test statistic):
+  de_precision{k}    |top-k(|pred|) & top-k(|true|)| / k
+  de_dir_acc{k}      share of the true top-k DE genes whose predicted change has the measured sign
+  pearson_de{k}      Pearson(pred, true) over the true top-k DE genes
+  spearman_de{k}     Spearman(pred, true) over the true top-k DE genes
 """
 from __future__ import annotations
 
@@ -33,4 +40,23 @@ def score_items(pred, true, mean_shift, genes_mask=None, k=50) -> dict[str, np.n
     top_p = np.argpartition(-np.abs(pred), kk - 1, axis=1)[:, :kk]
     ov = np.array([len(np.intersect1d(a, b)) for a, b in zip(top_t, top_p)]) / kk
     out["deg_overlap50"] = ov
+    return out
+
+
+def _rank_rows(A):
+    return np.argsort(np.argsort(A, axis=1), axis=1).astype(np.float64)
+
+
+def de_scores(pred, true, genes_mask=None, k: int = 20) -> dict[str, np.ndarray]:
+    if genes_mask is not None:
+        pred, true = pred[:, genes_mask], true[:, genes_mask]
+    kk = min(k, true.shape[1])
+    top_t = np.argpartition(-np.abs(true), kk - 1, axis=1)[:, :kk]
+    top_p = np.argpartition(-np.abs(pred), kk - 1, axis=1)[:, :kk]
+    pt = np.take_along_axis(pred, top_t, 1)
+    tt = np.take_along_axis(true, top_t, 1)
+    out = {f"de_precision{k}": np.array([len(np.intersect1d(a, b)) for a, b in zip(top_t, top_p)]) / kk,
+           f"de_dir_acc{k}": (np.sign(pt) == np.sign(tt)).mean(1),
+           f"pearson_de{k}": _pearson_rows(pt, tt),
+           f"spearman_de{k}": _pearson_rows(_rank_rows(pt), _rank_rows(tt))}
     return out

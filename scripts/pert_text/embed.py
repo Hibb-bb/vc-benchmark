@@ -23,10 +23,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--model", required=True)
 ap.add_argument("--batch-size", type=int, default=16)
 ap.add_argument("--max-len", type=int, default=1024)
+ap.add_argument("--cards", default=str(ROOT / "runs" / "pert_text" / "cards.jsonl"))
+ap.add_argument("--out", default=str(ROOT / "runs" / "pert_text" / "emb"))
 a = ap.parse_args()
-OUT = ROOT / "runs" / "pert_text" / "emb"
+OUT = Path(a.out)
 OUT.mkdir(parents=True, exist_ok=True)
-cards = [json.loads(l) for l in open(ROOT / "runs" / "pert_text" / "cards.jsonl")]
+cards = [json.loads(l) for l in open(a.cards)]
 (OUT / "keys.txt").write_text("\n".join(c["key"] for c in cards) + "\n")
 tag = a.model.split("/")[-1]
 dev = "cuda" if torch.cuda.is_available() else "cpu"
