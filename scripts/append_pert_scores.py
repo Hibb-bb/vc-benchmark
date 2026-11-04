@@ -25,17 +25,19 @@ ap.add_argument("--dataset", required=True)
 ap.add_argument("--respondent", required=True)
 ap.add_argument("--scheme", default="context")
 ap.add_argument("--folds", type=int, default=5)
+ap.add_argument("--run", default="pert_pool_v0", help="run whose scores table is merged into (and whose <respondent>/ holds the npz files unless --npz-root)")
+ap.add_argument("--npz-root", default=None, help="directory holding <respondent>/<dataset>.<scheme>.fold<k>.npz")
 ap.add_argument("--out", default=None, help="write the merged table here instead of in place (testing)")
 a = ap.parse_args()
 
-run = RUNS / "pert_pool_v0"
+run = RUNS / a.run
 items = ad.read_h5ad(DATA / "items" / f"{a.dataset}.items.h5ad")
 meta, D, _ = item_table(items)
 pos = {iid: i for i, iid in enumerate(meta.index)}
 pred = np.full_like(D, np.nan)
 ms_pred = np.zeros_like(D)
 for f, tr, te in fold_splits(meta, a.scheme, a.folds):
-    npz = run / a.respondent / f"{a.dataset}.{a.scheme}.fold{f}.npz"
+    npz = (Path(a.npz_root) if a.npz_root else run) / a.respondent / f"{a.dataset}.{a.scheme}.fold{f}.npz"
     assert npz.exists(), f"missing {npz}"
     z = np.load(npz, allow_pickle=True)
     for iid, p in zip(z["item_ids"], z["pred"]):

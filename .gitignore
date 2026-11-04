@@ -27,3 +27,8 @@ paper/*.blg
 paper/*.fls
 paper/*.fdb_latexmk
 paper/*.synctex.gz
+
+# CPA (cpa-tools) drops these in the working directory after training
+/model.pt
+/CPA_info.json
+/history.csv
