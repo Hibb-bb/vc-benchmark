@@ -35,6 +35,8 @@ Cell Bench, using the benchmark's own folds.
 Surprisingly, models using the Qwen3 embeddings improve almost uniformly compared to the same models without them.
 When the test perturbations are new, the model with the Qwen3 embedding wins in 93 of 105 pairs, with a median gain of
 0.4 to 0.9 on the ability scale.
+In CPA, a deep generative model, the embeddings help only on one screen, and CPA stays below a simple mean shift baseline
+with or without them.
 }
 
 \begin{document}
@@ -185,12 +187,14 @@ expression. We run CPA in two ways on the same folds:
 \begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
 \item \textbf{Own embedding}: CPA learns its perturbation vectors from scratch. A perturbation held out in the test fold
 never gets trained, so its vector stays at its random start.
-\item \textbf{Text card}: we reduce the card vectors to 128 numbers with PCA, scale each to unit length, and load them
-into CPA's perturbation table as fixed values. CPA still learns its own linear layer from these values into the latent
-space. A new perturbation therefore gets a vector that reflects its description.
+\item \textbf{Text card}: we load the full card vectors (2,560 numbers, scaled to unit length) into CPA's
+perturbation table as fixed values. A small network (one hidden layer of 512 units) maps each card into the latent
+space and is trained with the rest of CPA. A new perturbation therefore gets a vector that reflects its description.
+cpa-tools 0.8.8 leaves its own projection of fixed vectors out of the optimizer, so we put our network inside the
+perturbation table, where the optimizer does reach it, and checked that its weights change during training.
 \end{itemize}
 
-Both versions use the same settings: a 64-dimensional latent space, a negative binomial loss, up to 300 epochs with
+Both versions use the same settings: a 64-dimensional latent space, a negative binomial loss, up to 150 epochs with
 early stopping, and up to 200 cells per training item plus all control cells. To predict an item, we pass control cells of the test context through CPA with the test perturbation and
 again with no perturbation. The predicted shift is the difference of the two means, in log counts per 10,000 over the
 2,000 most variable genes. These shifts are scored and placed on the published scales in the same way as above.
@@ -199,21 +203,32 @@ We run this on Norman, sciPlex3 and the Immune Dictionary with five folds each (
 
 \begin{table}[h]
 \centering
-\caption{CPA with its own perturbation embedding and with the text card. Runs in progress.}
+\caption{CPA with its own perturbation embedding and with the text card, five folds each. Ability is on the published
+scale of each screen ($\pm$ one standard error).}
 \label{tab:cpa}
 \small
-\begin{tabular}{llrrr}
+\begin{tabular}{llrr}
 \toprule
-Screen & Split & Own embedding & Text card & Best published \\
+ & & \multicolumn{2}{c}{Ability $\uparrow$} \\
+\cmidrule(lr){3-4}
+Screen & Split & Own & Text card \\
 \midrule
-Norman 2019 & unseen perturbation & -- & -- & $+2.74$ \\
-sciPlex3 & unseen perturbation & -- & -- & $-0.36$ \\
-sciPlex3 & unseen combination & -- & -- & $+0.06$ \\
-Immune Dictionary & unseen perturbation & -- & -- & $-0.93$ \\
-Immune Dictionary & unseen combination & -- & -- & $+3.36$ \\
+Norman 2019 & unseen perturbation & $-2.19\pm0.18$ & $-2.39\pm0.18$ \\
+sciPlex3 & unseen perturbation & $-2.86\pm0.07$ & $-2.93\pm0.07$ \\
+sciPlex3 & unseen combination & $-3.33\pm0.07$ & $-3.20\pm0.07$ \\
+Immune Dictionary & unseen perturbation & $-6.64\pm0.51$ & $-3.91\pm0.16$ \\
+Immune Dictionary & unseen combination & $-4.70\pm0.17$ & $-3.80\pm0.14$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+CPA falls well below the mean shift baseline in every split, with either embedding; on sciPlex3 its predicted shifts
+barely correlate with the truth. The text card helps CPA on the Immune Dictionary, most clearly for unseen
+combinations (Pearson $\Delta$ 0.200 to 0.255; items passed 6\% to 10\%). The large gain in ability for unseen
+cytokines is mostly a floor effect: CPA with its own embedding passed 3 of 942 items, so its ability sits at the bottom
+of the scale with a wide error, while the mean Pearson $\Delta$ of the two versions is almost the same. On Norman the card
+lowers the score a little, and on sciPlex3 the two versions tie. The cards help the simple models far more than they
+help CPA.
 
 % ---------------------------------------------------------------------------
 \section{Limits}

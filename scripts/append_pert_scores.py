@@ -27,12 +27,13 @@ ap.add_argument("--scheme", default="context")
 ap.add_argument("--folds", type=int, default=5)
 ap.add_argument("--run", default="pert_pool_v0", help="run whose scores table is merged into (and whose <respondent>/ holds the npz files unless --npz-root)")
 ap.add_argument("--npz-root", default=None, help="directory holding <respondent>/<dataset>.<scheme>.fold<k>.npz")
+ap.add_argument("--min-cells", type=int, default=50, help="item filter; must match the run whose folds produced the predictions (30 for the Immune Dictionary)")
 ap.add_argument("--out", default=None, help="write the merged table here instead of in place (testing)")
 a = ap.parse_args()
 
 run = RUNS / a.run
 items = ad.read_h5ad(DATA / "items" / f"{a.dataset}.items.h5ad")
-meta, D, _ = item_table(items)
+meta, D, _ = item_table(items, min_cells=a.min_cells)
 pos = {iid: i for i, iid in enumerate(meta.index)}
 pred = np.full_like(D, np.nan)
 ms_pred = np.zeros_like(D)
